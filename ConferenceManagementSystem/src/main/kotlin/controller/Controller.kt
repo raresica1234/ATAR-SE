@@ -1,4 +1,0 @@
-package controller
-
-class Controller {
-}

@@ -1,5 +1,5 @@
 import tornadofx.launch
-import ui.Application
+import client.Application
 
 fun main(args: Array<String>) {
     launch<Application>(args)

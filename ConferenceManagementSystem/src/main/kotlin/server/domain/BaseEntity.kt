@@ -1,4 +1,4 @@
-package domain
+package server.domain
 
 class BaseEntity {
 }

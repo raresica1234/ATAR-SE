@@ -1,7 +1,7 @@
-package ui.view
+package client.view
 
 import tornadofx.*
-import ui.controller.UIController
+import client.controller.UIController
 
 class MainView : View("Conference Management System") {
     val controller: UIController by inject()

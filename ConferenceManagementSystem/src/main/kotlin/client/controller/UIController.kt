@@ -1,8 +1,8 @@
-package ui.controller
+package client.controller
 
 import javafx.collections.FXCollections
 import tornadofx.Controller
-import ui.model.CarModel
+import client.model.CarModel
 
 class UIController : Controller() {
     val values = FXCollections.observableArrayList(
