@@ -1,6 +1,7 @@
+
 # Conference Management System
 
-## Model
+# Model
 - User
 - Role
 - Proposal
@@ -10,8 +11,8 @@
 - Bid
 - Review
 
-### Model specifications
-#### User
+# Model specifications
+## User
 - `id`: Integer
 - `username`: String
 - `password`: String
@@ -24,7 +25,7 @@
 - The `name` could be split up into two fields: `firstName` and `lastName`.
 - The account has to be validated.
 
-#### Role
+## Role
 - `conferenceId`: Integer
 - `userId`: Integer
 - `roleType`: RoleType (enum with values: Author, Program Committee Member, Chair, Co-chair, Site Administrator, Authorized Person)
@@ -33,19 +34,19 @@
 - The program committee member can also be an author.
 - An authorized person can be anybody.
 
-#### Proposal
+## Proposal
 - `id`: Integer
 - `abstract`: String/File
 - `fullPaper`: String/File
-- `authors`: List<Integer> (where the user must have the author role associated with it)
+- `authors`: List\<Integer> (where the user must have the author role associated with it)
 - `name`: String
-- `keywords`: List<String>
-- `topics`: List<String>
+- `keywords`: List\<String>
+- `topics`: List\<String>
 
-#### Conference
+## Conference
 - `id`: Integer
 - `chairId`: Integer
-- `coChairIds`: List<Integer>
+- `coChairIds`: List\<Integer>
 - `abstractDeadline`: Date?
 - `fullPaperDeadline`: Date
 - `biddingDeadline`: Date
@@ -54,61 +55,84 @@
 **Observations**: 
 - The `fullPaperDeadline` and the `abstractDeadline` could be identical for some conferences. 
 
-#### Section
+## Section
 - `id`: Integer
 - `conferenceId`: Integer
 - `sessionChairId`: Integer (Program committee, chair, or co-chair)
-- `speakers`: List<Integer> (Authors and subsequently program committee members, but can not be a chair of the section)
-- `listener`: List<Integer> (user)
+- `speakers`: List\<Integer> (Authors and subsequently program committee members, but can not be a chair of the section)
+- `listener`: List\<Integer> (user)
 - `roomId`: Integer
 
-#### Room
+## Room
 - `id` : Integer
 - `seats`: Integer (representing number of seats/space)
 
-#### Bid
+## Bid
 - `pcMember`: ProgramCommitteeMember
 - `bidType`: BidType (enum with values: "pleased to review", "could review", "refuse to review", "in conflict")
 
 **Observation**: `"in conflict" bidType` is used for a program committee's paper that is also an author.
 
-#### Review
+## Review
 - `proposalId`: Integer
 - `userId`: Integer (where the user must have the program committee role associated with it)
 - `reviewType`: ReviewType (enum with values: strong accept, accept, weak accept, borderline paper, weak reject, reject, strong reject)
 - `recommendation`: String
 
-## Functionality
-### User specific functionality
-| Role | Functionality |
---- | --
-| Anybody | Create account |
-| Anybody | Login |
-| Site Administrator | Create conference |
-| Site Administrator(?) or Chair(?) | Add rooms |
-| BaseUser | Create submission |
-| Chair | Add co-chair to conference |
-| Chair/Co-chair | Add program committee member |
-| Chair/Co-chair | Add conference section |
-| Chair/Co-chair | Set attributes for the conference |
-| Program committee member | Browse submissions |
-| Program committee member | Bid on submissions |
-| Chair/Co-chair | Assign Program committee member to submissions |
-| Program commtitee member | Review submissions |
-| Program committee member | Chat between eachother on conflicting reviews | 
-| Program committee member | Browse reviewd submissions |
-| Chair/Co-chair | Request a resolution for submissions with conflicts |
-| Chair/Co-chair | Set new reviewers for the submission that still has conflicts or decide on outcome |
-| Author | Paper editing after review has been completed |
-| BaseUser | Browse conferences |
-| Chair/Co-chair | Add authorized users |
-| Authorized Users | Edit a conference's schedule |
-| Authorized Users | Create sessions and set their time and room |
-| Authorized Users | Set session chair |
-| BaseUser | Select which sessions they will attend (optional) |
-| Authorized Users | Make the selection of sessions optional or mandatory |
-| Speaker | Upload presentation |
-| Speaker, Listener | Pay participation |
+# Functionality
+## User specific functionality
+| Anybody |
+--- |
+| Create account |
+| Login (with or without password - as a listener) |  
+
+
+| BaseUser |
+--- | 
+| Browse conferences |
+| Create submission |
+| Select which sessions they will attend (optional) |
+| Pay participation fee |
+
+
+|  Site administrator |
+--- |
+| Create conference |
+| Add rooms - maybe chair too?
+
+| Chair and Co-chair |
+--- | 
+| (Chair only) Add co-chair to conference |
+| Add program committee member |
+| Add conference section |
+| Set attributes for the conference |
+| Assign Program committee member to submissions |
+| Request a resolution for submissions with conflicts |
+| Set new reviewers for the submission that still has conflicts or decide on outcome |
+| Add authorized users |
+
+| Program committee member |
+--- | 
+| Browse submissions |
+| Bid on submissions |
+| Review submissions |
+| Chat between eachother on conflicting reviews | 
+| Browse reviewd submissions |
+
+| Author |
+--- |
+| Paper editing after review has been completed |
+
+| Authorized Users |
+--- | 
+| Edit a conference's schedule |
+| Create sessions and set their time and room |
+| Set session chair |
+| Make the selection of sessions optional or mandatory |
+
+| Speaker |
+--- |
+| Upload presentation |
 
 **Anything done by an Authorized User can also be done by the Chair or Co-chair**
 ### Automatic functionality
@@ -121,27 +145,66 @@
 | Stop the review phase |
 
 ### We need to discuss:
-- An user can submit a proposal and add authors people that don't have an account. This could be solved in a number of ways:
-  - By forcing everybody to have an account beforehand.
-  - Sending invitation links to authors that don't have account by email.
-- Who should be able to add the rooms, the site administrator or the chairs/co-chairs
-- How are speakers assigned to sections :
-  - Self assign
+- Who should be able to add the rooms, the chairs or co-chairs?
+- How are speakers assigned to sections:
   - Authorized users assign them
 
-### Functionality description
-#### Create account
+## Anybody
+### Create account
 - Make sure the user doesn't exist in the database
 - Verify all fields
 - Create the account
 
-#### Login
-- Check if the user exists in the databse
+### Login
+- Check if the user exists in the database
 - Verify password
 
-#### Create conference
+## BaseUser
+### Browse conferences
+- Display all conferences
+
+### Create submission
+- discussion needed
+
+### Select which sessions they will attend
+- From browse conferences
+- Browse onto sections?
+
+
+### Pay participation fee
+- 
+
+## Site administrator
+### Create conference
 - Check that the user is a site administrator (probably button to this page should appear only if that's the case)
+- (?) Invitation by email
+- Select user
 - Add chair to conference
 
-#### Create submission
-- discussion needed
+### Add rooms
+- Check that the user is a site administrator/(?)chair (probably button to this page should appear only if that's the case)
+- Add room to database
+
+
+## Chair and co-chair
+### (Chair only) Add co-chair to conference
+- Check that the user is either a site administrator or a chair
+- (?) Invitation by email
+- Select user
+- Add co-chair to the database
+
+### Add program committee member
+- Check that the user is either a chair or co-chair
+- (?) Invitation by email
+- Select existing user
+
+### Add conference section
+- Check that the user is either a chair or co-chair
+- Add section to database
+
+### Change attributes for the conference
+- Check that the user is either a chair or co-chair
+
+### Assign Program Committee member to submissions
+- Browse submissions and see reviews(?)
+- 
