@@ -79,9 +79,6 @@
 - `reviewType`: ReviewType (enum with values: strong accept, accept, weak accept, borderline paper, weak reject, reject, strong reject)
 - `recommendation`: String
 
-**Observation**: `"borderline paper" reviewType does not represent a review in itself, but rather the case when a paper
-has a score of 0(both accepted and reject in equal measure) (e.g: 1 weak accept + 1 weak reject => borderline paper`
-
 # Functionality
 ## User specific functionality
 | Anybody |
