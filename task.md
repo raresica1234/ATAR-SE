@@ -68,7 +68,7 @@
 - `seats`: Integer (representing number of seats/space)
 
 ## Bid
-- `pcMember`: ProgramCommitteeMember
+- `pcMemberId`: Integer (Program Committee)
 - `bidType`: BidType (enum with values: "pleased to review", "could review", "refuse to review", "in conflict")
 
 **Observation**: `"in conflict" bidType` is used for a program committee's paper that is also an author.
@@ -78,6 +78,9 @@
 - `userId`: Integer (where the user must have the program committee role associated with it)
 - `reviewType`: ReviewType (enum with values: strong accept, accept, weak accept, borderline paper, weak reject, reject, strong reject)
 - `recommendation`: String
+
+**Observation**: `"borderline paper" reviewType does not represent a review in itself, but rather the case when a paper
+has a score of 0(both accepted and reject in equal measure) (e.g: 1 weak accept + 1 weak reject => borderline paper`
 
 # Functionality
 ## User specific functionality
