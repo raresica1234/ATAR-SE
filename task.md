@@ -68,7 +68,7 @@
 - `seats`: Integer (representing number of seats/space)
 
 ## Bid
-- `pcMember`: ProgramCommitteeMember
+- `pcMemberId`: Integer (Program Committee)
 - `bidType`: BidType (enum with values: "pleased to review", "could review", "refuse to review", "in conflict")
 
 **Observation**: `"in conflict" bidType` is used for a program committee's paper that is also an author.
