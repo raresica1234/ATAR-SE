@@ -1,0 +1,34 @@
+
+I attached diagrams with some modifications.
+
+AccountManagementCase
+- missing use case: Upload personal information (A PC Member uploads personal information when joining a conference; this can be included in
+  Create account use case)
+
+ConferenceManagementCase
+- delete Add Room - there are multiple rooms attached to a conference, in the '... sections' use case, not here
+- delete Make the selection of sessions optional or mandatory - it's always optional
+- delete co-chair (because it's the same role as chair) and the authorized user
+
+OrganizingPresentationsCase
+- session and sections are the same thing, so Add conference section and Create session are doing the same thing; please keep only 
+  Add conference section
+
+proposal and bidding management
+- Submit proposal is done by author
+- missing use case: Upload full paper
+
+ReviewManagementCase
+- Review Submission is done by PC Members
+- missing use case: Request closer evaluation (chair asks the reviewers to talk about a paper in order to get closer evaluations)
+
+
+
+Green use cases = primary use cases, please describe them just by adding preconditions / postconditions; also, use just these cases in
+sequence diagrams
+X = delete
+Missing use cases: please add them in the right place and add preconditions / postconditions to them.
+
+You can do this by the next lab and it's all right.
+
+
