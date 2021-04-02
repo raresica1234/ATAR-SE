@@ -5,7 +5,9 @@ import java.util.*
 data class Section(
     val id: Int,
     val conferenceId: Int,
+    var name: String,
     var sessionChairId: Int,
-    var eventDate: Date,
+    var startDate: Date,
+    var endDate: Date,
     var roomId: Int
 ) : BaseEntity<Int>(id)
