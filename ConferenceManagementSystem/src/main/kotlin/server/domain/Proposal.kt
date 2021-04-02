@@ -7,4 +7,5 @@ data class Proposal(
     var name: String,
     var keywords: List<String>,
     val topics: List<String>
-) : BaseEntity<Int>(id)
+) :
+    BaseEntity<Int>(id)
