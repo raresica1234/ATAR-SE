@@ -6,5 +6,5 @@ data class Proposal(
     var fullPaper: String,
     var name: String,
     var keywords: String,
-    val topics: String
+    var topics: String
 ) : BaseEntity<Int>(id)
