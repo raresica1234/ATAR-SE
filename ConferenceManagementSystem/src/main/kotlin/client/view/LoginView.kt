@@ -19,7 +19,7 @@ class LoginView: View("Conference Management System") {
         }
 
         vbox {
-            maxWidth = 128.0
+            maxWidth = 192.0
             paddingTop = 32.0
 
             label("Email")
@@ -31,7 +31,7 @@ class LoginView: View("Conference Management System") {
             }
         }
         vbox {
-            maxWidth = 128.0
+            maxWidth = 192.0
             paddingVertical = 32.0
 
             label("Password")
