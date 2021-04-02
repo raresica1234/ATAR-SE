@@ -8,5 +8,4 @@ data class User(
     var affiliation: String = "",
     var webpageLink: String = "",
     var isSiteAdministrator: Boolean = false
-) :
-    BaseEntity<Int>(id)
+) : BaseEntity<Int>(id)

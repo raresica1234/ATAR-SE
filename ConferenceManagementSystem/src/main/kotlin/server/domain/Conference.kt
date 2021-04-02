@@ -10,5 +10,4 @@ data class Conference(
     var biddingDeadline: Date,
     var reviewDeadline: Date,
     var reviewerCount: Int = 2
-) :
-    BaseEntity<Int>(id)
+) : BaseEntity<Int>(id)

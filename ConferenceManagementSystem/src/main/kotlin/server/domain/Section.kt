@@ -8,5 +8,4 @@ data class Section(
     var sessionChairId: Int,
     var eventDate: Date,
     var roomId: Int
-) :
-    BaseEntity<Int>(id)
+) : BaseEntity<Int>(id)

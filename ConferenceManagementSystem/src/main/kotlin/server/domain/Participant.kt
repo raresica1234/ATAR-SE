@@ -4,5 +4,4 @@ data class Participant(
     val userId: Int,
     val sectionId: Int,
     var isSpeaker: Boolean
-) :
-    BaseEntity<Pair<Int, Int>>(Pair(userId, sectionId))
+) : BaseEntity<Pair<Int, Int>>(Pair(userId, sectionId))

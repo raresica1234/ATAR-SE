@@ -5,5 +5,4 @@ data class Review(
     val pcMember: Int,
     var reviewType: ReviewType,
     var recommandation: String
-) :
-    BaseEntity<Pair<Int, Int>>(Pair(proposalId, pcMember))
+) : BaseEntity<Pair<Int, Int>>(Pair(proposalId, pcMember))
