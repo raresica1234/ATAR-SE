@@ -1,4 +1,3 @@
 package server.domain
 
-class BaseEntity {
-}
+open class BaseEntity<T>(id: T)
