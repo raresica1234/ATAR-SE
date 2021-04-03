@@ -1,4 +1,3 @@
-
 I attached diagrams with some modifications.
 
 AccountManagementCase
@@ -30,5 +29,3 @@ X = delete
 Missing use cases: please add them in the right place and add preconditions / postconditions to them.
 
 You can do this by the next lab and it's all right.
-
-
