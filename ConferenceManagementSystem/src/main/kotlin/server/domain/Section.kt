@@ -1,13 +1,16 @@
 package server.domain
 
-import java.util.*
+import org.ktorm.entity.Entity
+import java.time.LocalDate
 
-data class Section(
-    val id: Int,
-    val conferenceId: Int,
-    var name: String,
-    var sessionChairId: Int,
-    var startDate: Date,
-    var endDate: Date,
-    var roomId: Int
-) : BaseEntity<Int>(id)
+interface Section : Entity<Section> {
+    companion object : Entity.Factory<Section>()
+
+    val id: Int
+    val conference: Conference
+    var name: String
+    var sessionChairId: Int
+    var startDate: LocalDate
+    var endDate: LocalDate
+    var room: Room
+}

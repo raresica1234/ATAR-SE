@@ -1,7 +1,11 @@
 package server.domain
 
-data class Role(
-    val userId: Int,
-    val conferenceId: Int,
+import org.ktorm.entity.Entity
+
+interface Role : Entity<Role> {
+    companion object : Entity.Factory<Role>()
+
+    val user: User
+    val conference: Conference
     var roleType: RoleType
-) : BaseEntity<Pair<Int, Int>>(Pair(userId, conferenceId))
+}
