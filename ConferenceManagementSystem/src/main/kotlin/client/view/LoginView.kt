@@ -5,12 +5,13 @@ import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
 
-class LoginView: View("Conference Management System") {
+class LoginView : View("Conference Management System") {
     private val controller: LoginController by inject()
 
     override val root = vbox {
         alignment = Pos.CENTER
-        minWidth = 352.0
+        minWidth = 960.0
+        minHeight = 540.0
         paddingAll = 32.0
 
         text("Log in") {
@@ -54,7 +55,7 @@ class LoginView: View("Conference Management System") {
 
             text("You don't have an account?")
             button("Create account") {
-                action { controller.handleCreateAccountClick() }
+                action { replaceWith(CreateAccountView::class) }
             }
         }
     }
