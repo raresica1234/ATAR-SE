@@ -13,12 +13,16 @@ class UserService {
     companion object {
         fun createAccount(user: User) {
             if (!user.email.isEmail()) {
-                throw ValidationException("Email is invalid!",
-                    "The provided email address is not valid, verify it and please try again.")
+                throw ValidationException(
+                    "Email is invalid!",
+                    "The provided email address is not valid, verify it and please try again."
+                )
             }
             if (database.users.any { it.email.eq(user.email) }) {
-                throw ValidationException("Email is in use!",
-                    "The provided email address is already in use. Try to log in or choose a different email address.")
+                throw ValidationException(
+                    "Email is in use!",
+                    "The provided email address is already in use. Try to log in or choose a different email address."
+                )
             }
             database.users.add(user)
         }

@@ -41,7 +41,7 @@ class CreateAccountView : View("Conference Management System") {
                     minWidth = 192.0
 
                     label("Password")
-                    textfield {
+                    passwordfield {
                         promptText = "Password"
                         textProperty().bindBidirectional(controller.createAccountModel.password)
                     }
@@ -51,7 +51,7 @@ class CreateAccountView : View("Conference Management System") {
                     minWidth = 192.0
 
                     label("Confirm Password")
-                    textfield {
+                    passwordfield {
                         promptText = "Confirm Password"
                         textProperty().bindBidirectional(controller.createAccountModel.confirmPassword)
                     }

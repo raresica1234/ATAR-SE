@@ -8,4 +8,5 @@ fun String.isEmail() = Pattern.compile(EMAIL_PATTERN)
     .matches()
 
 fun SimpleStringProperty.isNullOrBlank() = this.get().isNullOrBlank()
+
 fun SimpleStringProperty.eq(other: SimpleStringProperty) = this.get() == other.get()

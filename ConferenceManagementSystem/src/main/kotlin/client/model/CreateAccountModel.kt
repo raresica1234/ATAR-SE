@@ -19,5 +19,6 @@ data class CreateAccountModel(
         lastName = this@CreateAccountModel.lastName.get()
         affiliation = this@CreateAccountModel.affiliation.get()
         webpageLink = this@CreateAccountModel.webpageLink.get().orEmpty()
+        isSiteAdministrator = false
     }
 }

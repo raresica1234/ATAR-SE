@@ -8,7 +8,7 @@ import utils.ValidationException
 import utils.eq
 import utils.isNullOrBlank
 
-class CreateAccountController: Controller() {
+class CreateAccountController : Controller() {
     val createAccountModel = CreateAccountModel()
 
     fun handleCreateAccountClick(): Boolean {
@@ -28,13 +28,18 @@ class CreateAccountController: Controller() {
             createAccountModel.confirmPassword.isNullOrBlank() ||
             createAccountModel.firstName.isNullOrBlank() ||
             createAccountModel.lastName.isNullOrBlank() ||
-            createAccountModel.affiliation.isNullOrBlank()) {
-            throw ValidationException("Not all fields completed!",
-                "There are some mandatory fields that have not been filled in. Please check them and try again.")
+            createAccountModel.affiliation.isNullOrBlank()
+        ) {
+            throw ValidationException(
+                "Not all fields completed!",
+                "There are some mandatory fields that have not been filled in. Please check them and try again."
+            )
         }
         if (!createAccountModel.password.eq(createAccountModel.confirmPassword)) {
-            throw ValidationException("Passwords do not match!",
-                "The given password does not match the confirm password, please try again.")
+            throw ValidationException(
+                "Passwords do not match!",
+                "The given password does not match the confirm password, please try again."
+            )
         }
     }
 }
