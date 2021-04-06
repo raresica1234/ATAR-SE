@@ -6,6 +6,6 @@ interface Bid : Entity<Bid> {
     companion object : Entity.Factory<Bid>()
 
     val id: Int
-    val pcMember: User
+    var pcMember: User
     var bidType: BidType
 }

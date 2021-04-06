@@ -7,7 +7,7 @@ interface Section : Entity<Section> {
     companion object : Entity.Factory<Section>()
 
     val id: Int
-    val conference: Conference
+    var conference: Conference
     var name: String
     var sessionChairId: Int
     var startDate: LocalDate

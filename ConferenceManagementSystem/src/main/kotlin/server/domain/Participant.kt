@@ -5,7 +5,7 @@ import org.ktorm.entity.Entity
 interface Participant : Entity<Participant> {
     companion object : Entity.Factory<Participant>()
 
-    val user: User
-    val section: Section
+    var user: User
+    var section: Section
     var isSpeaker: Boolean
 }
