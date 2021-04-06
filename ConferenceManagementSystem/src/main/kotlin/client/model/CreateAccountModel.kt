@@ -2,6 +2,7 @@ package client.model
 
 import javafx.beans.property.SimpleStringProperty
 import server.domain.User
+import utils.clear
 
 data class CreateAccountModel(
     val email: SimpleStringProperty = SimpleStringProperty(),
@@ -20,5 +21,15 @@ data class CreateAccountModel(
         affiliation = this@CreateAccountModel.affiliation.get()
         webpageLink = this@CreateAccountModel.webpageLink.get().orEmpty()
         isSiteAdministrator = false
+    }
+
+    fun clear() {
+        email.clear()
+        password.clear()
+        confirmPassword.clear()
+        firstName.clear()
+        lastName.clear()
+        affiliation.clear()
+        webpageLink.clear()
     }
 }

@@ -4,12 +4,18 @@ import client.model.CreateAccountModel
 import javafx.scene.control.ButtonType
 import server.service.UserService
 import tornadofx.Controller
+import tornadofx.Scope
+import tornadofx.Workspace
 import utils.ValidationException
 import utils.eq
 import utils.isNullOrBlank
 
 class CreateAccountController : Controller() {
     val createAccountModel = CreateAccountModel()
+
+    fun handleOnDock() {
+        createAccountModel.clear()
+    }
 
     fun handleCreateAccountClick(): Boolean {
         try {

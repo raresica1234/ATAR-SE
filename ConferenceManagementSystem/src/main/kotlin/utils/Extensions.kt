@@ -10,3 +10,5 @@ fun String.isEmail() = Pattern.compile(EMAIL_PATTERN)
 fun SimpleStringProperty.isNullOrBlank() = this.get().isNullOrBlank()
 
 fun SimpleStringProperty.eq(other: SimpleStringProperty) = this.get() == other.get()
+
+fun SimpleStringProperty.clear() = this.set(null)

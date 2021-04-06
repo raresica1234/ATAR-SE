@@ -9,6 +9,11 @@ import tornadofx.*
 class CreateAccountView : View("Conference Management System") {
     private val controller: CreateAccountController by inject()
 
+    override fun onDock() {
+        super.onDock()
+        controller.handleOnDock()
+    }
+
     override val root = vbox {
         alignment = Pos.CENTER
         minWidth = 960.0
@@ -129,7 +134,6 @@ class CreateAccountView : View("Conference Management System") {
                         }
                     }
                 }
-
             }
         }
     }
