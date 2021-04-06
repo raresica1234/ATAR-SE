@@ -1,6 +1,11 @@
 package server.domain
 
-data class Room(
-    val id: Int,
+import org.ktorm.entity.Entity
+
+interface Room : Entity<Room> {
+    companion object : Entity.Factory<Room>()
+
+    val id: Int
     var seatCount: Int
-) : BaseEntity<Int>(id)
+}
+

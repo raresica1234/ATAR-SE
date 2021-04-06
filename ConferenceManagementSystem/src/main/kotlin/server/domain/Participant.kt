@@ -1,7 +1,11 @@
 package server.domain
 
-data class Participant(
-    val userId: Int,
-    val sectionId: Int,
+import org.ktorm.entity.Entity
+
+interface Participant : Entity<Participant> {
+    companion object : Entity.Factory<Participant>()
+
+    var user: User
+    var section: Section
     var isSpeaker: Boolean
-) : BaseEntity<Pair<Int, Int>>(Pair(userId, sectionId))
+}

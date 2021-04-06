@@ -1,13 +1,16 @@
 package server.domain
 
-import java.util.*
+import org.ktorm.entity.Entity
+import java.time.LocalDate
 
-data class Conference(
-    val id: Int,
-    var name: String,
-    var abstractDeadline: Date,
-    var paperDeadline: Date,
-    var biddingDeadline: Date,
-    var reviewDeadline: Date,
-    var reviewerCount: Int = 2
-) : BaseEntity<Int>(id)
+interface Conference : Entity<Conference> {
+    companion object : Entity.Factory<Conference>()
+
+    val id: Int
+    var name: String
+    var abstractDeadline: LocalDate
+    var paperDeadline: LocalDate
+    var biddingDeadline: LocalDate
+    var reviewDeadline: LocalDate
+    var reviewerCount: Int
+}

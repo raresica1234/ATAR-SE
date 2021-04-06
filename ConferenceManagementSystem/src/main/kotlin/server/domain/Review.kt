@@ -1,8 +1,12 @@
 package server.domain
 
-data class Review(
-    val proposalId: Int,
-    val pcMember: Int,
-    var reviewType: ReviewType,
-    var recommandation: String
-) : BaseEntity<Pair<Int, Int>>(Pair(proposalId, pcMember))
+import org.ktorm.entity.Entity
+
+interface Review : Entity<Review> {
+    companion object : Entity.Factory<Review>()
+
+    var proposal: Proposal
+    var pcMember: User
+    var reviewType: ReviewType
+    var recommendation: String
+}
