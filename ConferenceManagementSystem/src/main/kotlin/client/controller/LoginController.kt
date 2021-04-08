@@ -2,11 +2,12 @@ package client.controller
 
 import client.model.LoginState
 import javafx.scene.control.ButtonType
+import server.domain.User
 import server.service.UserService.Companion.getAccountFromEmail
 import tornadofx.Controller
 import utils.ValidationException
 
-class LoginController(var emailText: String = "", var passwordText: String = ""): Controller() {
+class LoginController(var emailText: String = "", var passwordText: String = "", var user: User = User{}): Controller() {
     fun handleLoginClick() : LoginState {
         println("Email: $emailText\nPassword: $passwordText")
 
@@ -29,7 +30,7 @@ class LoginController(var emailText: String = "", var passwordText: String = "")
     }
 
     private fun login() : LoginState {
-        val user = getAccountFromEmail(emailText)
+        user = getAccountFromEmail(emailText)
             ?: throw ValidationException(
                 "User does not exist!",
                 "The email provided is not associated with any user, try creating an account first."

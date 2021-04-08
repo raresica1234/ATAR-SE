@@ -4,6 +4,7 @@ import org.ktorm.dsl.eq
 import org.ktorm.entity.add
 import org.ktorm.entity.any
 import org.ktorm.entity.find
+import org.ktorm.entity.update
 import server.database
 import server.domain.User
 import server.users
@@ -30,6 +31,11 @@ class UserService {
 
         fun getAccountFromEmail(email: String) : User? {
             return database.users.find { it.email eq email }
+        }
+
+        fun setAccountPassword(user: User, password: String) {
+            user.password = password;
+            database.users.update(user);
         }
     }
 }

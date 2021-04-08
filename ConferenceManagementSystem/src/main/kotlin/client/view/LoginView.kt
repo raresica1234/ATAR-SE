@@ -1,5 +1,6 @@
 package client.view
 
+import client.controller.CreatePasswordController
 import client.controller.LoginController
 import client.model.LoginState
 import javafx.geometry.Pos
@@ -10,6 +11,7 @@ import utils.switchTo
 
 class LoginView : View(APPLICATION_TITLE) {
     private val controller: LoginController by inject()
+    private val createPasswordController: CreatePasswordController by inject()
 
     override val root = vbox {
         alignment = Pos.CENTER
@@ -54,6 +56,7 @@ class LoginView : View(APPLICATION_TITLE) {
                     println("Login successful")
                 }
                 else if (loginState == LoginState.LOGIN_GUEST_USER) {
+                    createPasswordController.user = controller.user
                     switchTo(CreatePasswordView::class)
                 }
             }
