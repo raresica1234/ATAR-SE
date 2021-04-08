@@ -3,6 +3,7 @@ package server.service
 import org.ktorm.dsl.eq
 import org.ktorm.entity.add
 import org.ktorm.entity.any
+import org.ktorm.entity.find
 import server.database
 import server.domain.User
 import server.users
@@ -25,6 +26,10 @@ class UserService {
                 )
             }
             database.users.add(user)
+        }
+
+        fun getAccountFromEmail(email: String) : User? {
+            return database.users.find { it.email eq email }
         }
     }
 }

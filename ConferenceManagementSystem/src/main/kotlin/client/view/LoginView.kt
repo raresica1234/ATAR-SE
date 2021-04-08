@@ -1,6 +1,7 @@
 package client.view
 
 import client.controller.LoginController
+import client.model.LoginState
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
@@ -44,7 +45,17 @@ class LoginView : View("Conference Management System") {
             }
         }
         button("Log in") {
-            action { controller.handleLoginClick() }
+            action {
+                val loginState = controller.handleLoginClick()
+                if (loginState == LoginState.LOGIN_USER) {
+                    // TODO: Open the Browse Conference window
+                    println("Login successful")
+                }
+                else if (loginState == LoginState.LOGIN_GUEST_USER) {
+                    // TODO: Open the create password dialog
+                    println("Login as guest user")
+                }
+            }
         }
 
         vbox {
