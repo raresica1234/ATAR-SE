@@ -8,4 +8,12 @@ data class CreatePasswordModel(
     var user: SimpleObjectProperty<User> = SimpleObjectProperty(),
     var password: SimpleStringProperty = SimpleStringProperty(),
     var confirmPasword: SimpleStringProperty = SimpleStringProperty()
-)
+) {
+    fun toUser(): User {
+        val user = user.get()
+
+        user.password = password.get()
+
+        return user
+    }
+}

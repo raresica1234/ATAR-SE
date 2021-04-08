@@ -46,12 +46,10 @@ class LoginView : View(APPLICATION_TITLE) {
         }
         button("Log in") {
             action {
-                if (controller.handleLoginClick()) {
-                    val user = controller.loginModel.user
-                    if (user.password == "") {
-                        switchTo(CreatePasswordView::class, CreatePasswordView.PARAM_USER to user)
-                    }
-                    else {
+                controller.handleLoginClick()?.let {
+                    if (it.password.isEmpty()) {
+                        switchTo(CreatePasswordView::class, CreatePasswordView.PARAM_USER to it)
+                    } else {
                         // TODO: Open the Browse Conference window
                         println("Login successful")
                     }

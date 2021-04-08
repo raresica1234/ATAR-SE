@@ -5,16 +5,15 @@ import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
-import utils.switchTo
 
-class CreatePasswordView() : ViewWithParams(APPLICATION_TITLE) {
+class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
     companion object {
         const val PARAM_USER = "user"
     }
 
     private val controller: CreatePasswordController by inject()
 
-    override fun onParamSet(params: Map<String, Any?>) {
+    override fun onParamSet() {
         controller.model.user.set(getParam(PARAM_USER))
     }
 
@@ -58,7 +57,6 @@ class CreatePasswordView() : ViewWithParams(APPLICATION_TITLE) {
                 passwordfield {
                     promptText = "Confirm Password"
                     textProperty().bindBidirectional(controller.model.confirmPasword)
-
                 }
             }
         }
@@ -68,7 +66,8 @@ class CreatePasswordView() : ViewWithParams(APPLICATION_TITLE) {
             button("Create password") {
                 action {
                     if (controller.handleCreatePassword()) {
-                        switchTo(LoginView::class)
+                        // TODO: Open browse conferences
+                        println("Password modified successfully.")
                     }
                 }
             }

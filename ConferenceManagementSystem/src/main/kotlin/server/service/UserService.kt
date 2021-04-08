@@ -29,7 +29,7 @@ class UserService {
             database.users.add(user)
         }
 
-        fun login(email: String, password: String) : User {
+        fun login(email: String, password: String): User {
             val user = database.users.find { it.email eq email }
                 ?: throw ValidationException(
                     "User does not exist!",
@@ -42,12 +42,14 @@ class UserService {
                     "The given password does not match, please try again."
                 )
             }
+
             return user
         }
 
-        fun setAccountPassword(user: User, password: String) {
-            user.password = password;
+        fun updateUser(user: User): User {
             database.users.update(user);
+
+            return user
         }
     }
 }

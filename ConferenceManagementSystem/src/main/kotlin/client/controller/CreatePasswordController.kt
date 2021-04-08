@@ -1,24 +1,24 @@
 package client.controller
 
 import client.model.CreatePasswordModel
+import client.state.userState
 import javafx.scene.control.ButtonType
-import server.service.UserService.Companion.setAccountPassword
+import server.service.UserService
 import tornadofx.Controller
 import utils.ValidationException
-import utils.getOrEmpty
 import utils.isNullOrBlank
 
-class CreatePasswordController() : Controller() {
+class CreatePasswordController : Controller() {
     val model = CreatePasswordModel()
 
     fun handleCreatePassword(): Boolean {
         return try {
             validateFields()
-            setAccountPassword(model.user.get(), model.password.get())
-            true;
+            userState.user = UserService.updateUser(model.toUser())
+            true
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)
-            false;
+            false
         }
     }
 

@@ -2,7 +2,6 @@ package utils
 
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleStringProperty
-import tornadofx.Component
 import tornadofx.UIComponent
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
