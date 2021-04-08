@@ -2,7 +2,6 @@ package client.view
 
 import client.controller.CreatePasswordController
 import client.controller.LoginController
-import client.model.LoginState
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
@@ -31,9 +30,7 @@ class LoginView : View(APPLICATION_TITLE) {
             label("Email")
             textfield {
                 promptText = "Email"
-                textProperty().addListener { _, _, newValue ->
-                    controller.emailText = newValue
-                }
+                textProperty().bindBidirectional(controller.loginModel.email)
             }
         }
         vbox {
@@ -43,21 +40,22 @@ class LoginView : View(APPLICATION_TITLE) {
             label("Password")
             passwordfield {
                 promptText = "Password"
-                textProperty().addListener { _, _, newValue ->
-                    controller.passwordText = newValue
-                }
+                textProperty().bindBidirectional(controller.loginModel.password)
+
             }
         }
         button("Log in") {
             action {
-                val loginState = controller.handleLoginClick()
-                if (loginState == LoginState.LOGIN_USER) {
-                    // TODO: Open the Browse Conference window
-                    println("Login successful")
-                }
-                else if (loginState == LoginState.LOGIN_GUEST_USER) {
-                    createPasswordController.user = controller.user
-                    switchTo(CreatePasswordView::class)
+                if (controller.handleLoginClick()) {
+                    val user = controller.loginModel.user
+                    if (user.password == "") {
+                        createPasswordController.model.user = user
+                        switchTo(CreatePasswordView::class)
+                    }
+                    else {
+                        // TODO: Open the Browse Conference window
+                        println("Login successful")
+                    }
                 }
             }
         }

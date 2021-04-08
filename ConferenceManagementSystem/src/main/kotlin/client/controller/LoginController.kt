@@ -1,50 +1,31 @@
 package client.controller
 
-import client.model.LoginState
+import client.model.LoginModel
 import javafx.scene.control.ButtonType
-import server.domain.User
-import server.service.UserService.Companion.getAccountFromEmail
+import server.service.UserService
 import tornadofx.Controller
 import utils.ValidationException
 
-class LoginController(var emailText: String = "", var passwordText: String = "", var user: User = User{}): Controller() {
-    fun handleLoginClick() : LoginState {
-        println("Email: $emailText\nPassword: $passwordText")
+class LoginController(): Controller() {
+    val loginModel = LoginModel()
 
+    fun handleLoginClick() : Boolean {
         return try {
             validateFields()
-            login()
+            loginModel.user = UserService.login(loginModel.email.get(), loginModel.password.get())
+            true
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)
-            LoginState.LOGIN_FAILED
+            false
         }
     }
 
     private fun validateFields() {
-        if (emailText.isEmpty()) {
+        if (loginModel.email.get().isEmpty()) {
             throw ValidationException(
                 "No email provided!",
                 "The email is mandatory, fill it and try again."
             )
         }
-    }
-
-    private fun login() : LoginState {
-        user = getAccountFromEmail(emailText)
-            ?: throw ValidationException(
-                "User does not exist!",
-                "The email provided is not associated with any user, try creating an account first."
-            )
-
-        if (user.password == "") {
-            return LoginState.LOGIN_GUEST_USER
-        }
-        else if (user.password != passwordText) {
-            throw ValidationException(
-                "Password incorrect!",
-                "The given password does not match, please try again."
-            )
-        }
-        return LoginState.LOGIN_USER
     }
 }

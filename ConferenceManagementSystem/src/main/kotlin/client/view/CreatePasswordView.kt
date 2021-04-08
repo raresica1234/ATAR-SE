@@ -29,7 +29,7 @@ class CreatePasswordView() : View(APPLICATION_TITLE) {
                     font = Font(14.0)
                 }
 
-                text(controller.user.email) {
+                text(controller.model.user.email) {
                     font = Font(14.0)
                 }
             }
@@ -40,9 +40,7 @@ class CreatePasswordView() : View(APPLICATION_TITLE) {
                 label("Password")
                 passwordfield {
                     promptText = "Password"
-                    textProperty().addListener { _, _, newValue ->
-                        controller.password = newValue
-                    }
+                    textProperty().bindBidirectional(controller.model.password)
                 }
             }
             vbox {
@@ -51,12 +49,10 @@ class CreatePasswordView() : View(APPLICATION_TITLE) {
                 label("Confirm Password")
                 passwordfield {
                     promptText = "Confirm Password"
-                    textProperty().addListener { _, _, newValue ->
-                        controller.confirmPasword = newValue
-                    }
+                    textProperty().bindBidirectional(controller.model.confirmPasword)
+
                 }
             }
-
         }
 
         vbox {

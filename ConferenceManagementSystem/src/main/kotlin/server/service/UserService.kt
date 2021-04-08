@@ -29,8 +29,20 @@ class UserService {
             database.users.add(user)
         }
 
-        fun getAccountFromEmail(email: String) : User? {
-            return database.users.find { it.email eq email }
+        fun login(email: String, password: String) : User {
+            val user = database.users.find { it.email eq email }
+                ?: throw ValidationException(
+                    "User does not exist!",
+                    "The email provided is not associated with any user, try creating an account first."
+                )
+
+            if (user.password != password) {
+                throw ValidationException(
+                    "Password incorrect!",
+                    "The given password does not match, please try again."
+                )
+            }
+            return user
         }
 
         fun setAccountPassword(user: User, password: String) {
