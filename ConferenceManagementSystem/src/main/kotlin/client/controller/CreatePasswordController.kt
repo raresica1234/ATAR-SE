@@ -14,7 +14,7 @@ class CreatePasswordController() : Controller() {
     fun handleCreatePassword(): Boolean {
         return try {
             validateFields()
-            setAccountPassword(model.user, model.password.get())
+            setAccountPassword(model.user.get(), model.password.get())
             true;
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)

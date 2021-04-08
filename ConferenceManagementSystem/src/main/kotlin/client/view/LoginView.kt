@@ -49,8 +49,7 @@ class LoginView : View(APPLICATION_TITLE) {
                 if (controller.handleLoginClick()) {
                     val user = controller.loginModel.user
                     if (user.password == "") {
-                        createPasswordController.model.user = user
-                        switchTo(CreatePasswordView::class)
+                        switchTo(CreatePasswordView::class, CreatePasswordView.PARAM_USER to user)
                     }
                     else {
                         // TODO: Open the Browse Conference window

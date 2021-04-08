@@ -3,13 +3,21 @@ package client.view
 import client.controller.CreatePasswordController
 import javafx.geometry.Pos
 import javafx.scene.text.Font
+import server.domain.User
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
 
-class CreatePasswordView() : View(APPLICATION_TITLE) {
+class CreatePasswordView() : ViewWithParams(APPLICATION_TITLE) {
+    companion object {
+        const val PARAM_USER = "user"
+    }
+
     private val controller: CreatePasswordController by inject()
 
+    override fun onParamSet(params: Map<String, Any?>) {
+        controller.model.user.set(getParam(PARAM_USER))
+    }
 
     override val root = vbox {
         alignment = Pos.CENTER
@@ -29,8 +37,12 @@ class CreatePasswordView() : View(APPLICATION_TITLE) {
                     font = Font(14.0)
                 }
 
-                text(controller.model.user.email) {
+                text {
                     font = Font(14.0)
+//                    textProperty().bindBidirectional(controller.model.user.)
+//                    textProperty().bind(Bindings.createStringBinding({ controller.model.user }))
+//                    controller.model.user.stringBinding(textProperty(), op = { it?.email })
+                    controller.model.user.addListener { textProperty().set(it.email) }
                 }
             }
 
