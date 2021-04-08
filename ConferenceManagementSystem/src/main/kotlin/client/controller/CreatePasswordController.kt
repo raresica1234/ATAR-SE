@@ -5,6 +5,8 @@ import javafx.scene.control.ButtonType
 import server.service.UserService.Companion.setAccountPassword
 import tornadofx.Controller
 import utils.ValidationException
+import utils.getOrEmpty
+import utils.isNullOrBlank
 
 class CreatePasswordController() : Controller() {
     val model = CreatePasswordModel()
@@ -12,7 +14,7 @@ class CreatePasswordController() : Controller() {
     fun handleCreatePassword(): Boolean {
         return try {
             validateFields()
-            setPassword()
+            setAccountPassword(model.user, model.password.get())
             true;
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)
@@ -21,13 +23,13 @@ class CreatePasswordController() : Controller() {
     }
 
     private fun validateFields() {
-        if (model.password.get().isEmpty()) {
+        if (model.password.isNullOrBlank()) {
             throw ValidationException(
                 "Password not set!",
                 "The password must be set before proceeding, try again."
             )
         }
-        if (model.confirmPasword.get().isEmpty()) {
+        if (model.confirmPasword.isNullOrBlank()) {
             throw ValidationException(
                 "Password confirmation not set!",
                 "The password confirmation must be set before proceeding, try again."
@@ -39,9 +41,5 @@ class CreatePasswordController() : Controller() {
                 "The passwords must match, try again."
             )
         }
-    }
-
-    private fun setPassword() {
-        setAccountPassword(model.user, model.password.get())
     }
 }
