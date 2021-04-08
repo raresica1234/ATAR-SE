@@ -1,5 +1,6 @@
 package utils
 
+import client.view.ViewWithParams
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.Component
 import tornadofx.UIComponent
@@ -19,3 +20,8 @@ fun SimpleStringProperty.clear() = this.set(null)
 
 fun <T : UIComponent> UIComponent.switchTo(component: KClass<T>) =
     this.replaceWith(component, sizeToScene = true, centerOnScreen = true)
+
+fun <T : ViewWithParams> UIComponent.switchTo(component: KClass<T>, vararg params: Pair<String, Any?>) {
+    this.find(component).viewParams.putAll(params)
+    this.replaceWith(component, sizeToScene = true, centerOnScreen = true)
+}
