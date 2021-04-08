@@ -5,8 +5,9 @@ import javafx.geometry.Pos
 import javafx.scene.control.ButtonType
 import javafx.scene.text.Font
 import tornadofx.*
+import utils.APPLICATION_TITLE
 
-class CreateAccountView : View("Conference Management System") {
+class CreateAccountView : View(APPLICATION_TITLE) {
     private val controller: CreateAccountController by inject()
 
     override fun onDock() {
@@ -18,6 +19,8 @@ class CreateAccountView : View("Conference Management System") {
         alignment = Pos.CENTER
         minWidth = 960.0
         minHeight = 540.0
+        prefWidth = 960.0
+        prefHeight = 540.0
         paddingAll = 32.0
 
         vbox {

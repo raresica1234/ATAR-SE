@@ -5,8 +5,9 @@ import client.model.LoginState
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
+import utils.APPLICATION_TITLE
 
-class LoginView : View("Conference Management System") {
+class LoginView : View(APPLICATION_TITLE) {
     private val controller: LoginController by inject()
 
     override val root = vbox {
@@ -52,8 +53,7 @@ class LoginView : View("Conference Management System") {
                     println("Login successful")
                 }
                 else if (loginState == LoginState.LOGIN_GUEST_USER) {
-                    // TODO: Open the create password dialog
-                    println("Login as guest user")
+                    replaceWith(CreatePasswordView::class)
                 }
             }
         }
