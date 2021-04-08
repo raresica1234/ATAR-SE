@@ -2,11 +2,7 @@ package client.controller
 
 import client.model.LoginState
 import javafx.scene.control.ButtonType
-import org.ktorm.dsl.eq
-import org.ktorm.entity.find
-import server.database
 import server.service.UserService.Companion.getAccountFromEmail
-import server.users
 import tornadofx.Controller
 import utils.ValidationException
 
@@ -14,12 +10,12 @@ class LoginController(var emailText: String = "", var passwordText: String = "")
     fun handleLoginClick() : LoginState {
         println("Email: $emailText\nPassword: $passwordText")
 
-        try {
+        return try {
             validateFields()
-            return login()
+            login()
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)
-            return LoginState.LOGIN_FAILED
+            LoginState.LOGIN_FAILED
         }
     }
 
@@ -32,7 +28,7 @@ class LoginController(var emailText: String = "", var passwordText: String = "")
         }
     }
 
-    fun login() : LoginState {
+    private fun login() : LoginState {
         val user = getAccountFromEmail(emailText)
             ?: throw ValidationException(
                 "User does not exist!",
