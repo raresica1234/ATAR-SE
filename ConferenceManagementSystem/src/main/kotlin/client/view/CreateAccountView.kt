@@ -6,6 +6,7 @@ import javafx.scene.control.ButtonType
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.switchTo
 
 class CreateAccountView : View(APPLICATION_TITLE) {
     private val controller: CreateAccountController by inject()
@@ -17,17 +18,14 @@ class CreateAccountView : View(APPLICATION_TITLE) {
 
     override val root = vbox {
         alignment = Pos.CENTER
-        minWidth = 960.0
-        minHeight = 540.0
-        prefWidth = 960.0
-        prefHeight = 540.0
+        minWidth = 512.0
+        minHeight = 448.0
         paddingAll = 32.0
 
         vbox {
             maxWidth = 352.0
             text("Create account") {
                 font = Font(24.0)
-                paddingTop = 32.0
             }
 
             vbox {
@@ -122,7 +120,7 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                 spacing = 16.0
 
                 button("Back") {
-                    action { replaceWith(LoginView::class) }
+                    action { switchTo(LoginView::class) }
                 }
                 button("Create account") {
                     action {
@@ -132,7 +130,7 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                                 "Account created successfully, please log in into your new account",
                                 ButtonType.OK
                             ) {
-                                replaceWith(LoginView::class)
+                                switchTo(LoginView::class)
                             }
                         }
                     }

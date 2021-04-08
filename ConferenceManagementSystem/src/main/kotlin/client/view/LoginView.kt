@@ -6,14 +6,15 @@ import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.switchTo
 
 class LoginView : View(APPLICATION_TITLE) {
     private val controller: LoginController by inject()
 
     override val root = vbox {
         alignment = Pos.CENTER
-        minWidth = 960.0
-        minHeight = 540.0
+        minWidth = 320.0
+        minHeight = 448.0
         paddingAll = 32.0
 
         text("Log in") {
@@ -53,7 +54,7 @@ class LoginView : View(APPLICATION_TITLE) {
                     println("Login successful")
                 }
                 else if (loginState == LoginState.LOGIN_GUEST_USER) {
-                    replaceWith(CreatePasswordView::class)
+                    switchTo(CreatePasswordView::class)
                 }
             }
         }
@@ -66,7 +67,7 @@ class LoginView : View(APPLICATION_TITLE) {
 
             text("You don't have an account?")
             button("Create account") {
-                action { replaceWith(CreateAccountView::class) }
+                action { switchTo(CreateAccountView::class) }
             }
         }
     }
