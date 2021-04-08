@@ -3,7 +3,6 @@ package client.view
 import client.controller.CreatePasswordController
 import javafx.geometry.Pos
 import javafx.scene.text.Font
-import server.domain.User
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
@@ -33,16 +32,13 @@ class CreatePasswordView() : ViewWithParams(APPLICATION_TITLE) {
             maxWidth = 192.0
             vbox {
                 paddingTop = 32.0
-                text("Your email:") {
+                label("Your email:") {
                     font = Font(14.0)
                 }
 
                 text {
                     font = Font(14.0)
-//                    textProperty().bindBidirectional(controller.model.user.)
-//                    textProperty().bind(Bindings.createStringBinding({ controller.model.user }))
-//                    controller.model.user.stringBinding(textProperty(), op = { it?.email })
-                    controller.model.user.addListener { textProperty().set(it.email) }
+                    controller.model.user.addListener { _, _, newValue -> text = newValue.email }
                 }
             }
 
