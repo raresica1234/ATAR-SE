@@ -1,17 +1,21 @@
 package client.view
 
+import client.controller.CreatePasswordController
 import client.controller.LoginController
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
+import utils.APPLICATION_TITLE
+import utils.switchTo
 
-class LoginView : View("Conference Management System") {
+class LoginView : View(APPLICATION_TITLE) {
     private val controller: LoginController by inject()
+    private val createPasswordController: CreatePasswordController by inject()
 
     override val root = vbox {
         alignment = Pos.CENTER
-        minWidth = 960.0
-        minHeight = 540.0
+        minWidth = 320.0
+        minHeight = 448.0
         paddingAll = 32.0
 
         text("Log in") {
@@ -26,9 +30,7 @@ class LoginView : View("Conference Management System") {
             label("Email")
             textfield {
                 promptText = "Email"
-                textProperty().addListener { _, _, newValue ->
-                    controller.emailText = newValue
-                }
+                textProperty().bindBidirectional(controller.loginModel.email)
             }
         }
         vbox {
@@ -38,13 +40,21 @@ class LoginView : View("Conference Management System") {
             label("Password")
             passwordfield {
                 promptText = "Password"
-                textProperty().addListener { _, _, newValue ->
-                    controller.passwordText = newValue
-                }
+                textProperty().bindBidirectional(controller.loginModel.password)
+
             }
         }
         button("Log in") {
-            action { controller.handleLoginClick() }
+            action {
+                controller.handleLoginClick()?.let {
+                    if (it.password.isEmpty()) {
+                        switchTo(CreatePasswordView::class, CreatePasswordView.PARAM_USER to it)
+                    } else {
+                        // TODO: Open the Browse Conference window
+                        println("Login successful")
+                    }
+                }
+            }
         }
 
         vbox {
@@ -55,7 +65,7 @@ class LoginView : View("Conference Management System") {
 
             text("You don't have an account?")
             button("Create account") {
-                action { replaceWith(CreateAccountView::class) }
+                action { switchTo(CreateAccountView::class) }
             }
         }
     }

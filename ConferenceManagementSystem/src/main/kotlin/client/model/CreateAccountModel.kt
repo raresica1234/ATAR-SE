@@ -3,6 +3,7 @@ package client.model
 import javafx.beans.property.SimpleStringProperty
 import server.domain.User
 import utils.clear
+import utils.getOrEmpty
 
 data class CreateAccountModel(
     val email: SimpleStringProperty = SimpleStringProperty(),
@@ -19,7 +20,7 @@ data class CreateAccountModel(
         firstName = this@CreateAccountModel.firstName.get()
         lastName = this@CreateAccountModel.lastName.get()
         affiliation = this@CreateAccountModel.affiliation.get()
-        webpageLink = this@CreateAccountModel.webpageLink.get().orEmpty()
+        webpageLink = this@CreateAccountModel.webpageLink.getOrEmpty()
         isSiteAdministrator = false
     }
 

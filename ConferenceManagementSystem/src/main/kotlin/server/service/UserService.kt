@@ -3,6 +3,8 @@ package server.service
 import org.ktorm.dsl.eq
 import org.ktorm.entity.add
 import org.ktorm.entity.any
+import org.ktorm.entity.find
+import org.ktorm.entity.update
 import server.database
 import server.domain.User
 import server.users
@@ -25,6 +27,29 @@ class UserService {
                 )
             }
             database.users.add(user)
+        }
+
+        fun login(email: String, password: String): User {
+            val user = database.users.find { it.email eq email }
+                ?: throw ValidationException(
+                    "User does not exist!",
+                    "The email provided is not associated with any user, try creating an account first."
+                )
+
+            if (user.password != password) {
+                throw ValidationException(
+                    "Password incorrect!",
+                    "The given password does not match, please try again."
+                )
+            }
+
+            return user
+        }
+
+        fun updateUser(user: User): User {
+            database.users.update(user);
+
+            return user
         }
     }
 }
