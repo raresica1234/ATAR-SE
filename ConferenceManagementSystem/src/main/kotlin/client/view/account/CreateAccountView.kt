@@ -1,6 +1,6 @@
-package client.view
+package client.view.account
 
-import client.controller.CreateAccountController
+import client.controller.account.CreateAccountController
 import javafx.geometry.Pos
 import javafx.scene.control.ButtonType
 import javafx.scene.text.Font
@@ -33,9 +33,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                 paddingTop = 32.0
 
                 label("Email")
-                textfield {
+                textfield(controller.createAccountModel.email) {
                     promptText = "Email"
-                    textProperty().bindBidirectional(controller.createAccountModel.email)
                 }
             }
 
@@ -47,9 +46,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Password")
-                    passwordfield {
+                    passwordfield(controller.createAccountModel.password) {
                         promptText = "Password"
-                        textProperty().bindBidirectional(controller.createAccountModel.password)
                     }
                 }
 
@@ -57,9 +55,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Confirm Password")
-                    passwordfield {
+                    passwordfield(controller.createAccountModel.confirmPassword) {
                         promptText = "Confirm Password"
-                        textProperty().bindBidirectional(controller.createAccountModel.confirmPassword)
                     }
                 }
             }
@@ -72,9 +69,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("First Name")
-                    textfield {
+                    textfield(controller.createAccountModel.firstName) {
                         promptText = "First Name"
-                        textProperty().bindBidirectional(controller.createAccountModel.firstName)
                     }
                 }
 
@@ -82,9 +78,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Last Name")
-                    textfield {
+                    textfield(controller.createAccountModel.lastName) {
                         promptText = "Last Name"
-                        textProperty().bindBidirectional(controller.createAccountModel.lastName)
                     }
                 }
             }
@@ -97,9 +92,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Affiliation")
-                    textfield {
+                    textfield(controller.createAccountModel.affiliation) {
                         promptText = "Affiliation"
-                        textProperty().bindBidirectional(controller.createAccountModel.affiliation)
                     }
                 }
 
@@ -107,9 +101,8 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Webpage Link (Optional)")
-                    textfield {
+                    textfield(controller.createAccountModel.webpageLink) {
                         promptText = "Webpage Link"
-                        textProperty().bindBidirectional(controller.createAccountModel.webpageLink)
                     }
                 }
             }

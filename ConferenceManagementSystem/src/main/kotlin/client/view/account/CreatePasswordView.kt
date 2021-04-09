@@ -1,10 +1,13 @@
-package client.view
+package client.view.account
 
-import client.controller.CreatePasswordController
+import client.controller.account.CreatePasswordController
+import client.view.ViewWithParams
+import client.view.conference.ConferenceListView
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.switchTo
 
 class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
     companion object {
@@ -37,7 +40,7 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
 
                 text {
                     font = Font(14.0)
-                    controller.model.user.addListener { _, _, newValue -> text = newValue.email }
+                    controller.model.user.onChange { text = it?.email }
                 }
             }
 
@@ -45,18 +48,16 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
                 paddingTop = 32.0
 
                 label("Password")
-                passwordfield {
+                passwordfield(controller.model.password) {
                     promptText = "Password"
-                    textProperty().bindBidirectional(controller.model.password)
                 }
             }
             vbox {
                 paddingVertical = 32.0
 
                 label("Confirm Password")
-                passwordfield {
+                passwordfield(controller.model.confirmPassword) {
                     promptText = "Confirm Password"
-                    textProperty().bindBidirectional(controller.model.confirmPasword)
                 }
             }
         }
@@ -66,8 +67,7 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
             button("Create password") {
                 action {
                     if (controller.handleCreatePassword()) {
-                        // TODO: Open browse conferences
-                        println("Password modified successfully.")
+                        switchTo(ConferenceListView::class)
                     }
                 }
             }
