@@ -13,4 +13,7 @@ interface User : Entity<User> {
     var affiliation: String
     var webpageLink: String
     var isSiteAdministrator: Boolean
+
+    val fullName: String
+        get() = "$firstName $lastName"
 }

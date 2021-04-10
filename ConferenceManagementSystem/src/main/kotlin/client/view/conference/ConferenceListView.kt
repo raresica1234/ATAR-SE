@@ -12,29 +12,30 @@ import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.switchTo
 
 class ConferenceListView : View(APPLICATION_TITLE) {
     private val SELECT_A_CONFERENCE = "Select a conference to view its data..."
 
     private val controller by inject<ConferenceListController>()
 
-    private val activeListView = buildListView(controller.conferenceListModel.activeConferences)
-    private val participatingListView = buildListView(controller.conferenceListModel.participatingConferences)
+    private val activeListView = buildListView(controller.model.activeConferences)
+    private val participatingListView = buildListView(controller.model.participatingConferences)
 
     private val submitProposalButton = button("Submit proposal") {
-        action { println("Submit proposal for ${controller.conferenceListModel.selectedConference.get()}") }
+        action { println("Submit proposal for ${controller.model.selectedConference.get()}") }
     }
 
     private val participateButton = button("Participate") {
-        action { println("Participate to ${controller.conferenceListModel.selectedConference.get()}") }
+        action { println("Participate to ${controller.model.selectedConference.get()}") }
     }
 
     private val manageButton = button("Manage") {
-        action { println("Manage ${controller.conferenceListModel.selectedConference.get()}") }
+        action { println("Manage ${controller.model.selectedConference.get()}") }
     }
 
     private val viewButton = button("View") {
-        action { println("View ${controller.conferenceListModel.selectedConference.get()}") }
+        action { println("View ${controller.model.selectedConference.get()}") }
     }
 
     override fun onUndock() {
@@ -66,8 +67,8 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                         action { println("Go to manage rooms!") }
                     }
 
-                    button("Add conference") {
-                        action { println("Go to add conference!") }
+                    button("Create Conference") {
+                        action { switchTo(CreateConferenceView::class) }
                     }
                 }
             }
@@ -78,14 +79,14 @@ class ConferenceListView : View(APPLICATION_TITLE) {
             maxWidth = 768.0
 
             vbox {
-                textfield(controller.conferenceListModel.search) {
+                textfield(controller.model.search) {
                     promptText = "Search"
                 }
 
                 tabpane {
                     tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
                     selectionModel.selectedIndexProperty().onChange {
-                        controller.conferenceListModel.selectedConference.set(null)
+                        controller.model.selectedConference.set(null)
                         activeListView.selectionModel.clearSelection()
                         participatingListView.selectionModel.clearSelection()
                     }
@@ -111,7 +112,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 text(SELECT_A_CONFERENCE) {
                     font = Font(18.0)
 
-                    controller.conferenceListModel.selectedConference.onChange {
+                    controller.model.selectedConference.onChange {
                         text = it?.conference?.name ?: SELECT_A_CONFERENCE
                     }
                 }
@@ -137,7 +138,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
 
         selectionModel.selectionMode = SelectionMode.SINGLE
         selectionModel.selectedItemProperty().addListener { _, _, value ->
-            controller.conferenceListModel.selectedConference.set(value)
+            controller.model.selectedConference.set(value)
         }
     }
 
@@ -148,7 +149,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         text("-") {
             style { fontWeight = FontWeight.BOLD }
 
-            controller.conferenceListModel.selectedConference.onChange {
+            controller.model.selectedConference.onChange {
                 text = if (it == null) "-" else extractor(it)
             }
         }
@@ -160,15 +161,15 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         paddingTop = 56.0
         alignment = Pos.BOTTOM_RIGHT
 
-        controller.conferenceListModel.selectedConference.addListener { _, oldValue, newValue ->
+        controller.model.selectedConference.addListener { _, oldValue, newValue ->
             if (newValue == null || userState.user.isSiteAdministrator) {
                 children.clear()
                 return@addListener
             }
 
-            val isActive = controller.conferenceListModel.activeConferences.contains(newValue)
+            val isActive = controller.model.activeConferences.contains(newValue)
 
-            if (controller.conferenceListModel.activeConferences.contains(oldValue) && isActive) {
+            if (controller.model.activeConferences.contains(oldValue) && isActive) {
                 return@addListener
             }
 

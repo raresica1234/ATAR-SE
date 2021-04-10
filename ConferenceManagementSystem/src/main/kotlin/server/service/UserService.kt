@@ -1,10 +1,8 @@
 package server.service
 
 import org.ktorm.dsl.eq
-import org.ktorm.entity.add
-import org.ktorm.entity.any
-import org.ktorm.entity.find
-import org.ktorm.entity.update
+import org.ktorm.dsl.notEq
+import org.ktorm.entity.*
 import server.database
 import server.domain.User
 import server.users
@@ -51,5 +49,9 @@ class UserService {
 
             return user
         }
+
+        fun getAll(userId: Int) = database.users
+            .filter { it.id.notEq(userId) }
+            .toList()
     }
 }

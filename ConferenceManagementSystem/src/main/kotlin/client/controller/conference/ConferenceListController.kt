@@ -13,10 +13,10 @@ import utils.hasPassed
 import utils.joinOrDefault
 
 class ConferenceListController : Controller() {
-    val conferenceListModel = ConferenceListModel()
+    val model = ConferenceListModel()
 
     init {
-        with(conferenceListModel) {
+        with(model) {
             search.onChange {
                 val searchValue = it?.trim().orEmpty()
 
@@ -31,7 +31,7 @@ class ConferenceListController : Controller() {
     fun refreshData() {
         val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
 
-        with(conferenceListModel) {
+        with(model) {
             clear()
             roles.setAll(RoleService.getAllByUserId(userState.user.id))
 
