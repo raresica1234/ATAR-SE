@@ -14,7 +14,7 @@ class CreatePasswordController : Controller() {
     fun handleCreatePassword(): Boolean {
         return try {
             validateFields()
-            userState.user = UserService.updateUser(model.toUser())
+            userState.user = UserService.update(model.toUser())
             true
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)

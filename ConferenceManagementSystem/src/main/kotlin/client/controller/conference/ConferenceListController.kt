@@ -2,83 +2,73 @@ package client.controller.conference
 
 import client.model.conference.ConferenceListItemModel
 import client.model.conference.ConferenceListModel
-import server.domain.Conference
+import client.state.userState
+import server.domain.Role
+import server.domain.RoleType
+import server.service.ConferenceService
+import server.service.RoleService
 import tornadofx.Controller
 import tornadofx.onChange
-import java.time.LocalDate
+import utils.hasPassed
+import utils.joinOrDefault
 
 class ConferenceListController : Controller() {
     val conferenceListModel = ConferenceListModel()
 
     init {
-        conferenceListModel.search.onChange {
-            val activeConferences = conferenceListModel.getInitialActiveConferences()
-            val participatingConferences = conferenceListModel.getInitialParticipatingConferences()
+        with(conferenceListModel) {
+            search.onChange {
+                val searchValue = it?.trim().orEmpty()
 
-            val searchValue = it?.trim().orEmpty()
-
-            conferenceListModel.activeConferences.setAll(applySearch(activeConferences, searchValue))
-            conferenceListModel.participatingConferences.setAll(applySearch(participatingConferences, searchValue))
+                activeConferences.setAll(applySearch(initialActiveConferences, searchValue))
+                participatingConferences.setAll(applySearch(initialParticipatingConferences, searchValue))
+            }
         }
     }
 
-    fun handleOnUndock() {
-        conferenceListModel.allConferences.addAll(
-            ConferenceListItemModel(Conference {
-                name = "Conference 1"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None"),
-            ConferenceListItemModel(Conference {
-                name = "Conference 2"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None"),
-            ConferenceListItemModel(Conference {
-                name = "Conference 3"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None"),
-            ConferenceListItemModel(Conference {
-                name = "Conference 4"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None"),
-            ConferenceListItemModel(Conference {
-                name = "Conference 5"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None"),
-            ConferenceListItemModel(Conference {
-                name = "Conference 6"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None"),
-            ConferenceListItemModel(Conference {
-                name = "Conference 7"
-                abstractDeadline = LocalDate.of(2021, 4, 1)
-                paperDeadline = LocalDate.of(2021, 4, 10)
-                biddingDeadline = LocalDate.of(2021, 4, 20)
-                reviewDeadline = LocalDate.of(2021, 4, 30)
-            }, "Biology, Computer Science", "None")
-        )
+    fun handleOnBeforeShow() {
+        val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
 
-        conferenceListModel.activeConferences.addAll(conferenceListModel.allConferences.take(5))
-        conferenceListModel.participatingConferences.addAll(conferenceListModel.allConferences.takeLast(2))
+        with(conferenceListModel) {
+            clear()
+            roles.setAll(RoleService.getUserRoles(userState.user.id))
+
+            allConferences.forEach { conferenceWithData ->
+                val conference = conferenceWithData.conference
+                val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
+                val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
+
+                val rolesForConference = roles.find { it.conference.id == conference.id }
+
+                if (rolesForConference == null) {
+                    initialActiveConferences.add(
+                        ConferenceListItemModel(
+                            conference,
+                            sectionsString,
+                            proposalsString,
+                            conference.paperDeadline.hasPassed()
+                        )
+                    )
+                } else {
+                    initialParticipatingConferences.add(
+                        ConferenceListItemModel(
+                            conference,
+                            sectionsString,
+                            proposalsString,
+                            !hasPermissionToManage(rolesForConference)
+                        )
+                    )
+                }
+            }
+
+            activeConferences.setAll(initialActiveConferences)
+            participatingConferences.setAll(initialParticipatingConferences)
+        }
     }
 
     private fun applySearch(conferences: List<ConferenceListItemModel>, searchValue: String) =
         conferences.filter { it.conference.name.contains(searchValue, true) }
+
+    private fun hasPermissionToManage(role: Role) =
+        userState.user.isSiteAdministrator || role.roleType == RoleType.CHAIR
 }

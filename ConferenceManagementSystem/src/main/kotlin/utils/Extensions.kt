@@ -3,6 +3,7 @@ package utils
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.UIComponent
+import java.time.LocalDate
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
@@ -24,3 +25,8 @@ fun <T : ViewWithParams> UIComponent.switchTo(component: KClass<T>, vararg param
     this.find(component).setParams(*params)
     this.replaceWith(component, sizeToScene = true, centerOnScreen = true)
 }
+
+fun <T> Iterable<T>.joinOrDefault(delimiter: String, default: String) =
+    this.joinToString(delimiter).ifEmpty { default }
+
+fun LocalDate.hasPassed() = this.isAfter(LocalDate.now())

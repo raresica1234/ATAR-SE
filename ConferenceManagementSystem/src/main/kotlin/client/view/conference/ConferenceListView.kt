@@ -6,10 +6,10 @@ import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
+import javafx.scene.layout.HBox
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.*
-import tornadofx.Stylesheet.Companion.button
 import utils.APPLICATION_TITLE
 
 class ConferenceListView : View(APPLICATION_TITLE) {
@@ -20,25 +20,25 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     private val activeListView = buildListView(controller.conferenceListModel.activeConferences)
     private val participatingListView = buildListView(controller.conferenceListModel.participatingConferences)
 
-    private val submitProposalButton = buildConferenceButton("Submit proposal") {
-        println("Submit proposal for ${controller.conferenceListModel.selectedConference.get()}")
+    private val submitProposalButton = button("Submit proposal") {
+        action { println("Submit proposal for ${controller.conferenceListModel.selectedConference.get()}") }
     }
 
-    private val participateButton = buildConferenceButton("Participate") {
-        println("Participate to ${controller.conferenceListModel.selectedConference.get()}")
+    private val participateButton = button("Participate") {
+        action { println("Participate to ${controller.conferenceListModel.selectedConference.get()}") }
     }
 
-    private val manageButton = buildConferenceButton("Manage") {
-        println("Manage ${controller.conferenceListModel.selectedConference.get()}")
+    private val manageButton = button("Manage") {
+        action { println("Manage ${controller.conferenceListModel.selectedConference.get()}") }
     }
 
-    private val viewButton = buildConferenceButton("View") {
-        println("View ${controller.conferenceListModel.selectedConference.get()}")
+    private val viewButton = button("View") {
+        action { println("View ${controller.conferenceListModel.selectedConference.get()}") }
     }
 
     override fun onBeforeShow() {
         super.onBeforeShow()
-        controller.handleOnUndock()
+        controller.handleOnBeforeShow()
     }
 
     override val root = vbox {
@@ -172,19 +172,25 @@ class ConferenceListView : View(APPLICATION_TITLE) {
             children.clear()
 
             if (isActive) {
-                this += submitProposalButton
-                this += participateButton
+                buildActiveConferenceAction(this, newValue)
                 return@addListener
             }
 
-            if (newValue.conference.name == "Conference 7") {
-                this += manageButton
-            }
-            this += viewButton
+            buildPendingConferenceAction(this, newValue)
         }
     }
 
-    private fun buildConferenceButton(text: String, onClick: () -> Unit) = button(text) {
-        action { onClick() }
+    private fun buildActiveConferenceAction(hbox: HBox, itemModel: ConferenceListItemModel) {
+        if (!itemModel.hideExtraButton) {
+            hbox += submitProposalButton
+        }
+        hbox += participateButton
+    }
+
+    private fun buildPendingConferenceAction(hbox: HBox, itemModel: ConferenceListItemModel) {
+        if (!itemModel.hideExtraButton) {
+            hbox += manageButton
+        }
+        hbox += viewButton
     }
 }
