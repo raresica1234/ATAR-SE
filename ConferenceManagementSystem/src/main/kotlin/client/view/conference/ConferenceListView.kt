@@ -57,16 +57,18 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 font = Font(24.0)
             }
 
-            hbox {
-                alignment = Pos.CENTER_RIGHT
-                spacing = 16.0
+            if (userState.user.isSiteAdministrator) {
+                hbox {
+                    alignment = Pos.CENTER_RIGHT
+                    spacing = 16.0
 
-                button("Manage Rooms") {
-                    action { println("Go to manage rooms!") }
-                }
+                    button("Manage Rooms") {
+                        action { println("Go to manage rooms!") }
+                    }
 
-                button("Add conference") {
-                    action { println("Go to add conference!") }
+                    button("Add conference") {
+                        action { println("Go to add conference!") }
+                    }
                 }
             }
         }
