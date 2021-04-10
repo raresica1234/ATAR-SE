@@ -12,6 +12,6 @@ object Proposals : Table<Proposal>("proposals") {
     var name = varchar("name").bindTo { it.name }
     var keywords = varchar("keywords").bindTo { it.keywords }
     var topics = varchar("topics").bindTo { it.topics }
-    // TODO: Tell Rares about this
     var conferenceId = int("conferenceid").references(Conferences) { it.conference }
+    var sectionId = int("sectionid").references(Sections) { it.section }
 }

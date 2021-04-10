@@ -9,13 +9,32 @@ import javafx.scene.control.TabPane
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.*
+import tornadofx.Stylesheet.Companion.button
 import utils.APPLICATION_TITLE
 
 class ConferenceListView : View(APPLICATION_TITLE) {
+    private val SELECT_A_CONFERENCE = "Select a conference to view its data..."
+
     private val controller by inject<ConferenceListController>()
 
     private val activeListView = buildListView(controller.conferenceListModel.activeConferences)
     private val participatingListView = buildListView(controller.conferenceListModel.participatingConferences)
+
+    private val submitProposalButton = buildConferenceButton("Submit proposal") {
+        println("Submit proposal for ${controller.conferenceListModel.selectedConference.get()}")
+    }
+
+    private val participateButton = buildConferenceButton("Participate") {
+        println("Participate to ${controller.conferenceListModel.selectedConference.get()}")
+    }
+
+    private val manageButton = buildConferenceButton("Manage") {
+        println("Manage ${controller.conferenceListModel.selectedConference.get()}")
+    }
+
+    private val viewButton = buildConferenceButton("View") {
+        println("View ${controller.conferenceListModel.selectedConference.get()}")
+    }
 
     override fun onBeforeShow() {
         super.onBeforeShow()
@@ -86,11 +105,11 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                     spacing = 16.px
                 }
 
-                text("-") {
+                text(SELECT_A_CONFERENCE) {
                     font = Font(18.0)
 
                     controller.conferenceListModel.selectedConference.onChange {
-                        text = it?.conference?.name ?: "-"
+                        text = it?.conference?.name ?: SELECT_A_CONFERENCE
                     }
                 }
                 vbox {
@@ -138,20 +157,34 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         paddingTop = 56.0
         alignment = Pos.BOTTOM_RIGHT
 
-        button("Submit proposal") {
-            disableProperty().set(true)
-            controller.conferenceListModel.selectedConference.onChange {
-                disableProperty().set(it == null)
+        controller.conferenceListModel.selectedConference.addListener { _, oldValue, newValue ->
+            if (newValue == null) {
+                children.clear()
+                return@addListener
             }
-            action { println(controller.conferenceListModel.selectedConference.get()) }
-        }
 
-        button("Participate") {
-            disableProperty().set(true)
-            controller.conferenceListModel.selectedConference.onChange {
-                disableProperty().set(it == null)
+            val isActive = controller.conferenceListModel.activeConferences.contains(newValue)
+
+            if (controller.conferenceListModel.activeConferences.contains(oldValue) && isActive) {
+                return@addListener
             }
-            action { println("Go to participate!") }
+
+            children.clear()
+
+            if (isActive) {
+                this += submitProposalButton
+                this += participateButton
+                return@addListener
+            }
+
+            if (newValue.conference.name == "Conference 7") {
+                this += manageButton
+            }
+            this += viewButton
         }
+    }
+
+    private fun buildConferenceButton(text: String, onClick: () -> Unit) = button(text) {
+        action { onClick() }
     }
 }
