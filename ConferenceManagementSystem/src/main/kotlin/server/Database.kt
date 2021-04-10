@@ -18,6 +18,7 @@ val database = Database.connect(
 val Database.bids get() = this.sequenceOf(Bids)
 val Database.conferences get() = this.sequenceOf(Conferences)
 val Database.participants get() = this.sequenceOf(Participants)
+val Database.proposalAuthors get() = this.sequenceOf(ProposalAuthors)
 val Database.proposals get() = this.sequenceOf(Proposals)
 val Database.reviews get() = this.sequenceOf(Reviews)
 val Database.roles get() = this.sequenceOf(Roles)

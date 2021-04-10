@@ -46,7 +46,7 @@ class UserService {
             return user
         }
 
-        fun updateUser(user: User): User {
+        fun update(user: User): User {
             database.users.update(user);
 
             return user

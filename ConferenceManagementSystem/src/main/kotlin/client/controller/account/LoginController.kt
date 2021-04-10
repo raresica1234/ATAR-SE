@@ -1,6 +1,6 @@
-package client.controller
+package client.controller.account
 
-import client.model.LoginModel
+import client.model.account.LoginModel
 import client.state.userState
 import javafx.scene.control.ButtonType
 import server.domain.User
@@ -10,10 +10,10 @@ import utils.ValidationException
 import utils.getOrEmpty
 import utils.isNullOrBlank
 
-class LoginController: Controller() {
+class LoginController : Controller() {
     val loginModel = LoginModel()
 
-    fun handleLoginClick() : User? {
+    fun handleLoginClick(): User? {
         return try {
             validateFields()
             userState.user = UserService.login(loginModel.email.get(), loginModel.password.getOrEmpty())

@@ -5,8 +5,8 @@ import org.ktorm.entity.Entity
 interface Review : Entity<Review> {
     companion object : Entity.Factory<Review>()
 
-    var proposal: Proposal
-    var pcMember: User
+    var proposalId: Int
+    var pcMemberId: Int
     var reviewType: ReviewType
     var recommendation: String
 }

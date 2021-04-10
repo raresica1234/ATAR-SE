@@ -5,7 +5,7 @@ import org.ktorm.entity.Entity
 interface Role : Entity<Role> {
     companion object : Entity.Factory<Role>()
 
-    var user: User
-    var conference: Conference
+    var userId: Int
+    var conferenceId: Int
     var roleType: RoleType
 }

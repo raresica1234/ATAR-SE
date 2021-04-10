@@ -1,6 +1,6 @@
-package client.controller
+package client.controller.account
 
-import client.model.CreateAccountModel
+import client.model.account.CreateAccountModel
 import javafx.scene.control.ButtonType
 import server.service.UserService
 import tornadofx.Controller

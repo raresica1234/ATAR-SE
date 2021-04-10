@@ -1,7 +1,7 @@
-package client.view
+package client.view.account
 
-import client.controller.CreatePasswordController
-import client.controller.LoginController
+import client.controller.account.LoginController
+import client.view.conference.ConferenceListView
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
@@ -10,7 +10,6 @@ import utils.switchTo
 
 class LoginView : View(APPLICATION_TITLE) {
     private val controller: LoginController by inject()
-    private val createPasswordController: CreatePasswordController by inject()
 
     override val root = vbox {
         alignment = Pos.CENTER
@@ -28,9 +27,8 @@ class LoginView : View(APPLICATION_TITLE) {
             paddingTop = 32.0
 
             label("Email")
-            textfield {
+            textfield(controller.loginModel.email) {
                 promptText = "Email"
-                textProperty().bindBidirectional(controller.loginModel.email)
             }
         }
         vbox {
@@ -38,10 +36,8 @@ class LoginView : View(APPLICATION_TITLE) {
             paddingVertical = 32.0
 
             label("Password")
-            passwordfield {
+            passwordfield(controller.loginModel.password) {
                 promptText = "Password"
-                textProperty().bindBidirectional(controller.loginModel.password)
-
             }
         }
         button("Log in") {
@@ -50,8 +46,7 @@ class LoginView : View(APPLICATION_TITLE) {
                     if (it.password.isEmpty()) {
                         switchTo(CreatePasswordView::class, CreatePasswordView.PARAM_USER to it)
                     } else {
-                        // TODO: Open the Browse Conference window
-                        println("Login successful")
+                        switchTo(ConferenceListView::class)
                     }
                 }
             }
