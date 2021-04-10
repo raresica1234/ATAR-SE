@@ -11,6 +11,6 @@ interface Proposal : Entity<Proposal> {
     var name: String
     var keywords: String
     var topics: String
-    var conference: Conference
-    var section: Section
+    var conferenceId: Int
+    var sectionId: Int
 }

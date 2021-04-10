@@ -8,6 +8,6 @@ import server.domain.BidType
 
 object Bids : Table<Bid>("bids") {
     val id = int("id").primaryKey().bindTo { it.id }
-    val pcMemberId = int("pcmemberid").references(Users) { it.pcMember }
+    val pcMemberId = int("pcmemberid").bindTo { it.pcMemberId }
     var bidType = enum<BidType>("bidtype").bindTo { it.bidType }
 }

@@ -19,11 +19,11 @@ class ConferenceService {
         fun getAllActiveWithSectionsAndProposals() = database.conferences.map {
             ConferenceWithSectionsAndProposals(
                 it,
-                SectionService.getSectionsByConferenceId(it.id),
-                ProposalService.getProposalsByConferenceId(it.id)
+                SectionService.getAllByConferenceId(it.id),
+                ProposalService.getAllByConferenceId(it.id)
             )
         }.filter { conference ->
-            conference.sections.any { !it.endDate.hasPassed() }
+            conference.sections.isEmpty() || conference.sections.any { !it.endDate.hasPassed() }
         }
     }
 }

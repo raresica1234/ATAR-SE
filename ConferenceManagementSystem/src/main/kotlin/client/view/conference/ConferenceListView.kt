@@ -2,6 +2,7 @@ package client.view.conference
 
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
+import client.state.userState
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
@@ -36,9 +37,9 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         action { println("View ${controller.conferenceListModel.selectedConference.get()}") }
     }
 
-    override fun onBeforeShow() {
-        super.onBeforeShow()
-        controller.handleOnBeforeShow()
+    override fun onUndock() {
+        super.onUndock()
+        controller.refreshData()
     }
 
     override val root = vbox {
@@ -158,7 +159,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         alignment = Pos.BOTTOM_RIGHT
 
         controller.conferenceListModel.selectedConference.addListener { _, oldValue, newValue ->
-            if (newValue == null) {
+            if (newValue == null || userState.user.isSiteAdministrator) {
                 children.clear()
                 return@addListener
             }

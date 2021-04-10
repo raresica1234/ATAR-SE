@@ -29,4 +29,4 @@ fun <T : ViewWithParams> UIComponent.switchTo(component: KClass<T>, vararg param
 fun <T> Iterable<T>.joinOrDefault(delimiter: String, default: String) =
     this.joinToString(delimiter).ifEmpty { default }
 
-fun LocalDate.hasPassed() = this.isAfter(LocalDate.now())
+fun LocalDate.hasPassed() = this.isBefore(LocalDate.now())

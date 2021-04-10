@@ -8,7 +8,7 @@ import server.proposals
 
 class ProposalService {
     companion object {
-        fun getProposalsByConferenceId(conferenceId: Int) = database.proposals
+        fun getAllByConferenceId(conferenceId: Int) = database.proposals
             .filter { it.conferenceId.eq(conferenceId) }
             .toList()
     }

@@ -7,7 +7,7 @@ import server.domain.Role
 import server.domain.RoleType
 
 object Roles : Table<Role>("roles") {
-    val userId = int("userid").primaryKey().references(Users) { it.user }
-    val conferenceId = int("conferenceid").primaryKey().references(Conferences) { it.conference }
+    val userId = int("userid").primaryKey().bindTo { it.userId }
+    val conferenceId = int("conferenceid").primaryKey().bindTo { it.conferenceId }
     var roleType = enum<RoleType>("roletype").bindTo { it.roleType }
 }

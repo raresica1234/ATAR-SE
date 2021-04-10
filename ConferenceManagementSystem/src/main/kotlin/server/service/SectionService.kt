@@ -8,7 +8,7 @@ import server.sections
 
 class SectionService {
     companion object {
-        fun getSectionsByConferenceId(conferenceId: Int) = database.sections
+        fun getAllByConferenceId(conferenceId: Int) = database.sections
             .filter { it.conferenceId.eq(conferenceId) }
             .toList()
     }

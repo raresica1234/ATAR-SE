@@ -8,7 +8,7 @@ import server.roles
 
 class RoleService {
     companion object {
-        fun getUserRoles(userId: Int) = database.roles
+        fun getAllByUserId(userId: Int) = database.roles
             .filter { it.userId.eq(userId) }
             .toList()
     }

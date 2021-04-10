@@ -24,21 +24,23 @@ class ConferenceListController : Controller() {
                 participatingConferences.setAll(applySearch(initialParticipatingConferences, searchValue))
             }
         }
+
+        refreshData()
     }
 
-    fun handleOnBeforeShow() {
+    fun refreshData() {
         val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
 
         with(conferenceListModel) {
             clear()
-            roles.setAll(RoleService.getUserRoles(userState.user.id))
+            roles.setAll(RoleService.getAllByUserId(userState.user.id))
 
             allConferences.forEach { conferenceWithData ->
                 val conference = conferenceWithData.conference
                 val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
                 val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
 
-                val rolesForConference = roles.find { it.conference.id == conference.id }
+                val rolesForConference = roles.find { it.conferenceId == conference.id }
 
                 if (rolesForConference == null) {
                     initialActiveConferences.add(
