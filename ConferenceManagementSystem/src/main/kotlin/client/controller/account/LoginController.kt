@@ -11,12 +11,12 @@ import utils.getOrEmpty
 import utils.isNullOrBlank
 
 class LoginController : Controller() {
-    val loginModel = LoginModel()
+    val model = LoginModel()
 
     fun handleLoginClick(): User? {
         return try {
             validateFields()
-            userState.user = UserService.login(loginModel.email.get(), loginModel.password.getOrEmpty())
+            userState.user = UserService.login(model.email.get(), model.password.getOrEmpty())
             userState.user
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)
@@ -25,7 +25,7 @@ class LoginController : Controller() {
     }
 
     private fun validateFields() {
-        if (loginModel.email.isNullOrBlank()) {
+        if (model.email.isNullOrBlank()) {
             throw ValidationException(
                 "No email provided!",
                 "The email is mandatory, fill it and try again."

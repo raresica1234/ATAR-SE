@@ -25,7 +25,7 @@ class LoginView : View(APPLICATION_TITLE) {
                 maxWidth = 192.0
 
                 label("Email")
-                textfield(controller.loginModel.email) {
+                textfield(controller.model.email) {
                     promptText = "Email"
                 }
             }
@@ -33,7 +33,7 @@ class LoginView : View(APPLICATION_TITLE) {
                 maxWidth = 192.0
 
                 label("Password")
-                passwordfield(controller.loginModel.password) {
+                passwordfield(controller.model.password) {
                     promptText = "Password"
                 }
             }
