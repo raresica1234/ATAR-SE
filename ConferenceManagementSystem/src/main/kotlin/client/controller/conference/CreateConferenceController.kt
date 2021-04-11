@@ -33,9 +33,7 @@ class CreateConferenceController : Controller() {
     }
 
     private fun validateFields() {
-        if (model.name.isNullOrBlank() ||
-            model.chair.isObjectNull()
-        ) {
+        if (model.name.isNullOrBlank() || model.chair.isObjectNull()) {
             throw ValidationException(
                 "Not all fields completed!",
                 "'Name' and 'Chair' are mandatory fields that have not been filled in. Please check them and try again."
