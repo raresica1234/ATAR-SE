@@ -45,7 +45,7 @@ fun LocalDate?.validateBefore(other: LocalDate?, canBeEqual: Boolean = false): L
     if (other == null) {
         return this
     }
-    if (other == null || (canBeEqual && this <= other) || this < other) {
+    if (this == null || (canBeEqual && this <= other) || this < other) {
         return other
     }
     throw ValidationException("The dates are not in order", 
