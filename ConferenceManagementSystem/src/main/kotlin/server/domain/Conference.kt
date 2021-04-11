@@ -8,9 +8,9 @@ interface Conference : Entity<Conference> {
 
     val id: Int
     var name: String
-    var abstractDeadline: LocalDate
-    var paperDeadline: LocalDate
-    var biddingDeadline: LocalDate
-    var reviewDeadline: LocalDate
+    var abstractDeadline: LocalDate?
+    var paperDeadline: LocalDate?
+    var biddingDeadline: LocalDate?
+    var reviewDeadline: LocalDate?
     var reviewerCount: Int
 }

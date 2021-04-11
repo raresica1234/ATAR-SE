@@ -38,6 +38,10 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         action { println("View ${controller.model.selectedConference.get()}") }
     }
 
+    override fun onRefresh() {
+        super.onRefresh()
+    }
+
     override fun onUndock() {
         super.onUndock()
         controller.refreshData()
@@ -51,7 +55,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         spacing = 32.0
 
         hbox {
-            spacing = 416.0
+            spacing = 364.0
             maxWidth = 768.0
 
             text("Conferences") {
@@ -64,10 +68,12 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                     spacing = 16.0
 
                     button("Manage Rooms") {
+                        minWidth = 128.0
                         action { println("Go to manage rooms!") }
                     }
 
                     button("Create Conference") {
+                        minWidth = 128.0
                         action { switchTo(CreateConferenceView::class) }
                     }
                 }
@@ -119,10 +125,10 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 vbox {
                     spacing = 8.0
 
-                    this += buildLabelWithData("Abstract paper deadline:") { it.conference.abstractDeadline.toString() }
-                    this += buildLabelWithData("Full paper deadline:") { it.conference.paperDeadline.toString() }
-                    this += buildLabelWithData("Bidding deadline:") { it.conference.biddingDeadline.toString() }
-                    this += buildLabelWithData("Review deadline:") { it.conference.reviewDeadline.toString() }
+                    this += buildLabelWithData("Abstract paper deadline:") { it.conference.abstractDeadline?.toString() ?: "None" }
+                    this += buildLabelWithData("Full paper deadline:") { it.conference.paperDeadline?.toString() ?: "None" }
+                    this += buildLabelWithData("Bidding deadline:") { it.conference.biddingDeadline?.toString() ?: "None" }
+                    this += buildLabelWithData("Review deadline:") { it.conference.reviewDeadline?.toString() ?: "None" }
                     this += buildLabelWithData("Sections:") { it.sections }
                     this += buildLabelWithData("Submitted papers:") { it.papers }
 

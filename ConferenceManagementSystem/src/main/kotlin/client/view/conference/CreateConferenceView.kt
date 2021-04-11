@@ -6,13 +6,14 @@ import javafx.scene.text.Font
 import javafx.util.StringConverter
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.switchTo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CreateConferenceView : View(APPLICATION_TITLE) {
-    val controller by inject<CreateConferenceController>()
+    private val controller by inject<CreateConferenceController>()
 
-    val dateConverter = object : StringConverter<LocalDate?>() {
+    private val dateConverter = object : StringConverter<LocalDate?>() {
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
         override fun toString(date: LocalDate?) =
@@ -21,6 +22,16 @@ class CreateConferenceView : View(APPLICATION_TITLE) {
         override fun fromString(string: String?) =
             if (string.isNullOrBlank()) null
             else LocalDate.parse(string, formatter)
+    }
+
+    override fun onUndock() {
+        super.onUndock()
+        controller.refreshChairs()
+    }
+
+    override fun onDock() {
+        super.onDock()
+        controller.model.clear()
     }
 
     override val root = vbox {
@@ -97,8 +108,23 @@ class CreateConferenceView : View(APPLICATION_TITLE) {
             }
 
         }
-        button("Create Conference") {
-            action { println("create conference") }
+
+        hbox {
+            spacing = 16.0
+            alignment = Pos.CENTER
+            button("Back") {
+                action {
+                    switchTo(ConferenceListView::class)
+                }
+            }
+
+            button("Create Conference") {
+                action {
+                    if (controller.handleCreateConferenceClick()) {
+                        switchTo(ConferenceListView::class)
+                    }
+                }
+            }
         }
     }
 }

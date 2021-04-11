@@ -48,7 +48,7 @@ class ConferenceListController : Controller() {
                             conference,
                             sectionsString,
                             proposalsString,
-                            conference.paperDeadline.hasPassed()
+                            conference.paperDeadline?.hasPassed() ?: true
                         )
                     )
                 } else {
