@@ -3,8 +3,10 @@ package utils
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.util.StringConverter
 import tornadofx.UIComponent
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
@@ -48,8 +50,21 @@ fun LocalDate?.validateBefore(other: LocalDate?, canBeEqual: Boolean = false): L
     if (this == null || (canBeEqual && this <= other) || this < other) {
         return other
     }
-    throw ValidationException("The dates are not in order", 
-                              "The date $this should be before the date $other")
+    throw ValidationException(
+        "The dates are not in order",
+        "The date ${dateConverter.toString(this)} should be before the date ${dateConverter.toString(other)}"
+    )
 }
 
 fun <T> SimpleObjectProperty<T>.clear() = this.set(null)
+
+val dateConverter = object : StringConverter<LocalDate?>() {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+    override fun toString(date: LocalDate?) =
+        if (date == null) "" else formatter.format(date)
+
+    override fun fromString(string: String?) =
+        if (string.isNullOrBlank()) null
+        else LocalDate.parse(string, formatter)
+}
