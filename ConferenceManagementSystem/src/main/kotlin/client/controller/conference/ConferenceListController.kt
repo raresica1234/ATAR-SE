@@ -24,47 +24,50 @@ class ConferenceListController : Controller() {
                 participatingConferences.setAll(applySearch(initialParticipatingConferences, searchValue))
             }
         }
-
-        refreshData()
     }
 
     fun refreshData() {
-        val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
+        model.clear()
 
-        with(model) {
-            clear()
-            roles.setAll(RoleService.getAllByUserId(userState.user.id))
+        runAsync {
+            val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
 
-            allConferences.forEach { conferenceWithData ->
-                val conference = conferenceWithData.conference
-                val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
-                val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
+            with(model) {
+                roles.setAll(RoleService.getAllByUserId(userState.user.id))
 
-                val rolesForConference = roles.find { it.conferenceId == conference.id }
+                allConferences.forEach { conferenceWithData ->
+                    val conference = conferenceWithData.conference
+                    val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
+                    val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
 
-                if (rolesForConference == null) {
-                    initialActiveConferences.add(
-                        ConferenceListItemModel(
-                            conference,
-                            sectionsString,
-                            proposalsString,
-                            conference.paperDeadline?.hasPassed() ?: true
+                    val rolesForConference = roles.find { it.conferenceId == conference.id }
+
+                    if (rolesForConference == null) {
+                        initialActiveConferences.add(
+                            ConferenceListItemModel(
+                                conference,
+                                sectionsString,
+                                proposalsString,
+                                conference.paperDeadline?.hasPassed() ?: true
+                            )
                         )
-                    )
-                } else {
-                    initialParticipatingConferences.add(
-                        ConferenceListItemModel(
-                            conference,
-                            sectionsString,
-                            proposalsString,
-                            !hasPermissionToManage(rolesForConference)
+                    } else {
+                        initialParticipatingConferences.add(
+                            ConferenceListItemModel(
+                                conference,
+                                sectionsString,
+                                proposalsString,
+                                !hasPermissionToManage(rolesForConference)
+                            )
                         )
-                    )
+                    }
                 }
-            }
 
-            activeConferences.setAll(initialActiveConferences)
-            participatingConferences.setAll(initialParticipatingConferences)
+                activeConferences.setAll(initialActiveConferences)
+                participatingConferences.setAll(initialParticipatingConferences)
+            }
+        } ui {
+            model.isLoading.set(false)
         }
     }
 

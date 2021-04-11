@@ -11,19 +11,18 @@ import utils.switchTo
 class CreateAccountView : View(APPLICATION_TITLE) {
     private val controller: CreateAccountController by inject()
 
-    override fun onDock() {
-        super.onDock()
-        controller.handleOnDock()
+    override fun onUndock() {
+        super.onUndock()
+        controller.model.clear()
     }
 
-    override val root = vbox {
-        alignment = Pos.CENTER
+    override val root = vbox(32.0, Pos.CENTER) {
         minWidth = 512.0
         minHeight = 448.0
-        paddingAll = 32.0
 
         vbox {
             maxWidth = 352.0
+
             text("Create account") {
                 font = Font(24.0)
             }
@@ -33,20 +32,19 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                 paddingTop = 32.0
 
                 label("Email")
-                textfield(controller.createAccountModel.email) {
+                textfield(controller.model.email) {
                     promptText = "Email"
                 }
             }
 
-            hbox {
+            hbox(16.0) {
                 paddingTop = 16.0
-                spacing = 16.0
 
                 vbox {
                     minWidth = 192.0
 
                     label("Password")
-                    passwordfield(controller.createAccountModel.password) {
+                    passwordfield(controller.model.password) {
                         promptText = "Password"
                     }
                 }
@@ -55,21 +53,20 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Confirm Password")
-                    passwordfield(controller.createAccountModel.confirmPassword) {
+                    passwordfield(controller.model.confirmPassword) {
                         promptText = "Confirm Password"
                     }
                 }
             }
 
-            hbox {
+            hbox(16.0) {
                 paddingTop = 16.0
-                spacing = 16.0
 
                 vbox {
                     minWidth = 192.0
 
                     label("First Name")
-                    textfield(controller.createAccountModel.firstName) {
+                    textfield(controller.model.firstName) {
                         promptText = "First Name"
                     }
                 }
@@ -78,21 +75,20 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Last Name")
-                    textfield(controller.createAccountModel.lastName) {
+                    textfield(controller.model.lastName) {
                         promptText = "Last Name"
                     }
                 }
             }
 
-            hbox {
+            hbox(16.0) {
                 paddingTop = 16.0
-                spacing = 16.0
 
                 vbox {
                     minWidth = 192.0
 
                     label("Affiliation")
-                    textfield(controller.createAccountModel.affiliation) {
+                    textfield(controller.model.affiliation) {
                         promptText = "Affiliation"
                     }
                 }
@@ -101,16 +97,14 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                     minWidth = 192.0
 
                     label("Webpage Link (Optional)")
-                    textfield(controller.createAccountModel.webpageLink) {
+                    textfield(controller.model.webpageLink) {
                         promptText = "Webpage Link"
                     }
                 }
             }
 
-            hbox {
+            hbox(16.0, Pos.CENTER) {
                 paddingTop = 32.0
-                alignment = Pos.CENTER
-                spacing = 16.0
 
                 button("Back") {
                     action { switchTo(LoginView::class) }

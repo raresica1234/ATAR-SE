@@ -26,28 +26,24 @@ class CreateConferenceView : View(APPLICATION_TITLE) {
 
     override fun onUndock() {
         super.onUndock()
-        controller.refreshChairs()
+        controller.model.clear()
     }
 
     override fun onDock() {
         super.onDock()
-        controller.model.clear()
+        controller.refreshChairs()
     }
 
-    override val root = vbox {
-        alignment = Pos.CENTER
-        minWidth = 256.0
-        minHeight = 480.0
+    override val root = vbox(32.0, Pos.CENTER) {
+        minWidth = 320.0
+        minHeight = 512.0
         paddingAll = 32.0
-        spacing = 32.0
 
         text("Create Conference") {
             font = Font(24.0)
         }
 
-        vbox {
-            spacing = 8.0
-
+        vbox(8.0, Pos.CENTER) {
             vbox {
                 maxWidth = 192.0
 
@@ -109,15 +105,12 @@ class CreateConferenceView : View(APPLICATION_TITLE) {
 
         }
 
-        hbox {
-            spacing = 16.0
-            alignment = Pos.CENTER
+        hbox(16.0, Pos.CENTER) {
             button("Back") {
                 action {
                     switchTo(ConferenceListView::class)
                 }
             }
-
             button("Create Conference") {
                 action {
                     if (controller.handleCreateConferenceClick()) {

@@ -9,16 +9,12 @@ import utils.eq
 import utils.isNullOrBlank
 
 class CreateAccountController : Controller() {
-    val createAccountModel = CreateAccountModel()
-
-    fun handleOnDock() {
-        createAccountModel.clear()
-    }
+    val model = CreateAccountModel()
 
     fun handleCreateAccountClick(): Boolean {
         try {
             validateFields()
-            UserService.createAccount(createAccountModel.toUser())
+            UserService.createAccount(model.toUser())
         } catch (exception: ValidationException) {
             tornadofx.error(exception.title, exception.message, ButtonType.OK)
             return false
@@ -27,19 +23,19 @@ class CreateAccountController : Controller() {
     }
 
     private fun validateFields() {
-        if (createAccountModel.email.isNullOrBlank() ||
-            createAccountModel.password.isNullOrBlank() ||
-            createAccountModel.confirmPassword.isNullOrBlank() ||
-            createAccountModel.firstName.isNullOrBlank() ||
-            createAccountModel.lastName.isNullOrBlank() ||
-            createAccountModel.affiliation.isNullOrBlank()
+        if (model.email.isNullOrBlank() ||
+            model.password.isNullOrBlank() ||
+            model.confirmPassword.isNullOrBlank() ||
+            model.firstName.isNullOrBlank() ||
+            model.lastName.isNullOrBlank() ||
+            model.affiliation.isNullOrBlank()
         ) {
             throw ValidationException(
                 "Not all fields completed!",
                 "There are some mandatory fields that have not been filled in. Please check them and try again."
             )
         }
-        if (!createAccountModel.password.eq(createAccountModel.confirmPassword)) {
+        if (!model.password.eq(model.confirmPassword)) {
             throw ValidationException(
                 "Passwords do not match!",
                 "The given password does not match the confirm password, please try again."

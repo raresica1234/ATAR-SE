@@ -1,5 +1,6 @@
 package client.model.conference
 
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -13,11 +14,13 @@ data class ConferenceListModel(
     val activeConferences: ObservableList<ConferenceListItemModel> = FXCollections.observableArrayList(),
     val participatingConferences: ObservableList<ConferenceListItemModel> = FXCollections.observableArrayList(),
     val search: SimpleStringProperty = SimpleStringProperty(),
-    val selectedConference: SimpleObjectProperty<ConferenceListItemModel> = SimpleObjectProperty<ConferenceListItemModel>()
+    val selectedConference: SimpleObjectProperty<ConferenceListItemModel> = SimpleObjectProperty<ConferenceListItemModel>(),
+    val isLoading: SimpleBooleanProperty = SimpleBooleanProperty(true)
 ) {
     fun clear() {
         selectedConference.set(null)
         search.set(null)
+        isLoading.set(true)
 
         initialActiveConferences.clear()
         initialParticipatingConferences.clear()

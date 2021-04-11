@@ -38,24 +38,21 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         action { println("View ${controller.model.selectedConference.get()}") }
     }
 
-    override fun onRefresh() {
-        super.onRefresh()
+    private val progress = progressbar {
+        maxWidth = 192.0
     }
 
-    override fun onUndock() {
-        super.onUndock()
+    override fun onDock() {
+        super.onDock()
         controller.refreshData()
     }
 
-    override val root = vbox {
-        alignment = Pos.CENTER
+    override val root = vbox(32.0, Pos.CENTER) {
         minWidth = 768.0
         minHeight = 448.0
         paddingAll = 32.0
-        spacing = 32.0
 
-        hbox {
-            spacing = 364.0
+        hbox(364.0) {
             maxWidth = 768.0
 
             text("Conferences") {
@@ -63,10 +60,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
             }
 
             if (userState.user.isSiteAdministrator) {
-                hbox {
-                    alignment = Pos.CENTER_RIGHT
-                    spacing = 16.0
-
+                hbox(16.0, Pos.CENTER_RIGHT) {
                     button("Manage Rooms") {
                         minWidth = 128.0
                         action { println("Go to manage rooms!") }
@@ -80,11 +74,18 @@ class ConferenceListView : View(APPLICATION_TITLE) {
             }
         }
 
-        hbox {
-            spacing = 32.0
+        hbox(32.0) {
             maxWidth = 768.0
 
             vbox {
+                this += progress
+                controller.model.isLoading.onChange {
+                    children.remove(progress)
+                    if (it) {
+                        children.add(0, progress)
+                    }
+                }
+
                 textfield(controller.model.search) {
                     promptText = "Search"
                 }
@@ -106,13 +107,12 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 }
             }
 
-            vbox {
+            vbox(16.0) {
                 style {
                     backgroundColor += c("#fafafa")
                     borderColor += box(c("#222"))
                     minWidth = 576.px
                     padding = box(16.px)
-                    spacing = 16.px
                 }
 
                 text(SELECT_A_CONFERENCE) {
@@ -122,9 +122,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                         text = it?.conference?.name ?: SELECT_A_CONFERENCE
                     }
                 }
-                vbox {
-                    spacing = 8.0
-
+                vbox(8.0) {
                     this += buildLabelWithData("Abstract paper deadline:") { it.conference.abstractDeadline?.toString() ?: "None" }
                     this += buildLabelWithData("Full paper deadline:") { it.conference.paperDeadline?.toString() ?: "None" }
                     this += buildLabelWithData("Bidding deadline:") { it.conference.biddingDeadline?.toString() ?: "None" }
@@ -148,9 +146,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         }
     }
 
-    private fun buildLabelWithData(labelText: String, extractor: (ConferenceListItemModel) -> String) = hbox {
-        spacing = 8.0
-
+    private fun buildLabelWithData(labelText: String, extractor: (ConferenceListItemModel) -> String) = hbox(8.0) {
         label(labelText)
         text("-") {
             style { fontWeight = FontWeight.BOLD }
@@ -161,11 +157,9 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         }
     }
 
-    private fun buildConferenceActions() = hbox {
+    private fun buildConferenceActions() = hbox(16.0, Pos.BOTTOM_RIGHT) {
         minWidth = 448.0
-        spacing = 16.0
         paddingTop = 56.0
-        alignment = Pos.BOTTOM_RIGHT
 
         controller.model.selectedConference.addListener { _, oldValue, newValue ->
             if (newValue == null || userState.user.isSiteAdministrator) {

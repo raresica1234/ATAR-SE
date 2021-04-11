@@ -14,10 +14,6 @@ import utils.isObjectNull
 class CreateConferenceController : Controller() {
     val model = CreateConferenceModel()
 
-    init {
-        refreshChairs()
-    }
-
     fun refreshChairs() {
         val chairs = UserService.getAll(userState.user.id)
             .map { UserItemModel(it.id, it.fullName, it.email) }
