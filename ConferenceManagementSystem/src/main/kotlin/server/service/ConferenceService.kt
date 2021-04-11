@@ -1,12 +1,15 @@
 package server.service
 
+import org.ktorm.entity.add
 import org.ktorm.entity.map
 import server.conferences
 import server.database
 import server.domain.Conference
 import server.domain.Proposal
+import server.domain.RoleType
 import server.domain.Section
 import utils.hasPassed
+import utils.validateBefore
 
 data class ConferenceWithSectionsAndProposals(
     val conference: Conference,
@@ -24,6 +27,17 @@ class ConferenceService {
             )
         }.filter { conference ->
             conference.sections.isEmpty() || conference.sections.any { !it.endDate.hasPassed() }
+        }
+
+        fun createConference(conference: Conference, chairId: Int) = with(conference) {
+            abstractDeadline.validateBefore(paperDeadline, true)
+                .validateBefore(biddingDeadline)
+                .validateBefore(reviewDeadline)
+
+            database.conferences.add(this)
+            RoleService.add(chairId, id, RoleType.CHAIR)
+
+            this
         }
     }
 }

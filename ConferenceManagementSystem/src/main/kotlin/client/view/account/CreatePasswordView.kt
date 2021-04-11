@@ -20,20 +20,18 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
         controller.model.user.set(getParam(PARAM_USER))
     }
 
-    override val root = vbox {
-        alignment = Pos.CENTER
+    override val root = vbox(64.0, Pos.CENTER) {
         minWidth = 320.0
         minHeight = 448.0
         paddingAll = 32.0
 
         text("Create password") {
             font = Font(24.0)
-            paddingTop = 32.0
         }
-        vbox {
+
+        vbox(16.0) {
             maxWidth = 192.0
             vbox {
-                paddingTop = 32.0
                 label("Your email:") {
                     font = Font(14.0)
                 }
@@ -45,16 +43,12 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
             }
 
             vbox {
-                paddingTop = 32.0
-
                 label("Password")
                 passwordfield(controller.model.password) {
                     promptText = "Password"
                 }
             }
             vbox {
-                paddingVertical = 32.0
-
                 label("Confirm Password")
                 passwordfield(controller.model.confirmPassword) {
                     promptText = "Confirm Password"
@@ -62,8 +56,7 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
             }
         }
 
-        vbox {
-            alignment = Pos.CENTER
+        vbox(alignment = Pos.CENTER) {
             button("Create password") {
                 action {
                     if (controller.handleCreatePassword()) {

@@ -13,10 +13,10 @@ import utils.hasPassed
 import utils.joinOrDefault
 
 class ConferenceListController : Controller() {
-    val conferenceListModel = ConferenceListModel()
+    val model = ConferenceListModel()
 
     init {
-        with(conferenceListModel) {
+        with(model) {
             search.onChange {
                 val searchValue = it?.trim().orEmpty()
 
@@ -24,47 +24,50 @@ class ConferenceListController : Controller() {
                 participatingConferences.setAll(applySearch(initialParticipatingConferences, searchValue))
             }
         }
-
-        refreshData()
     }
 
     fun refreshData() {
-        val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
+        model.clear()
 
-        with(conferenceListModel) {
-            clear()
-            roles.setAll(RoleService.getAllByUserId(userState.user.id))
+        runAsync {
+            val allConferences = ConferenceService.getAllActiveWithSectionsAndProposals()
 
-            allConferences.forEach { conferenceWithData ->
-                val conference = conferenceWithData.conference
-                val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
-                val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
+            with(model) {
+                roles.setAll(RoleService.getAllByUserId(userState.user.id))
 
-                val rolesForConference = roles.find { it.conferenceId == conference.id }
+                allConferences.forEach { conferenceWithData ->
+                    val conference = conferenceWithData.conference
+                    val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
+                    val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
 
-                if (rolesForConference == null) {
-                    initialActiveConferences.add(
-                        ConferenceListItemModel(
-                            conference,
-                            sectionsString,
-                            proposalsString,
-                            conference.paperDeadline.hasPassed()
+                    val rolesForConference = roles.find { it.conferenceId == conference.id }
+
+                    if (rolesForConference == null) {
+                        initialActiveConferences.add(
+                            ConferenceListItemModel(
+                                conference,
+                                sectionsString,
+                                proposalsString,
+                                conference.paperDeadline?.hasPassed() ?: true
+                            )
                         )
-                    )
-                } else {
-                    initialParticipatingConferences.add(
-                        ConferenceListItemModel(
-                            conference,
-                            sectionsString,
-                            proposalsString,
-                            !hasPermissionToManage(rolesForConference)
+                    } else {
+                        initialParticipatingConferences.add(
+                            ConferenceListItemModel(
+                                conference,
+                                sectionsString,
+                                proposalsString,
+                                !hasPermissionToManage(rolesForConference)
+                            )
                         )
-                    )
+                    }
                 }
-            }
 
-            activeConferences.setAll(initialActiveConferences)
-            participatingConferences.setAll(initialParticipatingConferences)
+                activeConferences.setAll(initialActiveConferences)
+                participatingConferences.setAll(initialParticipatingConferences)
+            }
+        } ui {
+            model.isLoading.set(false)
         }
     }
 
