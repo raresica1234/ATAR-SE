@@ -48,7 +48,8 @@ fun LocalDate?.validateBefore(other: LocalDate?, canBeEqual: Boolean = false): L
     if (other == null || (canBeEqual && this <= other) || this < other) {
         return other
     }
-    throw ValidationException("The dates are not in order", "The date $this should be before the date $other")
+    throw ValidationException("The dates are not in order", 
+                              "The date $this should be before the date $other")
 }
 
 fun <T> SimpleObjectProperty<T>.clear() = this.set(null)
