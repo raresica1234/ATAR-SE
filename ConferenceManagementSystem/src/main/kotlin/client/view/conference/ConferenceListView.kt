@@ -3,6 +3,7 @@ package client.view.conference
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
 import client.state.userState
+import client.view.component.vBoxPane
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
@@ -107,13 +108,8 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 }
             }
 
-            vbox(16.0) {
-                style {
-                    backgroundColor += c("#fafafa")
-                    borderColor += box(c("#222"))
-                    minWidth = 576.px
-                    padding = box(16.px)
-                }
+            vBoxPane(16.0) {
+                minWidth = 576.0
 
                 text(SELECT_A_CONFERENCE) {
                     font = Font(18.0)

@@ -9,13 +9,18 @@ import tornadofx.vbox
 import utils.dateConverter
 import java.time.LocalDate
 
-fun EventTarget.datePicker(label: String, property: Property<LocalDate>, op: DatePicker.() -> Unit = {}) =
+fun EventTarget.datePicker(
+    label: String,
+    property: Property<LocalDate>,
+    size: Double = 2.0,
+    op: DatePicker.() -> Unit = {}
+) =
     vbox().apply {
-        maxWidth = 192.0
+        maxWidth = size
 
         label(label)
         datepicker(property) {
-            minWidth = 192.0
+            minWidth = size
             converter = dateConverter
 
             op(this)
