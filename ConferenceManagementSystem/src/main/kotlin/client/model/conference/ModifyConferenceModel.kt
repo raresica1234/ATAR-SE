@@ -1,6 +1,7 @@
 package client.model.conference
 
 import client.model.ProposalItemModel
+import client.model.RoomItemModel
 import client.model.SelectedUserItemModel
 import client.model.UserItemModel
 import javafx.beans.property.SimpleIntegerProperty
@@ -11,21 +12,16 @@ import javafx.collections.ObservableList
 import utils.getOrEmpty
 import java.time.LocalDate
 
-data class ModifyConferenceRoomModel(
-    val id: SimpleIntegerProperty = SimpleIntegerProperty(),
-    val seats: SimpleIntegerProperty = SimpleIntegerProperty()
-)
-
 data class ModifyConferenceSourceModel(
     val chairs: ObservableList<UserItemModel> = FXCollections.observableArrayList(),
     val committees: ObservableList<SelectedUserItemModel> = FXCollections.observableArrayList(),
-    val rooms: ObservableList<ModifyConferenceRoomModel> = FXCollections.observableArrayList()
+    val rooms: ObservableList<RoomItemModel> = FXCollections.observableArrayList()
 )
 
 data class ModifyConferenceSectionModel(
     val id: SimpleIntegerProperty = SimpleIntegerProperty(),
     val name: SimpleStringProperty = SimpleStringProperty(),
-    val selectedRoom: SimpleObjectProperty<ModifyConferenceRoomModel> = SimpleObjectProperty(),
+    val selectedRoom: SimpleObjectProperty<RoomItemModel> = SimpleObjectProperty(),
     val startDate: SimpleObjectProperty<LocalDate> = SimpleObjectProperty(),
     val endDate: SimpleObjectProperty<LocalDate> = SimpleObjectProperty(),
     val proposals: ObservableList<ProposalItemModel> = FXCollections.observableArrayList()
