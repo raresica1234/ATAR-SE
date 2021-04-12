@@ -1,6 +1,7 @@
 package client.view.component
 
 import javafx.beans.property.Property
+import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventTarget
 import javafx.scene.control.DatePicker
 import tornadofx.datepicker

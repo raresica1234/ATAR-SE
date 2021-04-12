@@ -32,7 +32,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     }
 
     private val manageButton = button("Manage") {
-        action { println("Manage ${controller.model.selectedConference.get()}") }
+        action { switchTo(ModifyConferenceView::class, "id" to controller.model.getConferenceId()) }
     }
 
     private val viewButton = button("View") {

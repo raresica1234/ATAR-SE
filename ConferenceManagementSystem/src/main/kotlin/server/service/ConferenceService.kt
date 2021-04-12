@@ -1,6 +1,8 @@
 package server.service
 
+import org.ktorm.dsl.eq
 import org.ktorm.entity.add
+import org.ktorm.entity.find
 import org.ktorm.entity.map
 import server.conferences
 import server.database
@@ -39,5 +41,7 @@ class ConferenceService {
 
             this
         }
+
+        fun getConference(conferenceId: Int) = database.conferences.find { it.id.eq(conferenceId) }
     }
 }

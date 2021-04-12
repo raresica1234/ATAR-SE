@@ -25,4 +25,6 @@ data class ConferenceListModel(
         initialActiveConferences.clear()
         initialParticipatingConferences.clear()
     }
+
+    fun getConferenceId() = selectedConference.get().id
 }

@@ -45,6 +45,7 @@ class ConferenceListController : Controller() {
                     if (rolesForConference == null) {
                         initialActiveConferences.add(
                             ConferenceListItemModel(
+                                conference.id,
                                 conference,
                                 sectionsString,
                                 proposalsString,
@@ -54,6 +55,7 @@ class ConferenceListController : Controller() {
                     } else {
                         initialParticipatingConferences.add(
                             ConferenceListItemModel(
+                                conference.id,
                                 conference,
                                 sectionsString,
                                 proposalsString,

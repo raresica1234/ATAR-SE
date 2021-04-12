@@ -2,16 +2,11 @@ package client.view.conference
 
 import client.controller.conference.CreateConferenceController
 import client.view.component.datePicker
-import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
 import javafx.scene.text.Font
-import javafx.util.StringConverter
 import tornadofx.*
 import utils.APPLICATION_TITLE
-import utils.dateConverter
 import utils.switchTo
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class CreateConferenceView : View(APPLICATION_TITLE) {
     private val controller by inject<CreateConferenceController>()

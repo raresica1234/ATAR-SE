@@ -2,22 +2,15 @@ package client.view.conference
 
 import client.controller.conference.ModifyConferenceController
 import client.model.ProposalItemModel
-import client.model.SelectedUserItemModel
-import client.model.UserItemModel
+import client.model.conference.ModifyConferenceSectionModel
 import client.view.ViewWithParams
 import client.view.component.datePicker
 import client.view.component.setNode
 import client.view.component.vBoxPane
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleObjectProperty
-import javafx.collections.FXCollections
+import javafx.event.EventTarget
 import javafx.geometry.Pos
-import javafx.scene.control.SelectionMode
-import javafx.scene.control.TableCell
-import javafx.scene.control.TableColumn
 import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.text.Font
-import javafx.util.Callback
 import tornadofx.*
 import utils.APPLICATION_TITLE
 
@@ -27,7 +20,7 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
     private val LEFT_SIDE_WIDTH = 160.0
 
     override fun onParamSet() {
-        TODO("Not yet implemented")
+        controller.model.id.set(getParam<Int>("id") ?: 0)
     }
 
     override val root = vbox(alignment = Pos.CENTER) {
@@ -39,119 +32,137 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
             }
 
             hbox(128.0) {
-                vbox(16.0) {
-                    vbox {
-                        maxWidth = LEFT_SIDE_WIDTH
-
-                        label("Name")
-                        textfield() {
-                            promptText = "Name"
-                        }
-                    }
-
-                    vbox(8.0) {
-                        text("Deadlines") {
-                            font = Font(18.0)
-                        }
-
-                        datePicker("Abstract paper deadline", SimpleObjectProperty(), LEFT_SIDE_WIDTH)
-                        datePicker("Full paper deadline", SimpleObjectProperty(), LEFT_SIDE_WIDTH)
-                        datePicker("Bidding deadline", SimpleObjectProperty(), LEFT_SIDE_WIDTH)
-                        datePicker("Review deadline", SimpleObjectProperty(), LEFT_SIDE_WIDTH)
-                    }
-                }
-                vbox(16.0) {
-                    vbox {
-                        maxWidth = 256.0
-
-                        label("Co-chair")
-                        combobox<UserItemModel>() {
-                            minWidth = 256.0
-                            promptText = "Select a co-chair"
-                        }
-                    }
-                    vbox {
-                        maxWidth = 256.0
-
-                        label("Program committees")
-                        textfield() {
-                            promptText = "Search"
-                        }
-                        listview<SelectedUserItemModel>(FXCollections.observableArrayList()) {
-                            minWidth = 256.0
-                            maxHeight = 182.0
-                            cellFactory = CheckBoxListCell.forListView { it.selected }
-                        }
-                    }
-                }
+                addNameAndDateFields()
+                addCoChairAndPCSelection()
             }
 
             hbox(16.0) {
                 maxHeight = 384.0
 
-                vbox(4.0) {
-                    hbox(LEFT_SIDE_WIDTH - 105.0) {
-                        text("Sections") {
-                            font = Font(18.0)
-                        }
+                addSectionsList()
+                addSectionPane()
+            }
+        }
+    }
 
-                        button("Add") { }
-                    }
+    private fun EventTarget.addNameAndDateFields() = vbox(16.0) {
+        vbox {
+            maxWidth = LEFT_SIDE_WIDTH
 
-                    listview<String>(FXCollections.observableArrayList()) {
-                        maxWidth = LEFT_SIDE_WIDTH
+            label("Name")
+            textfield(controller.model.name) {
+                promptText = "Name"
+            }
+        }
+
+        vbox(8.0) {
+            text("Deadlines") {
+                font = Font(18.0)
+            }
+
+            datePicker("Abstract paper deadline", controller.model.abstractDeadline, LEFT_SIDE_WIDTH)
+            datePicker("Full paper deadline", controller.model.paperDeadline, LEFT_SIDE_WIDTH)
+            datePicker("Bidding deadline", controller.model.biddingDeadline, LEFT_SIDE_WIDTH)
+            datePicker("Review deadline", controller.model.reviewDeadline, LEFT_SIDE_WIDTH)
+        }
+    }
+
+    private fun EventTarget.addCoChairAndPCSelection() = vbox(16.0) {
+        vbox {
+            maxWidth = 256.0
+
+            label("Co-chair")
+            combobox(controller.model.selectedChair, controller.model.sources.chairs) {
+                minWidth = 256.0
+                promptText = "Select a co-chair"
+            }
+        }
+        vbox {
+            maxWidth = 256.0
+
+            label("Program committees")
+            textfield(controller.model.search) {
+                promptText = "Search"
+            }
+            listview(controller.model.searchedCommittees) {
+                minWidth = 256.0
+                maxHeight = 182.0
+                cellFactory = CheckBoxListCell.forListView { it.selected }
+            }
+        }
+    }
+
+    private fun EventTarget.addSectionsList() = vbox(4.0) {
+        hbox(LEFT_SIDE_WIDTH - 105.0) {
+            text("Sections") {
+                font = Font(18.0)
+            }
+
+            button("Add") {
+                controller.model.selectedSection.addListener { _, oldValue, newValue ->
+                    if (newValue != null) {
+                        // When a list item is not in focus, prepare model for add
+                        controller.model.selectedSection.set(ModifyConferenceSectionModel())
                     }
+                    // Enable button only when old value was null and new one is empty
+                    disableProperty().set(oldValue != null)
                 }
+            }
+        }
 
-                vBoxPane(32.0) {
-                    hbox(32.0) {
-                        vbox(8.0) {
-                            vbox {
-                                maxWidth = LEFT_SIDE_WIDTH
+        listview(controller.model.sections) {
+            maxWidth = LEFT_SIDE_WIDTH
+        }
+    }
 
-                                label("Name")
-                                textfield() {
-                                    promptText = "Name"
-                                }
-                            }
-                            datePicker("Start date", SimpleObjectProperty(), LEFT_SIDE_WIDTH)
-                        }
-                        vbox(8.0) {
-                            vbox {
-                                maxWidth = LEFT_SIDE_WIDTH
+    private fun EventTarget.addSectionPane() = vBoxPane(32.0) {
+        val section = controller.model.selectedSectionDetails
 
-                                label("Room")
-                                combobox<String>() {
-                                    minWidth = LEFT_SIDE_WIDTH
-                                    promptText = "Select a room"
-                                }
-                            }
-                            datePicker("End date", SimpleObjectProperty(), LEFT_SIDE_WIDTH)
-                        }
-                        button("Delete")
-                    }
+        addPaneFieldsAndDeleteButton(section)
+        addProposalsWithAddButton(section)
+    }
 
-                    vbox(4.0) {
-                        hbox(370.0, Pos.BOTTOM_LEFT) {
-                            text("Proposals") {
-                                font = Font(14.0)
-                            }
-                            button("Add")
-                        }
+    private fun EventTarget.addPaneFieldsAndDeleteButton(section: ModifyConferenceSectionModel) = hbox(49.0) {
+        vbox(8.0) {
+            vbox {
+                maxWidth = LEFT_SIDE_WIDTH
 
-                        tableview(FXCollections.observableArrayList(
-                            ProposalItemModel(1, "Test", "Ana")
-                        )) {
-                            readonlyColumn("Proposal name", ProposalItemModel::name)
-                            readonlyColumn("Proposal authors", ProposalItemModel::name).minWidth = 256.0
-                            readonlyColumn("Actions", ProposalItemModel::id).setNode {
+                label("Name")
+                textfield(section.name) {
+                    promptText = "Name"
+                }
+            }
+            datePicker("Start date", section.startDate, LEFT_SIDE_WIDTH)
+        }
+        vbox(8.0) {
+            vbox {
+                maxWidth = LEFT_SIDE_WIDTH
 
-                                button("Remove") {
-                                    action { println("Remove proposal $item") }
-                                }
-                            }
-                        }
-                    }
+                label("Room")
+                combobox(section.selectedRoom, controller.model.sources.rooms) {
+                    minWidth = LEFT_SIDE_WIDTH
+                    promptText = "Select a room"
+                }
+            }
+            datePicker("End date", section.endDate, LEFT_SIDE_WIDTH)
+        }
+        button("Delete")
+    }
+
+    private fun EventTarget.addProposalsWithAddButton(section: ModifyConferenceSectionModel) = vbox(4.0) {
+        hbox(370.0, Pos.BOTTOM_LEFT) {
+            text("Proposals") {
+                font = Font(14.0)
+            }
+            button("Add")
+        }
+
+        tableview(section.proposals) {
+            readonlyColumn("Proposal name", ProposalItemModel::name).minWidth = 128.0
+            readonlyColumn("Proposal authors", ProposalItemModel::name).minWidth = 256.0
+            readonlyColumn("Actions", ProposalItemModel::id).setNode {
+                button("Remove") {
+                    action { println("Remove proposal $item") }
                 }
             }
         }
