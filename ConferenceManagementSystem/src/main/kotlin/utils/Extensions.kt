@@ -3,8 +3,11 @@ package utils
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ObservableBooleanValue
+import javafx.scene.Node
 import javafx.util.StringConverter
 import tornadofx.UIComponent
+import tornadofx.onChange
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
@@ -15,6 +18,9 @@ fun String.isEmail() = Pattern.compile(EMAIL_PATTERN)
     .matches()
 
 fun SimpleStringProperty.isNullOrBlank() = this.get().isNullOrBlank()
+
+fun SimpleStringProperty.isValid() = !this.isNullOrBlank()
+
 fun SimpleStringProperty.getOrEmpty() = this.get().orEmpty()
 
 fun SimpleStringProperty.eq(other: SimpleStringProperty) = this.get() == other.get()
@@ -35,6 +41,8 @@ fun <T> Iterable<T>.joinOrDefault(delimiter: String, default: String) =
 fun LocalDate.hasPassed() = this.isBefore(LocalDate.now())
 
 fun <T> SimpleObjectProperty<T>.isObjectNull() = this.get() == null
+
+fun <T> SimpleObjectProperty<T>.isValid() = this.get() != null
 
 /**
  * Validation for consecutive dates, returns the last valid date or null.
@@ -67,4 +75,10 @@ val dateConverter = object : StringConverter<LocalDate?>() {
     override fun fromString(string: String?) =
         if (string.isNullOrBlank()) null
         else LocalDate.parse(string, formatter)
+}
+
+fun Node.onBlur(handler: () -> Unit) = focusedProperty().onChange {
+    if (!it) {
+        handler()
+    }
 }

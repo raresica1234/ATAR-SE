@@ -26,7 +26,7 @@ class CreateConferenceController : Controller() {
             validateFields()
             ConferenceService.createConference(model.toConference(), model.getChairId())
         } catch (exception: ValidationException) {
-            tornadofx.error(exception.title, exception.message, ButtonType.OK)
+            exception.displayError()
             return false
         }
         return true

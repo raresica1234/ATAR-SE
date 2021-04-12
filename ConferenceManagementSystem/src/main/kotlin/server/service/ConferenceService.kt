@@ -4,6 +4,7 @@ import org.ktorm.dsl.eq
 import org.ktorm.entity.add
 import org.ktorm.entity.find
 import org.ktorm.entity.map
+import org.ktorm.entity.update
 import server.conferences
 import server.database
 import server.domain.Conference
@@ -32,9 +33,7 @@ class ConferenceService {
         }
 
         fun createConference(conference: Conference, chairId: Int) = with(conference) {
-            abstractDeadline.validateBefore(paperDeadline, true)
-                .validateBefore(biddingDeadline)
-                .validateBefore(reviewDeadline)
+            validateDeadlines(this)
 
             database.conferences.add(this)
             RoleService.add(chairId, id, RoleType.CHAIR)
@@ -42,6 +41,18 @@ class ConferenceService {
             this
         }
 
-        fun getConference(conferenceId: Int) = database.conferences.find { it.id.eq(conferenceId) }
+        fun get(conferenceId: Int) = database.conferences.find { it.id.eq(conferenceId) }
+
+        fun update(conference: Conference) = conference.apply {
+            validateDeadlines(this)
+
+            database.conferences.update(this)
+        }
+
+        private fun validateDeadlines(conference: Conference) = with(conference) {
+            abstractDeadline.validateBefore(paperDeadline, true)
+                .validateBefore(biddingDeadline)
+                .validateBefore(reviewDeadline)
+        }
     }
 }

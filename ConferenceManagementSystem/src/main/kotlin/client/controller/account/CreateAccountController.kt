@@ -16,7 +16,7 @@ class CreateAccountController : Controller() {
             validateFields()
             UserService.createAccount(model.toUser())
         } catch (exception: ValidationException) {
-            tornadofx.error(exception.title, exception.message, ButtonType.OK)
+            exception.displayError()
             return false
         }
         return true

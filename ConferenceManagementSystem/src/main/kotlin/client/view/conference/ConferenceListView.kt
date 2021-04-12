@@ -13,6 +13,7 @@ import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.dateConverter
 import utils.switchTo
 
 class ConferenceListView : View(APPLICATION_TITLE) {
@@ -119,10 +120,18 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                     }
                 }
                 vbox(8.0) {
-                    this += buildLabelWithData("Abstract paper deadline:") { it.conference.abstractDeadline?.toString() ?: "None" }
-                    this += buildLabelWithData("Full paper deadline:") { it.conference.paperDeadline?.toString() ?: "None" }
-                    this += buildLabelWithData("Bidding deadline:") { it.conference.biddingDeadline?.toString() ?: "None" }
-                    this += buildLabelWithData("Review deadline:") { it.conference.reviewDeadline?.toString() ?: "None" }
+                    this += buildLabelWithData("Abstract paper deadline:") {
+                        dateConverter.toString(it.conference.abstractDeadline).ifBlank { "None" }
+                    }
+                    this += buildLabelWithData("Full paper deadline:") {
+                        dateConverter.toString(it.conference.paperDeadline).ifBlank { "None" }
+                    }
+                    this += buildLabelWithData("Bidding deadline:") {
+                        dateConverter.toString(it.conference.biddingDeadline).ifBlank { "None" }
+                    }
+                    this += buildLabelWithData("Review deadline:") {
+                        dateConverter.toString(it.conference.reviewDeadline).ifBlank { "None" }
+                    }
                     this += buildLabelWithData("Sections:") { it.sections }
                     this += buildLabelWithData("Submitted papers:") { it.papers }
 

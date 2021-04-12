@@ -13,6 +13,8 @@ import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.onBlur
+import utils.switchTo
 
 class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
     private val controller by inject<ModifyConferenceController>()
@@ -42,6 +44,15 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                 addSectionsList()
                 addSectionPane()
             }
+
+            hbox {
+                alignment = Pos.CENTER_RIGHT
+
+                button("Close") {
+                    action { switchTo(ConferenceListView::class) }
+                }
+            }
+
         }
     }
 
@@ -52,6 +63,7 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
             label("Name")
             textfield(controller.model.name) {
                 promptText = "Name"
+                onBlur { controller.updateConference() }
             }
         }
 
@@ -60,10 +72,18 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                 font = Font(18.0)
             }
 
-            datePicker("Abstract paper deadline", controller.model.abstractDeadline, LEFT_SIDE_WIDTH)
-            datePicker("Full paper deadline", controller.model.paperDeadline, LEFT_SIDE_WIDTH)
-            datePicker("Bidding deadline", controller.model.biddingDeadline, LEFT_SIDE_WIDTH)
-            datePicker("Review deadline", controller.model.reviewDeadline, LEFT_SIDE_WIDTH)
+            datePicker("Abstract paper deadline", controller.model.abstractDeadline, LEFT_SIDE_WIDTH) {
+                onBlur { controller.updateConference() }
+            }
+            datePicker("Full paper deadline", controller.model.paperDeadline, LEFT_SIDE_WIDTH) {
+                onBlur { controller.updateConference() }
+            }
+            datePicker("Bidding deadline", controller.model.biddingDeadline, LEFT_SIDE_WIDTH) {
+                onBlur { controller.updateConference() }
+            }
+            datePicker("Review deadline", controller.model.reviewDeadline, LEFT_SIDE_WIDTH) {
+                onBlur { controller.updateConference() }
+            }
         }
     }
 

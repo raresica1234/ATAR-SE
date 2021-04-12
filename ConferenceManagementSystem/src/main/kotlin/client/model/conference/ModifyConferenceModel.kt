@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import server.domain.Conference
 import utils.getOrEmpty
 import java.time.LocalDate
 
@@ -43,4 +44,21 @@ data class ModifyConferenceModel(
     val selectedSection: SimpleObjectProperty<ModifyConferenceSectionModel> = SimpleObjectProperty(),
     val selectedSectionDetails: ModifyConferenceSectionModel = ModifyConferenceSectionModel(),
     val search: SimpleStringProperty = SimpleStringProperty()
-)
+) {
+    fun setConference(conference: Conference) {
+        name.set(conference.name)
+        abstractDeadline.set(conference.abstractDeadline)
+        paperDeadline.set(conference.paperDeadline)
+        biddingDeadline.set(conference.biddingDeadline)
+        reviewDeadline.set(conference.reviewDeadline)
+    }
+
+    fun toConference() = Conference {
+        id = this@ModifyConferenceModel.id.get()
+        name = this@ModifyConferenceModel.name.getOrEmpty()
+        abstractDeadline = this@ModifyConferenceModel.abstractDeadline.get()
+        paperDeadline = this@ModifyConferenceModel.paperDeadline.get()
+        biddingDeadline = this@ModifyConferenceModel.biddingDeadline.get()
+        reviewDeadline = this@ModifyConferenceModel.reviewDeadline.get()
+    }
+}

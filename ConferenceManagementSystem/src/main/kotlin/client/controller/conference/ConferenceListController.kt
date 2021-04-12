@@ -64,12 +64,13 @@ class ConferenceListController : Controller() {
                         )
                     }
                 }
-
-                activeConferences.setAll(initialActiveConferences)
-                participatingConferences.setAll(initialParticipatingConferences)
             }
         } ui {
-            model.isLoading.set(false)
+            with(model) {
+                activeConferences.setAll(initialActiveConferences)
+                participatingConferences.setAll(initialParticipatingConferences)
+                isLoading.set(false)
+            }
         }
     }
 
