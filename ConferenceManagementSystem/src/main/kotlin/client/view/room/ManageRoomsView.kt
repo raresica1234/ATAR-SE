@@ -46,7 +46,9 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                             action { println("Edit room $item") }
                         }
                         button("Delete") {
-                            action { println("Delete room $item") }
+                            action {
+                                controller.handleDeleteRoomClick(item)
+                            }
                         }
                     }
                 }
