@@ -23,29 +23,45 @@ class ModifyConferenceController : Controller() {
     private var initialConference: Conference = Conference {}
 
     init {
-        with(model) {
-            id.onChange {
-                if (it != 0) {
-                    fetchData(it)
-                }
-            }
-            search.onChange { applyCommitteesSearch(it) }
+        model.search.onChange { applyCommitteesSearch(it) }
+    }
+
+    fun refreshData() {
+        val conferenceId = model.id.get()
+
+        if (conferenceId != 0) {
+            fetchData(conferenceId)
         }
     }
 
     private fun fetchData(conferenceId: Int) {
-        ConferenceService.get(conferenceId)?.let {
-            initialConference = it
-            model.setConference(it)
+        runAsync {
+            ConferenceService.get(conferenceId)?.let {
+                initialConference = it
+            }
+
+            val users = UserService.getUsersWithRole(userState.user.id, conferenceId)
+                .filter { it.roleType != RoleType.AUTHOR || it.roleType != RoleType.LISTENER }
+
+            val usersWithSelection = users.map {
+                SelectedUserItemModel(
+                    it.user.id,
+                    it.user.fullName,
+                    it.user.email,
+                    SimpleBooleanProperty(it.roleType == RoleType.PROGRAM_COMMITTEE).apply {
+                        onChange { checked -> handleCommitteeSelection(it.user, checked) }
+                    }
+                )
+            }
+            users to usersWithSelection
+        } ui {
+            model.setConference(initialConference)
+            setChairsSource(it.first)
+            model.sources.committees.setAll(it.second)
+            selectChair(it.first)
+            model.searchedCommittees.setAll(model.sources.committees)
+            model.isLoading.set(false)
         }
-
-        val users = UserService.getUsersWithRole(userState.user.id, conferenceId)
-            .filter { it.roleType != RoleType.AUTHOR || it.roleType != RoleType.LISTENER }
-
-        setChairsSource(users)
-        setCommitteesSource(users)
-        selectChair(users)
-        model.searchedCommittees.setAll(model.sources.committees)
     }
 
     fun updateConference() {
@@ -79,47 +95,40 @@ class ModifyConferenceController : Controller() {
         chairs.addAll(users.map { UserItemModel(it.user.id, it.user.fullName, it.user.email) })
     }
 
-    private fun setCommitteesSource(users: List<UserWithRole>) {
-        model.selectedChair.addListener { _, previousChair, selectedChair ->
-            handleSelectedChair(previousChair, selectedChair, users)
-
-            model.sources.committees.setAll(
-                users.filter { it.user.id != selectedChair?.id ?: 0 }
-                    .map {
-                        SelectedUserItemModel(
-                            it.user.id,
-                            it.user.fullName,
-                            it.user.email,
-                            SimpleBooleanProperty(it.roleType == RoleType.PROGRAM_COMMITTEE).apply {
-                                onChange { checked -> handleCommitteeSelection(it.user, checked) }
-                            }
-                        )
-                    })
-
-            applyCommitteesSearch()
-        }
-    }
-
     private fun selectChair(users: List<UserWithRole>) = with(model) {
         val coChairId = users.find { it.roleType == RoleType.CHAIR }?.user?.id ?: 0
 
         selectedChair.set(sources.chairs.find { it.id == coChairId })
+
+        model.selectedChair.addListener { _, previousChair, selectedChair ->
+            handleSelectedChair(previousChair, selectedChair, users)
+
+            applyCommitteesSearch(selectedChair = selectedChair)
+        }
     }
 
-    private fun applyCommitteesSearch(search: String? = model.search.get()) {
+    private fun applyCommitteesSearch(
+        search: String? = model.search.get(),
+        selectedChair: UserItemModel? = model.selectedChair.get()
+    ) {
         val searchValue = search?.trim()
+        val committeesWithoutChair = model.sources.committees.filtered { it.id != selectedChair?.id ?: 0 }
 
         if (searchValue == null) {
-            model.searchedCommittees.setAll(model.sources.committees)
+            model.searchedCommittees.setAll(committeesWithoutChair)
             return
         }
 
-        model.searchedCommittees.setAll(model.sources.committees.filtered {
+        model.searchedCommittees.setAll(committeesWithoutChair.filtered {
             it.email.contains(searchValue, true) || it.fullName.contains(searchValue, true)
         })
     }
 
-    private fun handleSelectedChair(previousChair: UserItemModel?, selectedChair: UserItemModel?, users: List<UserWithRole>) {
+    private fun handleSelectedChair(
+        previousChair: UserItemModel?,
+        selectedChair: UserItemModel?,
+        users: List<UserWithRole>
+    ) {
         val conferenceId = model.id.get()
 
         // if selectedChair is set to null, data is being deallocated

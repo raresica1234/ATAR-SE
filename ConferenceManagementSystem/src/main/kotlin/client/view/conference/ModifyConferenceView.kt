@@ -25,34 +25,54 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
         controller.model.id.set(getParam<Int>("id") ?: 0)
     }
 
+    override fun onDock() {
+        super.onDock()
+        controller.refreshData()
+    }
+
+    override fun onUndock() {
+        super.onUndock()
+        controller.model.reset()
+    }
+
+    private val progress = progressbar()
+
     override val root = vbox(alignment = Pos.CENTER) {
-        paddingAll = 32.0
+        progress.prefWidthProperty().bind(widthProperty())
+        this += progress
+        controller.model.isLoading.onChange {
+            progress.opacity = if (it) 1.0 else 0.0
+        }
 
-        vbox(32.0) {
-            text("Modify Conference") {
-                font = Font(24.0)
-            }
+        vbox(alignment = Pos.CENTER) {
+            paddingAll = 32.0
 
-            hbox(128.0) {
-                addNameAndDateFields()
-                addCoChairAndPCSelection()
-            }
-
-            hbox(16.0) {
-                maxHeight = 384.0
-
-                addSectionsList()
-                addSectionPane()
-            }
-
-            hbox {
-                alignment = Pos.CENTER_RIGHT
-
-                button("Close") {
-                    action { switchTo(ConferenceListView::class) }
+            vbox(32.0) {
+                text("Modify Conference") {
+                    font = Font(24.0)
                 }
-            }
 
+                hbox(128.0) {
+                    addNameAndDateFields()
+                    addCoChairAndPCSelection()
+                }
+
+                hbox(16.0) {
+                    maxHeight = 384.0
+
+                    addSectionsList()
+                    addSectionPane()
+                }
+
+                hbox {
+                    alignment = Pos.CENTER_RIGHT
+
+                    button("Close") {
+                        action { switchTo(ConferenceListView::class) }
+                    }
+                }
+
+            }
         }
     }
 

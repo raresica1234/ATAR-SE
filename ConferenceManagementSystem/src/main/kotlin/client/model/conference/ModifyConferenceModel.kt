@@ -4,12 +4,14 @@ import client.model.ProposalItemModel
 import client.model.RoomItemModel
 import client.model.SelectedUserItemModel
 import client.model.UserItemModel
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import server.domain.Conference
+import utils.clear
 import utils.getOrEmpty
 import java.time.LocalDate
 
@@ -43,7 +45,8 @@ data class ModifyConferenceModel(
     val sections: ObservableList<ModifyConferenceSectionModel> = FXCollections.observableArrayList(),
     val selectedSection: SimpleObjectProperty<ModifyConferenceSectionModel> = SimpleObjectProperty(),
     val selectedSectionDetails: ModifyConferenceSectionModel = ModifyConferenceSectionModel(),
-    val search: SimpleStringProperty = SimpleStringProperty()
+    val search: SimpleStringProperty = SimpleStringProperty(),
+    val isLoading: SimpleBooleanProperty = SimpleBooleanProperty(true)
 ) {
     fun setConference(conference: Conference) {
         name.set(conference.name)
@@ -60,5 +63,11 @@ data class ModifyConferenceModel(
         paperDeadline = this@ModifyConferenceModel.paperDeadline.get()
         biddingDeadline = this@ModifyConferenceModel.biddingDeadline.get()
         reviewDeadline = this@ModifyConferenceModel.reviewDeadline.get()
+    }
+
+    fun reset() = run {
+        isLoading.set(true)
+        search.clear()
+        selectedChair.clear()
     }
 }
