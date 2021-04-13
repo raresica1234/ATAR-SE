@@ -13,7 +13,7 @@ import java.time.LocalDate
 fun EventTarget.datePicker(
     label: String,
     property: Property<LocalDate>,
-    size: Double = 2.0,
+    size: Double = 192.0,
     op: DatePicker.() -> Unit = {}
 ) =
     vbox().apply {
