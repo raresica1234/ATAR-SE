@@ -17,7 +17,7 @@ class CreatePasswordController : Controller() {
             userState.user = UserService.update(model.toUser())
             true
         } catch (exception: ValidationException) {
-            tornadofx.error(exception.title, exception.message, ButtonType.OK)
+            exception.displayError()
             false
         }
     }

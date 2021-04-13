@@ -45,6 +45,7 @@ class ConferenceListController : Controller() {
                     if (rolesForConference == null) {
                         initialActiveConferences.add(
                             ConferenceListItemModel(
+                                conference.id,
                                 conference,
                                 sectionsString,
                                 proposalsString,
@@ -54,6 +55,7 @@ class ConferenceListController : Controller() {
                     } else {
                         initialParticipatingConferences.add(
                             ConferenceListItemModel(
+                                conference.id,
                                 conference,
                                 sectionsString,
                                 proposalsString,
@@ -62,12 +64,13 @@ class ConferenceListController : Controller() {
                         )
                     }
                 }
-
-                activeConferences.setAll(initialActiveConferences)
-                participatingConferences.setAll(initialParticipatingConferences)
             }
         } ui {
-            model.isLoading.set(false)
+            with(model) {
+                activeConferences.setAll(initialActiveConferences)
+                participatingConferences.setAll(initialParticipatingConferences)
+                isLoading.set(false)
+            }
         }
     }
 

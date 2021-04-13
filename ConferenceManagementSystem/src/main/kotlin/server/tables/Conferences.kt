@@ -4,7 +4,7 @@ import org.ktorm.schema.*
 import server.domain.Conference
 
 object Conferences : Table<Conference>("conferences") {
-    val id = int("id").primaryKey().bindTo { it.id }
+    var id = int("id").primaryKey().bindTo { it.id }
     var name = varchar("name").bindTo { it.name }
     var abstractDeadline = date("abstractdeadline").bindTo { it.abstractDeadline }
     var paperDeadline = date("paperdeadline").bindTo { it.paperDeadline }

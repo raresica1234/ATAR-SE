@@ -3,6 +3,7 @@ package client.view.conference
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
 import client.state.userState
+import client.view.component.vBoxPane
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
@@ -12,6 +13,7 @@ import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.dateConverter
 import utils.switchTo
 
 class ConferenceListView : View(APPLICATION_TITLE) {
@@ -31,7 +33,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     }
 
     private val manageButton = button("Manage") {
-        action { println("Manage ${controller.model.selectedConference.get()}") }
+        action { switchTo(ModifyConferenceView::class, "id" to controller.model.getConferenceId()) }
     }
 
     private val viewButton = button("View") {
@@ -107,13 +109,8 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 }
             }
 
-            vbox(16.0) {
-                style {
-                    backgroundColor += c("#fafafa")
-                    borderColor += box(c("#222"))
-                    minWidth = 576.px
-                    padding = box(16.px)
-                }
+            vBoxPane(16.0) {
+                minWidth = 576.0
 
                 text(SELECT_A_CONFERENCE) {
                     font = Font(18.0)
@@ -123,10 +120,18 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                     }
                 }
                 vbox(8.0) {
-                    this += buildLabelWithData("Abstract paper deadline:") { it.conference.abstractDeadline?.toString() ?: "None" }
-                    this += buildLabelWithData("Full paper deadline:") { it.conference.paperDeadline?.toString() ?: "None" }
-                    this += buildLabelWithData("Bidding deadline:") { it.conference.biddingDeadline?.toString() ?: "None" }
-                    this += buildLabelWithData("Review deadline:") { it.conference.reviewDeadline?.toString() ?: "None" }
+                    this += buildLabelWithData("Abstract paper deadline:") {
+                        dateConverter.toString(it.conference.abstractDeadline).ifBlank { "None" }
+                    }
+                    this += buildLabelWithData("Full paper deadline:") {
+                        dateConverter.toString(it.conference.paperDeadline).ifBlank { "None" }
+                    }
+                    this += buildLabelWithData("Bidding deadline:") {
+                        dateConverter.toString(it.conference.biddingDeadline).ifBlank { "None" }
+                    }
+                    this += buildLabelWithData("Review deadline:") {
+                        dateConverter.toString(it.conference.reviewDeadline).ifBlank { "None" }
+                    }
                     this += buildLabelWithData("Sections:") { it.sections }
                     this += buildLabelWithData("Submitted papers:") { it.papers }
 

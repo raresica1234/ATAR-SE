@@ -6,7 +6,7 @@ import java.time.LocalDate
 interface Conference : Entity<Conference> {
     companion object : Entity.Factory<Conference>()
 
-    val id: Int
+    var id: Int
     var name: String
     var abstractDeadline: LocalDate?
     var paperDeadline: LocalDate?

@@ -1,28 +1,15 @@
 package client.view.conference
 
 import client.controller.conference.CreateConferenceController
+import client.view.component.datePicker
 import javafx.geometry.Pos
 import javafx.scene.text.Font
-import javafx.util.StringConverter
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class CreateConferenceView : View(APPLICATION_TITLE) {
     private val controller by inject<CreateConferenceController>()
-
-    private val dateConverter = object : StringConverter<LocalDate?>() {
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
-        override fun toString(date: LocalDate?) =
-            if (date == null) "" else formatter.format(date)
-
-        override fun fromString(string: String?) =
-            if (string.isNullOrBlank()) null
-            else LocalDate.parse(string, formatter)
-    }
 
     override fun onUndock() {
         super.onUndock()
@@ -63,46 +50,10 @@ class CreateConferenceView : View(APPLICATION_TITLE) {
                 }
             }
 
-            vbox {
-                maxWidth = 192.0
-
-                label("Abstract paper deadline")
-                datepicker(controller.model.abstractDeadline) {
-                    minWidth = 192.0
-                    converter = dateConverter
-                }
-            }
-
-            vbox {
-                maxWidth = 192.0
-
-                label("Full paper deadline")
-                datepicker(controller.model.paperDeadline) {
-                    minWidth = 192.0
-                    converter = dateConverter
-                }
-            }
-
-            vbox {
-                maxWidth = 192.0
-
-                label("Bidding deadline")
-                datepicker(controller.model.biddingDeadline) {
-                    minWidth = 192.0
-                    converter = dateConverter
-                }
-            }
-
-            vbox {
-                maxWidth = 192.0
-
-                label("Review deadline")
-                datepicker(controller.model.reviewDeadline) {
-                    minWidth = 192.0
-                    converter = dateConverter
-                }
-            }
-
+            datePicker("Abstract paper deadline", controller.model.abstractDeadline)
+            datePicker("Full paper deadline", controller.model.paperDeadline)
+            datePicker("Bidding deadline", controller.model.biddingDeadline)
+            datePicker("Review deadline", controller.model.reviewDeadline)
         }
 
         hbox(16.0, Pos.CENTER) {

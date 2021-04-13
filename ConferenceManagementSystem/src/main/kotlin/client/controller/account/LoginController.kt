@@ -19,7 +19,7 @@ class LoginController : Controller() {
             userState.user = UserService.login(model.email.get(), model.password.getOrEmpty())
             userState.user
         } catch (exception: ValidationException) {
-            tornadofx.error(exception.title, exception.message, ButtonType.OK)
+            exception.displayError()
             null
         }
     }
