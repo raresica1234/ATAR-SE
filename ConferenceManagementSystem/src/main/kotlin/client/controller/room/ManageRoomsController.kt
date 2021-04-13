@@ -5,7 +5,6 @@ import client.model.room.ManageRoomsModel
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonBar
 import org.ktorm.dsl.eq
-import org.ktorm.entity.drop
 import org.ktorm.entity.removeIf
 import server.database
 import server.rooms
