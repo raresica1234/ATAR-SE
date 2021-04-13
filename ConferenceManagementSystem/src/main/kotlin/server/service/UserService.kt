@@ -1,13 +1,17 @@
 package server.service
 
+import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.notEq
 import org.ktorm.entity.*
 import server.database
+import server.domain.RoleType
 import server.domain.User
 import server.users
 import utils.ValidationException
 import utils.isEmail
+
+data class UserWithRole(var user: User, var roleType: RoleType?)
 
 class UserService {
     companion object {
@@ -50,8 +54,14 @@ class UserService {
             return user
         }
 
+        fun get(userId: Int) = database.users.find { it.id.eq(userId) }
+
         fun getAll(userId: Int) = database.users
             .filter { it.id.notEq(userId) }
             .toList()
+
+        fun getUsersWithRole(excludingUserId: Int, conferenceId: Int) = database.users
+            .filter { it.isSiteAdministrator.eq(false).and(it.id.notEq(excludingUserId)) }
+            .map { UserWithRole(it, RoleService.get(it.id, conferenceId)?.roleType) }
     }
 }
