@@ -8,8 +8,6 @@ import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonBar
 import javafx.scene.text.Font
-import server.domain.Room
-import server.service.RoomSerivce
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
@@ -46,24 +44,13 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                 readonlyColumn("Actions", RoomItemModel::id) {
                     minWidth = 128.0
                     setNode {
+                        val id = item
+                        val room = controller.model.rooms.find { it.id == id }
                         button("Edit") {
                             action {
-                                dialog {
-                                    minWidth = 256.0
-                                    minHeight = 128.0
-                                    spacing = 16.0
-                                    alignment = Pos.CENTER_LEFT
-                                    label("New seats number for room $item: ")
-                                    controller.model.seatCount.set(controller.model.rooms[item].seats)
-                                    textfield(controller.model.seatCount)
-
-                                    hbox(16.0, Pos.CENTER_RIGHT) {
-                                        button("Save") {
-                                            action {
-                                                controller.model.rooms[item].seats = controller.model.seatCount.get()
-                                                close()
-                                            }
-                                        }
+                                room?.let {
+                                    manageRoomsDialog(id, room.seats) {
+                                        controller.handleEdit(room, RoomItemModel(id, it))
                                     }
                                 }
                             }
@@ -74,9 +61,9 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                                     type = Alert.AlertType.CONFIRMATION,
                                     header = "Delete Room",
                                     content = "Delete room $item",
-                                    actionFn = { btnType ->
-                                        if (btnType.buttonData == ButtonBar.ButtonData.OK_DONE) {
-                                            controller.handleDeleteRoomClick(item)
+                                    actionFn = { buttonType ->
+                                        if (buttonType.buttonData == ButtonBar.ButtonData.OK_DONE) {
+                                            controller.handleDeleteRoom(item)
                                         }
                                     })
                             }
@@ -90,28 +77,8 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                 }
                 button("Add room") {
                     action {
-                        dialog {
-                            minWidth = 256.0
-                            minHeight = 128.0
-                            spacing = 16.0
-                            alignment = Pos.CENTER_LEFT
-                            label("Number of seats: ")
-                            textfield(controller.model.seatCount)
-
-                            hbox(16.0, Pos.CENTER_RIGHT) {
-                                button("Add") {
-                                    action {
-                                        controller.handleAddRoomClick()
-                                        close()
-                                    }
-                                }
-
-                                button("Cancel") {
-                                    action {
-                                        close()
-                                    }
-                                }
-                            }
+                        manageRoomsDialog {
+                            controller.handleAdd(it)
                         }
                     }
                 }
