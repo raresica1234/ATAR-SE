@@ -9,6 +9,7 @@ import server.domain.Role
 import server.domain.RoleType
 import server.domain.User
 import server.roles
+import java.lang.Exception
 
 class RoleService {
     companion object {
@@ -16,14 +17,19 @@ class RoleService {
             .filter { it.userId.eq(userId) }
             .toList()
 
-        fun add(userId: Int, conferenceId: Int, roleType: RoleType): Role {
+        fun add(userId: Int, conferenceId: Int, roleType: RoleType): Role? {
             val role = Role {
+                this.userId = userId
                 this.conferenceId = conferenceId
                 this.roleType = roleType
-                this.userId = userId
             }
 
-            database.roles.add(role)
+            try {
+                database.roles.add(role)
+            } catch (exception: Exception) {
+                println("Exception in RoleService.add($role): $exception")
+                return null
+            }
 
             return role
         }
@@ -44,8 +50,14 @@ class RoleService {
             it.userId.eq(userId).and(it.conferenceId.eq(conferenceId))
         }
 
-        fun delete(userId: Int, conferenceId: Int) = database.roles.removeIf {
-            it.userId.eq(userId).and(it.conferenceId.eq(conferenceId))
+        fun delete(userId: Int, conferenceId: Int, roleType: RoleType? = null) = database.roles.removeIf {
+            val mainCondition = it.userId.eq(userId).and(it.conferenceId.eq(conferenceId))
+
+            if (roleType == null) {
+                mainCondition
+            } else {
+                mainCondition.and(it.roleType.eq(roleType))
+            }
         }
     }
 }

@@ -56,10 +56,9 @@ class ModifyConferenceController : Controller() {
             users to usersWithSelection
         } ui {
             model.setConference(initialConference)
-            setChairsSource(it.first)
             model.sources.committees.setAll(it.second)
+            setChairsSource(it.first)
             selectChair(it.first)
-            model.searchedCommittees.setAll(model.sources.committees)
             model.isLoading.set(false)
         }
     }
@@ -98,13 +97,15 @@ class ModifyConferenceController : Controller() {
     private fun selectChair(users: List<UserWithRole>) = with(model) {
         val coChairId = users.find { it.roleType == RoleType.CHAIR }?.user?.id ?: 0
 
-        selectedChair.set(sources.chairs.find { it.id == coChairId })
-
-        model.selectedChair.addListener { _, previousChair, selectedChair ->
-            handleSelectedChair(previousChair, selectedChair, users)
+        selectedChair.addListener { _, previousChair, selectedChair ->
+            if (!isLoading.get()) {
+                handleSelectedChair(previousChair, selectedChair, users)
+            }
 
             applyCommitteesSearch(selectedChair = selectedChair)
         }
+
+        selectedChair.set(sources.chairs.find { it.id == coChairId })
     }
 
     private fun applyCommitteesSearch(
@@ -153,13 +154,13 @@ class ModifyConferenceController : Controller() {
             return
         }
 
-        // otherwise, update it
+        // update the existing PC member role to chair
         RoleService.update(exCommittee.id, conferenceId, RoleType.CHAIR)
 
         // propagate changes to the view
         exCommittee.selected.set(false)
         users.find { it.user.id == selectedChair.id }?.roleType = null
-        users.find { it.user.id == exCommittee.id }?.roleType = RoleType.CHAIR
+        users.find { it.user.id == selectedChair.id }?.roleType = RoleType.CHAIR
     }
 
     private fun handleCommitteeSelection(user: User, checked: Boolean) {
@@ -168,7 +169,7 @@ class ModifyConferenceController : Controller() {
         if (checked) {
             RoleService.add(user.id, conferenceId, RoleType.PROGRAM_COMMITTEE)
         } else {
-            RoleService.delete(user.id, conferenceId)
+            RoleService.delete(user.id, conferenceId, RoleType.PROGRAM_COMMITTEE)
         }
     }
 }
