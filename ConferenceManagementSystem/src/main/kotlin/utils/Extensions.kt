@@ -82,3 +82,11 @@ fun Node.onBlur(handler: () -> Unit) = focusedProperty().onChange {
         handler()
     }
 }
+
+fun <T> T?.ifNull(provider: () -> T): T {
+    if (this == null) {
+        return provider()
+    }
+
+    return this
+}

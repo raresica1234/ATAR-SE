@@ -9,6 +9,8 @@ import server.domain.Role
 import server.domain.RoleType
 import server.domain.User
 import server.roles
+import utils.LOG_EXCEPTIONS
+import utils.ifNull
 import java.lang.Exception
 
 class RoleService {
@@ -27,21 +29,26 @@ class RoleService {
             try {
                 database.roles.add(role)
             } catch (exception: Exception) {
-                println("Exception in RoleService.add($role): $exception")
+                if (LOG_EXCEPTIONS) println("Exception in RoleService.add($role): $exception")
                 return null
             }
 
             return role
         }
 
-        fun update(userId: Int, conferenceId: Int, roleType: RoleType): Role {
+        fun update(userId: Int, conferenceId: Int, roleType: RoleType): Role? {
             val role = Role {
+                this.userId = userId
                 this.conferenceId = conferenceId
                 this.roleType = roleType
-                this.userId = userId
             }
 
-            database.roles.update(role)
+            try {
+                database.roles.update(role)
+            } catch (exception: Exception) {
+                if (LOG_EXCEPTIONS) println("Exception in RoleService.update($role): $exception")
+                return null
+            }
 
             return role
         }
@@ -59,5 +66,10 @@ class RoleService {
                 mainCondition.and(it.roleType.eq(roleType))
             }
         }
+
+        fun addOrUpdate(userId: Int, conferenceId: Int, roleType: RoleType) =
+            add(userId, conferenceId, roleType).ifNull {
+                update(userId, conferenceId, roleType)
+            }
     }
 }

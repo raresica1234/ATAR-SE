@@ -145,20 +145,13 @@ class ModifyConferenceController : Controller() {
             return
         }
 
-        // obtain the user that is now selected and was checked as program committee
-        val exCommittee = model.sources.committees.find { it.id == selectedChair.id && it.selected.value }
+        // unselect PC member that becomes chair
+        model.sources.committees.find { it.id == selectedChair.id }?.selected?.set(false)
 
-        // if the user did not have a previous role, add it
-        if (exCommittee == null) {
-            RoleService.add(selectedChair.id, conferenceId, RoleType.CHAIR)
-            return
-        }
-
-        // update the existing PC member role to chair
-        RoleService.update(exCommittee.id, conferenceId, RoleType.CHAIR)
+        // Add or update role
+        RoleService.addOrUpdate(selectedChair.id, conferenceId, RoleType.CHAIR)
 
         // propagate changes to the view
-        exCommittee.selected.set(false)
         users.find { it.user.id == selectedChair.id }?.roleType = null
         users.find { it.user.id == selectedChair.id }?.roleType = RoleType.CHAIR
     }
