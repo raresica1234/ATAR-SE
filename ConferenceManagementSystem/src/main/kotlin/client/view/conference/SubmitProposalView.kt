@@ -3,6 +3,7 @@ package client.view.conference
 import client.controller.conference.SubmitProposalController
 import client.view.ViewWithParams
 import javafx.geometry.Pos
+import javafx.scene.layout.Priority
 import javafx.scene.text.Font
 import javafx.stage.FileChooser
 import tornadofx.*
@@ -87,24 +88,37 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
                 }
 
                 hbox {
-                    alignment = Pos.CENTER
                     vbox {
                         alignment = Pos.CENTER
                         label("Full paper:")
+                        hboxConstraints {
+                            hgrow = Priority.NEVER
+                        }
                     }
                     vbox {
                         alignment = Pos.CENTER
-                        label(controller.model.fullPaperName)
+                        label(controller.model.fullPaperName) {
+                            maxWidth = 150.0
+                        }
+                        hboxConstraints {
+                            hgrow = Priority.ALWAYS
+                        }
                     }
-                    button("Upload") {
-                        minWidth = 128.0
-                        action {
-                            val fullPapers = chooseFile(title = "Select full paper location", filters = PAPER_FILTERS)
+                    vbox {
+                        button("Upload") {
+                            minWidth = 128.0
+                            hboxConstraints {
+                                hgrow = Priority.NEVER
+                            }
+                            action {
+                                val fullPapers =
+                                    chooseFile(title = "Select full paper location", filters = PAPER_FILTERS)
 
-                            // If a file was selected then update the paper location with the new location
-                            if (fullPapers.isNotEmpty()) {
-                                controller.model.fullPaperLocation.set(fullPapers[0].absolutePath)
-                                controller.model.fullPaperName.set(fullPapers[0].name)
+                                // If a file was selected then update the paper location with the new location
+                                if (fullPapers.isNotEmpty()) {
+                                    controller.model.fullPaperLocation.set(fullPapers[0].absolutePath)
+                                    controller.model.fullPaperName.set(fullPapers[0].name)
+                                }
                             }
                         }
                     }
