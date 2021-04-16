@@ -8,6 +8,7 @@ data class RoomItemModel(
     var seats: Int = 0
 ) {
     override fun toString() = "Room with $seats seats"
+
     fun toRoom() = Room{
         id = this@RoomItemModel.id
         seatCount = this@RoomItemModel.seats
