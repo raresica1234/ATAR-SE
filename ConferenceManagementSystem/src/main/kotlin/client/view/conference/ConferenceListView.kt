@@ -26,7 +26,9 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     private val participatingListView = buildListView(controller.model.participatingConferences)
 
     private val submitProposalButton = button("Submit proposal") {
-        action { println("Submit proposal for ${controller.model.selectedConference.get()}") }
+        action {
+            switchTo(SubmitProposalView::class, SubmitProposalView.PARAM_CONFERENCE to controller.model.selectedConference.get().conference)
+        }
     }
 
     private val participateButton = button("Participate") {

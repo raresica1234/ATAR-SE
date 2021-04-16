@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import server.domain.Conference
-import tornadofx.ge
 import utils.clear
 import java.time.LocalDate
 
