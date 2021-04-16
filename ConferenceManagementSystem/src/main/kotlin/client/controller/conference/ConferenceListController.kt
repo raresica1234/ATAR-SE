@@ -37,8 +37,9 @@ class ConferenceListController : Controller() {
 
                 allConferences.forEach { conferenceWithData ->
                     val conference = conferenceWithData.conference
-                    val sectionsString = conferenceWithData.sections.joinOrDefault(", ", "None")
-                    val proposalsString = conferenceWithData.proposals.joinOrDefault(", ", "None")
+                    // TODO: Maybe add more to the sections
+                    val sectionsString = conferenceWithData.sections.joinToString { it.name }.ifEmpty { "None" }
+                    val proposalsString = conferenceWithData.proposals.joinToString { it.name }.ifEmpty { "None" }
 
                     val rolesForConference = roles.find { it.conferenceId == conference.id }
 
