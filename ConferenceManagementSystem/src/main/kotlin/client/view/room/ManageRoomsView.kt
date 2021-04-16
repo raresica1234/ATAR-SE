@@ -24,18 +24,17 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
         paddingAll = 32.0
 
         vbox(32.0) {
-
-
             text("Manage Rooms") {
                 font = Font(24.0)
             }
 
-
-            tableview(controller.model.rooms) {
+            tableview(controller.rooms) {
                 maxWidth = 256.0
                 maxHeight = 128.0
+
                 readonlyColumn("Seats", RoomItemModel::seats) {
                     minWidth = 120.0
+                    
                     cellFormat {
                         alignment = Pos.CENTER
                         text = it.toString()
@@ -43,9 +42,10 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                 }
                 readonlyColumn("Actions", RoomItemModel::id) {
                     minWidth = 128.0
+
                     setNode {
                         val id = item
-                        val room = controller.model.rooms.find { it.id == id }
+                        val room = controller.rooms.find { it.id == id }
                         button("Edit") {
                             action {
                                 room?.let {

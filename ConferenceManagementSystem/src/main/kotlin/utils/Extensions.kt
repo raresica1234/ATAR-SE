@@ -86,7 +86,6 @@ fun Node.onBlur(handler: () -> Unit) = focusedProperty().onChange {
 
 fun <T> ObservableList<T>.setObject(oldItem: T, newItem: T?) {
     set(indexOf(oldItem), newItem)
-//    this.set ([indexOf(oldItem)] = newItem
 }
 
 fun <T> T?.ifNull(provider: () -> T): T {

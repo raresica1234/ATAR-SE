@@ -4,12 +4,12 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.geometry.Pos
 import tornadofx.*
 
-
 fun UIComponent.manageRoomsDialog(roomId: Int = 0, initialSeats: Int = 0, onSave: (Int) -> Unit = {}) = dialog {
     minWidth = 256.0
     minHeight = 128.0
     spacing = 16.0
     alignment = Pos.CENTER_LEFT
+
     val numberOfSeats = SimpleIntegerProperty(initialSeats)
 
     if (roomId == 0) {

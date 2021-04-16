@@ -12,6 +12,7 @@ import server.rooms
 class RoomSerivce {
     companion object {
         fun getAll() = database.rooms.toList()
+
         fun add(seatCount: Int): Room {
             val room = Room {
                 this.seatCount = seatCount
@@ -23,6 +24,7 @@ class RoomSerivce {
         }
 
         fun delete(id: Int) = database.rooms.removeIf { it.id eq id }
+
         fun update(room: Room) = database.rooms.update(room)
     }
 
