@@ -34,9 +34,10 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
 
                 readonlyColumn("Seats", RoomItemModel::seats) {
                     minWidth = 120.0
-                    
+
                     cellFormat {
                         alignment = Pos.CENTER
+
                         text = it.toString()
                     }
                 }
@@ -57,15 +58,9 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                         }
                         button("Delete") {
                             action {
-                                alert(
-                                    type = Alert.AlertType.CONFIRMATION,
-                                    header = "Delete Room",
-                                    content = "Delete room $item",
-                                    actionFn = { buttonType ->
-                                        if (buttonType.buttonData == ButtonBar.ButtonData.OK_DONE) {
-                                            controller.handleDeleteRoom(item)
-                                        }
-                                    })
+                                alert(Alert.AlertType.CONFIRMATION, "Delete Room",  "Delete room $item") {
+                                    controller.handleDeleteRoom(item)
+                                }
                             }
                         }
                     }
