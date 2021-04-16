@@ -16,7 +16,7 @@ class SubmitProposalController : Controller() {
         return try {
             validateFields()
 
-            var authors = model.authors.get().split(", ", ",").toMutableList()
+            var authors = model.authors.get().split("\n").toMutableList()
 
             UserService.createMissingAccounts(authors)
 
