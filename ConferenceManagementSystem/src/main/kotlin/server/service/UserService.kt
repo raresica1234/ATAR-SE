@@ -63,5 +63,14 @@ class UserService {
         fun getUsersWithRole(excludingUserId: Int, conferenceId: Int) = database.users
             .filter { it.isSiteAdministrator.eq(false).and(it.id.notEq(excludingUserId)) }
             .map { UserWithRole(it, RoleService.get(it.id, conferenceId)?.roleType) }
+
+        fun createMissingAccounts(emails: List<String>) {
+            emails.forEach { currentEmail ->
+                // If user does not exist add the account with just the email
+                if (database.users.find { it.email.eq(currentEmail) } == null) {
+                    database.users.add(User { email = currentEmail })
+                }
+            }
+        }
     }
 }
