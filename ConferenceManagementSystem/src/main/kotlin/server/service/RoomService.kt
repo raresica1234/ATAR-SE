@@ -9,7 +9,7 @@ import server.database
 import server.domain.Room
 import server.rooms
 
-class RoomSerivce {
+class RoomService {
     companion object {
         fun getAll() = database.rooms.toList()
 

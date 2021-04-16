@@ -58,7 +58,7 @@ class ManageRoomsView : View(APPLICATION_TITLE) {
                         }
                         button("Delete") {
                             action {
-                                alert(Alert.AlertType.CONFIRMATION, "Delete Room",  "Delete room $item") {
+                                confirm("Delete Room",  "Delete room $item") {
                                     controller.handleDeleteRoom(item)
                                 }
                             }
