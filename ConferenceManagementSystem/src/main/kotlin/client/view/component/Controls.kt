@@ -1,7 +1,6 @@
 package client.view.component
 
 import javafx.beans.property.Property
-import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventTarget
 import javafx.scene.control.DatePicker
 import tornadofx.datepicker
@@ -15,15 +14,14 @@ fun EventTarget.datePicker(
     property: Property<LocalDate>,
     size: Double = 192.0,
     op: DatePicker.() -> Unit = {}
-) =
-    vbox().apply {
-        maxWidth = size
+) = vbox().apply {
+    maxWidth = size
 
-        label(label)
-        datepicker(property) {
-            minWidth = size
-            converter = dateConverter
+    label(label)
+    datepicker(property) {
+        minWidth = size
+        converter = dateConverter
 
-            op(this)
-        }
+        op(this)
     }
+}
