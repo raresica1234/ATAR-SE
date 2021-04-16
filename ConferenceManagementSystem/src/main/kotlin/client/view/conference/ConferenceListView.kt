@@ -167,26 +167,19 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         minWidth = 448.0
         paddingTop = 56.0
 
-        controller.model.selectedConference.addListener { _, oldValue, newValue ->
-            if (newValue == null || userState.user.isSiteAdministrator) {
-                children.clear()
-                return@addListener
-            }
-
-            val isActive = controller.model.activeConferences.contains(newValue)
-
-            if (controller.model.activeConferences.contains(oldValue) && isActive) {
-                return@addListener
-            }
-
+        controller.model.selectedConference.onChange {
             children.clear()
 
-            if (isActive) {
-                buildActiveConferenceAction(this, newValue)
-                return@addListener
+            if (it == null || userState.user.isSiteAdministrator) {
+                return@onChange
             }
 
-            buildPendingConferenceAction(this, newValue)
+            if (controller.model.activeConferences.contains(it)) {
+                buildActiveConferenceAction(this, it)
+                return@onChange
+            }
+
+            buildPendingConferenceAction(this, it)
         }
     }
 
