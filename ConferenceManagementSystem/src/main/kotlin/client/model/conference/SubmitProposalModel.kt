@@ -24,4 +24,5 @@ data class SubmitProposalModel(
         topics = this@SubmitProposalModel.topics.get()
         conferenceId = this@SubmitProposalModel.conference.get().id
     }
+
 }

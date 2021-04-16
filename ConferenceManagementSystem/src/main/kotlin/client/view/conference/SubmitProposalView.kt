@@ -14,8 +14,12 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
         const val PARAM_CONFERENCE = "conference"
     }
 
-    val PAPER_FILTERS =
-        arrayOf(FileChooser.ExtensionFilter("Full paper (*.pdf, *.docx, *.txt)", "*.pdf", "*.docx", "*.txt"))
+    private val PAPER_FILTERS = arrayOf(
+        FileChooser.ExtensionFilter(
+            "Full paper (*.pdf, *.docx, *.txt)",
+            "*.pdf", "*.docx", "*.txt"
+        )
+    )
 
     private val TEXT_AREA_WIDTH = 128.0
     private val TEXT_AREA_HEIGHT = 256.0
@@ -102,14 +106,7 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
                 button("Upload") {
                     minWidth = 128.0
                     action {
-                        val fullPapers =
-                            chooseFile(title = "Select full paper location", filters = PAPER_FILTERS)
-
-                        // If a file was selected then update the paper location with the new location
-                        if (fullPapers.isNotEmpty()) {
-                            controller.model.fullPaperLocation.set(fullPapers[0].absolutePath)
-                            controller.model.fullPaperName.set(fullPapers[0].name)
-                        }
+                        controller.handleFullPaperUpload(chooseFile("Select full paper location", PAPER_FILTERS))
                     }
                 }
             }

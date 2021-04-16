@@ -27,7 +27,10 @@ class ConferenceListView : View(APPLICATION_TITLE) {
 
     private val submitProposalButton = button("Submit proposal") {
         action {
-            switchTo(SubmitProposalView::class, SubmitProposalView.PARAM_CONFERENCE to controller.model.selectedConference.get().conference)
+            switchTo(
+                SubmitProposalView::class,
+                SubmitProposalView.PARAM_CONFERENCE to controller.model.getConference()
+            )
         }
     }
 

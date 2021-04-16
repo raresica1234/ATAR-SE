@@ -27,4 +27,6 @@ data class ConferenceListModel(
     }
 
     fun getConferenceId() = selectedConference.get().id
+
+    fun getConference() = selectedConference.get().conference
 }

@@ -54,7 +54,5 @@ class ConferenceService {
                 .validateBefore(biddingDeadline)
                 .validateBefore(reviewDeadline)
         }
-
-        fun isFullPaperNeeded(conference: Conference) = conference.abstractDeadline == conference.paperDeadline
     }
 }
