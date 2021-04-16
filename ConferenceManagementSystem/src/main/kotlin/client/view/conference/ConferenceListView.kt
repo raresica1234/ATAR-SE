@@ -3,6 +3,7 @@ package client.view.conference
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
 import client.state.userState
+import client.view.room.ManageRoomsView
 import client.view.component.vBoxPane
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
@@ -65,7 +66,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 hbox(16.0, Pos.CENTER_RIGHT) {
                     button("Manage Rooms") {
                         minWidth = 128.0
-                        action { println("Go to manage rooms!") }
+                        action { switchTo(ManageRoomsView::class) }
                     }
 
                     button("Create Conference") {

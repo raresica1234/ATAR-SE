@@ -1,9 +1,10 @@
 package utils
 
+import client.model.RoomItemModel
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.value.ObservableBooleanValue
+import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.util.StringConverter
 import tornadofx.UIComponent
@@ -81,6 +82,10 @@ fun Node.onBlur(handler: () -> Unit) = focusedProperty().onChange {
     if (!it) {
         handler()
     }
+}
+
+fun <T> ObservableList<T>.setObject(oldItem: T, newItem: T?) {
+    set(indexOf(oldItem), newItem)
 }
 
 fun <T> T?.ifNull(provider: () -> T): T {
