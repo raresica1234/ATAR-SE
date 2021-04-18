@@ -1,7 +1,8 @@
-package client.view.conference
+package client.view.proposal
 
-import client.controller.conference.SubmitProposalController
+import client.controller.proposal.SubmitProposalController
 import client.view.ViewWithParams
+import client.view.conference.ConferenceListView
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import javafx.stage.FileChooser

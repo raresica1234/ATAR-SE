@@ -1,8 +1,7 @@
-package client.controller.conference
+package client.controller.proposal
 
-import client.model.conference.SubmitProposalModel
+import client.model.proposal.SubmitProposalModel
 import client.state.userState
-import server.service.ConferenceService
 import server.service.ProposalService
 import server.service.UserService
 import tornadofx.Controller
@@ -17,11 +16,13 @@ class SubmitProposalController : Controller() {
         return try {
             validateFields()
 
-            val authors = model.authors.get().split("\n").toMutableList()
+            val authors = mutableListOf(userState.user.email)
+
+            model.authors.get()?.let {
+                if (it.isBlank()) authors.addAll(it.split("\n"))
+            }
 
             UserService.createMissingAccounts(authors)
-
-            authors.add(userState.user.email)
             ProposalService.submitProposal(model.toProposal(), authors)
             true
         } catch (exception: ValidationException) {
@@ -40,7 +41,7 @@ class SubmitProposalController : Controller() {
         model.fullPaperName.set(path.first().name)
     }
 
-    fun validateFields() {
+    private fun validateFields() {
         if (model.name.isNullOrBlank()) {
             throw ValidationException(
                 "Name of the proposal is empty!",

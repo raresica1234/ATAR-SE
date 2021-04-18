@@ -1,10 +1,14 @@
 package server.service
 
 import org.ktorm.dsl.eq
-import org.ktorm.entity.*
+import org.ktorm.entity.add
+import org.ktorm.entity.filter
+import org.ktorm.entity.find
+import org.ktorm.entity.toList
 import server.database
 import server.domain.Proposal
 import server.domain.ProposalAuthor
+import server.domain.RoleType
 import server.proposalAuthors
 import server.proposals
 import server.users
@@ -24,6 +28,7 @@ class ProposalService {
                         proposalId = proposal.id
                         authorId = it.id
                     })
+                    RoleService.add(it.id, proposal.conferenceId, RoleType.AUTHOR)
                 }
         }
 

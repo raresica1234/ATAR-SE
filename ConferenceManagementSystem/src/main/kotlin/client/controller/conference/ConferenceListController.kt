@@ -10,7 +10,6 @@ import server.service.RoleService
 import tornadofx.Controller
 import tornadofx.onChange
 import utils.hasPassed
-import utils.joinOrDefault
 
 class ConferenceListController : Controller() {
     val model = ConferenceListModel()
@@ -80,4 +79,13 @@ class ConferenceListController : Controller() {
 
     private fun hasPermissionToManage(role: Role) =
         userState.user.isSiteAdministrator || role.roleType == RoleType.CHAIR
+
+    fun isAuthor(): Boolean {
+        val conferenceId = model.getConferenceId()
+        val userId = userState.user.id
+
+        return model.roles.any {
+            it.conferenceId == conferenceId && it.roleType == RoleType.AUTHOR && it.userId == userId
+        }
+    }
 }
