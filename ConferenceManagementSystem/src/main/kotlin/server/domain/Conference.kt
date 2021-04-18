@@ -13,4 +13,6 @@ interface Conference : Entity<Conference> {
     var biddingDeadline: LocalDate?
     var reviewDeadline: LocalDate?
     var reviewerCount: Int
+
+    val isFullPaper get() = abstractDeadline == paperDeadline
 }
