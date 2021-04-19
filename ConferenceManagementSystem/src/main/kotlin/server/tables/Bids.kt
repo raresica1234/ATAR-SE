@@ -7,7 +7,7 @@ import server.domain.Bid
 import server.domain.BidType
 
 object Bids : Table<Bid>("bids") {
-    val id = int("id").primaryKey().bindTo { it.id }
-    val pcMemberId = int("pcmemberid").bindTo { it.pcMemberId }
+    var proposalId = int("proposalid").primaryKey().bindTo { it.proposalId }
+    var pcMemberId = int("pcmemberid").primaryKey().bindTo { it.pcMemberId }
     var bidType = enum<BidType>("bidtype").bindTo { it.bidType }
 }

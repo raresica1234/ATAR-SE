@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty
 import server.domain.Conference
 
 class ViewProposalModel(
+    var id: Int = 0,
     val conference: SimpleObjectProperty<Conference> = SimpleObjectProperty(),
     val name: SimpleStringProperty = SimpleStringProperty(),
     val topics: SimpleStringProperty = SimpleStringProperty(),

@@ -31,14 +31,14 @@ class SubmitProposalController : Controller() {
         }
     }
 
-    fun handleFullPaperUpload(path: List<File>) {
+    fun handleFullPaperUpload(file: File?) {
         // If a file was selected then update the paper location with the new location
-        if (path.isEmpty()) {
+        if (file == null) {
             return
         }
 
-        model.fullPaperLocation.set(path.first().absolutePath)
-        model.fullPaperName.set(path.first().name)
+        model.fullPaperLocation.set(file.absolutePath)
+        model.fullPaperName.set(file.name)
     }
 
     private fun validateFields() {

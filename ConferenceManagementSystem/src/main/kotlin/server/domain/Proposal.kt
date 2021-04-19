@@ -5,7 +5,7 @@ import org.ktorm.entity.Entity
 interface Proposal : Entity<Proposal> {
     companion object : Entity.Factory<Proposal>()
 
-    val id: Int
+    var id: Int
     var abstractPaper: String
     var fullPaper: String
     var name: String
