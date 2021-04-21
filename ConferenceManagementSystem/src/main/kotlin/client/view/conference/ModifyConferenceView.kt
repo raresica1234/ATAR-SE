@@ -142,13 +142,14 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
             }
 
             button("Add") {
-                controller.model.selectedSection.addListener { _, oldValue, newValue ->
-                    if (newValue == null) {
+                controller.model.selectedSection.onChange {
+                    if (it == null) {
                         // When a list item is not in focus, prepare model for add
                         controller.model.selectedSection.set(ModifyConferenceSectionModel())
+                        return@onChange
                     }
                     // Enable button only when old value was null and new one is empty
-                    disableProperty().set(oldValue != null)
+                    disableProperty().set(it.id.get() != 0)
                 }
 
                 action { controller.addSection() }
@@ -203,12 +204,8 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                 datePicker("End date", section.endDate, LEFT_SIDE_WIDTH)
             }
             button("Delete") {
-                disableProperty().set(true)
-                controller.model.selectedSection.onChange {
-                    it?.let {
-                        disableProperty().set(it.id.get() == 0)
-                    }
-                }
+                disableProperty().set(section.id.get() == 0)
+                action { controller.deleteSection(section) }
             }
         }
 
@@ -227,12 +224,7 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                     font = Font(14.0)
                 }
                 button("Add") {
-                    disableProperty().set(true)
-                    controller.model.selectedSection.onChange {
-                        it?.let {
-                            disableProperty().set(it.id.get() == 0)
-                        }
-                    }
+                    disableProperty().set(section.id.get() == 0)
                 }
             }
 

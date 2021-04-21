@@ -26,8 +26,13 @@ class ModifyConferenceController : Controller() {
 
     init {
         model.search.onChange { applyCommitteesSearch(it) }
-        model.selectedSection.onChange { section ->
-            section?.let { refreshRooms(it) }
+        model.selectedSection.addListener { _, oldValue, _ ->
+            if (oldValue == null) {
+                return@addListener
+            }
+            if (oldValue.id.get() != 0) {
+                updateSection(oldValue)
+            }
         }
     }
 
@@ -44,7 +49,8 @@ class ModifyConferenceController : Controller() {
             val allUsers: List<UserItemModel>,
             val usersWithRoles: List<UserWithRole>,
             val usersWithSelection: List<SelectedUserItemModel>,
-            val sections: List<ModifyConferenceSectionModel>
+            val sections: List<ModifyConferenceSectionModel>,
+            val rooms: List<RoomItemModel>
         )
 
         runAsync {
@@ -74,11 +80,14 @@ class ModifyConferenceController : Controller() {
                 }
             }
 
-            FetchedData(allUsers, usersWithRoles, usersWithSelection, sections)
+            val rooms = RoomService.getAll().map { RoomItemModel(it.id, it.seatCount) }
+
+            FetchedData(allUsers, usersWithRoles, usersWithSelection, sections, rooms)
         } ui {
             model.setConference(initialConference)
             model.sources.committees.setAll(it.usersWithSelection)
             model.sources.users.setAll(it.allUsers)
+            model.sources.rooms.setAll(it.rooms)
             setChairsSource(it.usersWithRoles)
             selectChair(it.usersWithRoles)
             model.sections.setAll(it.sections)
@@ -111,7 +120,32 @@ class ModifyConferenceController : Controller() {
             validateSection(section)
         } catch (exception: ValidationException) {
             exception.displayError()
+            return
         }
+
+        SectionService.add(section)
+
+        model.sections.add(model.selectedSection.get())
+        model.selectedSection.set(ModifyConferenceSectionModel())
+    }
+
+    fun deleteSection(section: ModifyConferenceSectionModel) {
+        SectionService.delete(section.id.get())
+
+        model.sections.remove(section)
+    }
+
+    private fun updateSection(section: ModifyConferenceSectionModel) {
+        val sectionToUpdate = section.toSection(initialConference.id)
+
+        try {
+            validateSection(sectionToUpdate)
+        } catch (exception: ValidationException) {
+            exception.displayError()
+            return
+        }
+
+        SectionService.update(sectionToUpdate)
     }
 
     private fun areConferenceFieldsValid() = with(model) {
@@ -200,15 +234,6 @@ class ModifyConferenceController : Controller() {
         }
     }
 
-    private fun refreshRooms(section: ModifyConferenceSectionModel) {
-        runAsync {
-            RoomService.getUnusedRoomsWith(section.selectedRoom.get()?.id ?: 0)
-                .map { RoomItemModel(it.id, it.seatCount) }
-        } ui {
-            model.sources.rooms.setAll(it)
-        }
-    }
-
     private fun validateSection(section: Section) = with(section) {
         if (conferenceId == 0 ||
             name.isBlank() ||
@@ -224,5 +249,13 @@ class ModifyConferenceController : Controller() {
         }
 
         startDate.validateBefore(endDate, true)
+
+        if (!SectionService.isRoomAvailable(roomId, startDate, endDate, section.id)) {
+            throw ValidationException(
+                "Room is in use",
+                "Please change the room or adjust the dates such that another section's room is not overlapping with" +
+                        "the current one!"
+            )
+        }
     }
 }

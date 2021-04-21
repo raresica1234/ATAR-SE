@@ -54,6 +54,9 @@ data class ModifyConferenceSectionModel(
     override fun toString() = name.getOrEmpty()
 
     fun toSection(conferenceId: Int) = Section {
+        val sectionId = this@ModifyConferenceSectionModel.id.get()
+        if (sectionId != 0) id = sectionId
+
         this.conferenceId = conferenceId
         name = this@ModifyConferenceSectionModel.name.getOrEmpty()
         sessionChairId = sessionChair.get()?.id ?: 0

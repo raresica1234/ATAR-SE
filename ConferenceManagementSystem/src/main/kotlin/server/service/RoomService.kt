@@ -8,10 +8,11 @@ import org.ktorm.entity.*
 import server.database
 import server.domain.Room
 import server.rooms
+import java.time.LocalDate
 
 class RoomService {
     companion object {
-        fun getAll() = database.rooms.toList()
+        fun getAll() = database.rooms.sortedBy { it.seatCount }.toList()
 
         fun add(seatCount: Int): Room {
             val room = Room {
