@@ -3,6 +3,7 @@ package client.view.conference
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
 import client.state.userState
+import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.proposal.ViewProposalView
 import client.view.proposal.SubmitProposalView
@@ -13,7 +14,6 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
 import javafx.scene.layout.HBox
 import javafx.scene.text.Font
-import javafx.scene.text.FontWeight
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.dateConverter
@@ -167,16 +167,12 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         }
     }
 
-    private fun buildLabelWithData(labelText: String, extractor: (ConferenceListItemModel) -> String) = hbox(8.0) {
-        label(labelText)
-        text("-") {
-            style { fontWeight = FontWeight.BOLD }
-
+    private fun buildLabelWithData(labelText: String, extractor: (ConferenceListItemModel) -> String) =
+        labelWithData(labelText) {
             controller.model.selectedConference.onChange {
                 text = if (it == null) "-" else extractor(it)
             }
         }
-    }
 
     private fun buildConferenceActions() = hbox(16.0, Pos.BOTTOM_RIGHT) {
         minWidth = 448.0

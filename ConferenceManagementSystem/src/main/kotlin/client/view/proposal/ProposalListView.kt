@@ -1,11 +1,12 @@
 package client.view.proposal
 
 import client.controller.proposal.ProposalListController
-import client.model.conference.ConferenceListItemModel
 import client.model.proposal.ProposalListItemModel
 import client.view.ViewWithParams
+import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import javafx.collections.ObservableList
+import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
@@ -90,10 +91,17 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                     controller.model.selectedProposal.onChange {
                         text = it?.name ?: SELECT_A_PROPOSAL
                     }
-                    vbox(8.0) {
-                        TODO("Add labels")
-                    }
                 }
+                vbox(8.0) {
+                    buildLabelWithData("Name:") { it.name }
+                    buildLabelWithData("Topics:") { it.topics }
+                    buildLabelWithData("Keywords:") { it.keywords }
+                    buildLabelWithData("Authors:") { it.authors }
+                    buildLabelWithData("Abstract:") { it.abstract }
+                    buildLabelWithData("Status:") { it.status }
+                }
+
+                buildProposalActions()
             }
         }
     }
@@ -105,6 +113,60 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         selectionModel.selectionMode = SelectionMode.SINGLE
         selectionModel.selectedItemProperty().onChange {
             controller.model.selectedProposal.set(it)
+        }
+    }
+
+    private fun EventTarget.buildLabelWithData(labelText: String, extractor: (ProposalListItemModel) -> String) =
+        labelWithData(labelText) {
+            controller.model.selectedProposal.onChange {
+                text = if (it == null) "-" else extractor(it)
+            }
+        }
+
+    private fun EventTarget.buildProposalActions() = hbox(16.0, Pos.CENTER_RIGHT) {
+        controller.model.selectedProposal.onChange {
+            children.clear()
+
+            if (it == null) {
+                return@onChange
+            }
+
+            if (controller.model.leftTabProposals.contains(it)) {
+                buildLeftTabActions(it)
+                return@onChange
+            }
+
+            buildRightTabActions(it)
+        }
+    }
+
+    private fun EventTarget.buildLeftTabActions(proposal: ProposalListItemModel) {
+        if (controller.model.role.get() == RoleType.CHAIR) {
+            button("Manage reviews") {
+                action { println("Manage reviews for proposal ${proposal.id}") }
+            }
+            return
+        }
+        button("Pleased to review") {
+            action { println("Pleased to review for proposal ${proposal.id}") }
+        }
+        button("Could review") {
+            action { println("Could review for proposal ${proposal.id}") }
+        }
+        button("Refuse to review") {
+            action { println("Refuse to review for proposal ${proposal.id}") }
+        }
+    }
+
+    private fun EventTarget.buildRightTabActions(proposal: ProposalListItemModel) {
+        if (controller.model.role.get() == RoleType.CHAIR) {
+            button("Resolve conflicts") {
+                action { println("Resolve conflicts for proposal ${proposal.id}") }
+            }
+            return
+        }
+        button("Review") {
+            action { println("Review for proposal ${proposal.id}") }
         }
     }
 }
