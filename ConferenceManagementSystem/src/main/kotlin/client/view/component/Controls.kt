@@ -1,6 +1,7 @@
 package client.view.component
 
 import javafx.beans.property.Property
+import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventTarget
 import javafx.scene.control.DatePicker
 import javafx.scene.text.FontWeight
@@ -26,12 +27,16 @@ fun EventTarget.datePicker(
     }
 }
 
-fun EventTarget.labelWithData(labelText: String, op: Text.() -> Unit = {}) = hbox(8.0) {
+fun EventTarget.labelWithData(
+    labelText: String,
+    binding: SimpleStringProperty = SimpleStringProperty("-"),
+    op: Text.() -> Unit = {}
+) = hbox(8.0) {
     label(labelText)
     textflow {
         maxWidth = 256.0
 
-        text("-") {
+        text(binding) {
             style { fontWeight = FontWeight.BOLD }
 
             op(this)

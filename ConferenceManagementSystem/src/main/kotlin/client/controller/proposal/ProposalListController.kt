@@ -26,7 +26,6 @@ class ProposalListController : Controller() {
         )
         model.isLoading.set(true)
         runAsync {
-
             val userId = userState.user.id
 
             val role = RoleService.get(userId, conference.id)?.roleType ?: return@runAsync null

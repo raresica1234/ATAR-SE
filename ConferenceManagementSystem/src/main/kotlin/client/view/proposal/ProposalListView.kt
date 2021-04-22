@@ -141,7 +141,6 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         labelWithData(labelText) {
             controller.model.selectedProposal.onChange {
                 text = if (it == null) "-" else extractor(it)
-
             }
         }
 
