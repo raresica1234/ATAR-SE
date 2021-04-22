@@ -19,7 +19,7 @@ class SubmitProposalController : Controller() {
             val authors = mutableListOf(userState.user.email)
 
             model.authors.get()?.let {
-                if (it.isBlank()) authors.addAll(it.split("\n"))
+                if (it.isNotBlank()) authors.addAll(it.split("\n"))
             }
 
             UserService.createMissingAccounts(authors)

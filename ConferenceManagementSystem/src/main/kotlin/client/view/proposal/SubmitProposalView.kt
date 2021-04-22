@@ -92,25 +92,6 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
                 }
             }
 
-            /*hbox(32.0) {
-                maxWidth = VIEW_WIDTH
-                hbox(8.0, Pos.CENTER) {
-                    label("Full paper:") {
-                        minWidth = 70.0
-                    }
-
-                    label(controller.model.fullPaperName) {
-                        minWidth = 180.0
-                        maxWidth = 180.0
-                    }
-                }
-                button("Upload") {
-                    minWidth = 128.0
-                    action {
-                        controller.handleFullPaperUpload(chooseFile("Select full paper location", PAPER_FILTERS))
-                    }
-                }
-            }*/
             uploadPaper(controller.model.fullPaperName) {
                 controller.handleFullPaperUpload(it)
             }
