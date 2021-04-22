@@ -79,11 +79,11 @@ class ProposalService {
 
         fun getAllWithAuthorsByConference(conferenceId: Int) = database.proposals
             .filter { it.conferenceId eq conferenceId }
-            .mapNotNull { ProposalWithAuthors(it, getAuthorsForProposal(it.id)) }
+            .mapNotNull { ProposalWithAuthors(it, getProposalAuthors(it.id)) }
 
         fun getAllInConflictWithAuthorsByConference(conferenceId: Int) = database.proposals
             .filter { (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.IN_CONFLICT) }
-            .mapNotNull { ProposalWithAuthors(it, getAuthorsForProposal(it.id)) }
+            .mapNotNull { ProposalWithAuthors(it, getProposalAuthors(it.id)) }
 
         fun getAllForBiddingWithAuthors(conferenceId: Int, pcMemberId: Int): List<ProposalWithAuthors> {
             val madeBids = BidService.getAllByPcMember(pcMemberId)
@@ -93,7 +93,7 @@ class ProposalService {
             }.toList()
                 .filter { proposal -> madeBids.none { it.proposalId == proposal.id } }
                 .map {
-                    ProposalWithAuthors(it, getAuthorsForProposal(it.id))
+                    ProposalWithAuthors(it, getProposalAuthors(it.id))
                 }
         }
 
@@ -105,7 +105,7 @@ class ProposalService {
             }.toList()
                 .filter { proposal -> approvedBids.any { it.proposalId == proposal.id } }
                 .map {
-                    ProposalWithAuthors(it, getAuthorsForProposal(it.id))
+                    ProposalWithAuthors(it, getProposalAuthors(it.id))
                 }
         }
     }
