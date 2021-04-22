@@ -6,7 +6,7 @@ import java.time.LocalDate
 interface Section : Entity<Section> {
     companion object : Entity.Factory<Section>()
 
-    val id: Int
+    var id: Int
     var conferenceId: Int
     var name: String
     var sessionChairId: Int

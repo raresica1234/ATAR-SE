@@ -1,21 +1,23 @@
 package client.controller.conference
 
+import client.model.RoomItemModel
 import client.model.SelectedUserItemModel
 import client.model.UserItemModel
 import client.model.conference.ModifyConferenceModel
+import client.model.conference.ModifyConferenceSectionModel
 import client.state.userState
 import javafx.beans.property.SimpleBooleanProperty
 import server.domain.Conference
 import server.domain.RoleType
+import server.domain.Section
 import server.domain.User
-import server.service.ConferenceService
-import server.service.RoleService
-import server.service.UserService
-import server.service.UserWithRole
+import server.service.*
 import tornadofx.Controller
 import tornadofx.onChange
 import utils.ValidationException
 import utils.isValid
+import utils.validateBefore
+import java.time.LocalDate
 
 class ModifyConferenceController : Controller() {
     val model: ModifyConferenceModel = ModifyConferenceModel()
@@ -24,6 +26,14 @@ class ModifyConferenceController : Controller() {
 
     init {
         model.search.onChange { applyCommitteesSearch(it) }
+        model.selectedSection.addListener { _, oldValue, _ ->
+            if (oldValue == null) {
+                return@addListener
+            }
+            if (oldValue.id.get() != 0) {
+                updateSection(oldValue)
+            }
+        }
     }
 
     fun refreshData() {
@@ -35,15 +45,25 @@ class ModifyConferenceController : Controller() {
     }
 
     private fun fetchData(conferenceId: Int) {
+        data class FetchedData(
+            val allUsers: List<UserItemModel>,
+            val usersWithRoles: List<UserWithRole>,
+            val usersWithSelection: List<SelectedUserItemModel>,
+            val sections: List<ModifyConferenceSectionModel>,
+            val rooms: List<RoomItemModel>
+        )
+
         runAsync {
             ConferenceService.get(conferenceId)?.let {
                 initialConference = it
             }
 
-            val users = UserService.getUsersWithRole(userState.user.id, conferenceId)
+            val allUsers = UserService.getAll().map { UserItemModel(it.id, it.fullName, it.email) }
+
+            val usersWithRoles = UserService.getUsersWithRole(userState.user.id, conferenceId)
                 .filter { it.roleType != RoleType.AUTHOR || it.roleType != RoleType.LISTENER }
 
-            val usersWithSelection = users.map {
+            val usersWithSelection = usersWithRoles.map {
                 SelectedUserItemModel(
                     it.user.id,
                     it.user.fullName,
@@ -53,12 +73,25 @@ class ModifyConferenceController : Controller() {
                     }
                 )
             }
-            users to usersWithSelection
+
+            val sections = SectionService.getAllWithProposalsByConference(initialConference.id).map {
+                ModifyConferenceSectionModel.from(it) { proposalId ->
+                    ProposalService.getAuthorsForProposal(proposalId).joinToString { user -> user.fullName }
+                }
+            }
+
+            val rooms = RoomService.getAll().map { RoomItemModel(it.id, it.seatCount) }
+
+            FetchedData(allUsers, usersWithRoles, usersWithSelection, sections, rooms)
         } ui {
             model.setConference(initialConference)
-            model.sources.committees.setAll(it.second)
-            setChairsSource(it.first)
-            selectChair(it.first)
+            model.sources.committees.setAll(it.usersWithSelection)
+            model.sources.users.setAll(it.allUsers)
+            model.sources.rooms.setAll(it.rooms)
+            setChairsSource(it.usersWithRoles)
+            selectChair(it.usersWithRoles)
+            model.sections.setAll(it.sections)
+            model.selectedSection.set(ModifyConferenceSectionModel())
             model.isLoading.set(false)
         }
     }
@@ -78,6 +111,41 @@ class ModifyConferenceController : Controller() {
         } catch (exception: ValidationException) {
             exception.displayError()
         }
+    }
+
+    fun addSection() {
+        val section = model.selectedSection.get().toSection(initialConference.id)
+
+        try {
+            validateSection(section)
+        } catch (exception: ValidationException) {
+            exception.displayError()
+            return
+        }
+
+        SectionService.add(section)
+
+        model.sections.add(model.selectedSection.get())
+        model.selectedSection.set(ModifyConferenceSectionModel())
+    }
+
+    fun deleteSection(section: ModifyConferenceSectionModel) {
+        SectionService.delete(section.id.get())
+
+        model.sections.remove(section)
+    }
+
+    private fun updateSection(section: ModifyConferenceSectionModel) {
+        val sectionToUpdate = section.toSection(initialConference.id)
+
+        try {
+            validateSection(sectionToUpdate)
+        } catch (exception: ValidationException) {
+            exception.displayError()
+            return
+        }
+
+        SectionService.update(sectionToUpdate)
     }
 
     private fun areConferenceFieldsValid() = with(model) {
@@ -163,6 +231,31 @@ class ModifyConferenceController : Controller() {
             RoleService.add(user.id, conferenceId, RoleType.PROGRAM_COMMITTEE)
         } else {
             RoleService.delete(user.id, conferenceId, RoleType.PROGRAM_COMMITTEE)
+        }
+    }
+
+    private fun validateSection(section: Section) = with(section) {
+        if (conferenceId == 0 ||
+            name.isBlank() ||
+            sessionChairId == 0 ||
+            startDate == LocalDate.EPOCH ||
+            endDate == LocalDate.EPOCH ||
+            roomId == 0
+        ) {
+            throw ValidationException(
+                "Some fields are empty",
+                "All fields must be filled in, please check them and try again!"
+            )
+        }
+
+        startDate.validateBefore(endDate, true)
+
+        if (!SectionService.isRoomAvailable(roomId, startDate, endDate, section.id)) {
+            throw ValidationException(
+                "Room is in use",
+                "Please change the room or adjust the dates such that another section's room is not overlapping with" +
+                        "the current one!"
+            )
         }
     }
 }

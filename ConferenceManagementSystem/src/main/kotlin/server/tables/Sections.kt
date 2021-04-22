@@ -8,8 +8,8 @@ import server.domain.Section
 import server.tables.Bids.bindTo
 
 object Sections : Table<Section>("sections") {
-    val id = int("id").primaryKey().bindTo { it.id }
-    val conferenceId = int("conferenceid").bindTo { it.conferenceId }
+    var id = int("id").primaryKey().bindTo { it.id }
+    var conferenceId = int("conferenceid").bindTo { it.conferenceId }
     var name = varchar("name").bindTo { it.name }
     var sessionChairId = int("sessionchairid").bindTo { it.sessionChairId }
     var startDate = date("startdate").bindTo { it.startDate }

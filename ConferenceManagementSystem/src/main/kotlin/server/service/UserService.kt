@@ -56,7 +56,7 @@ class UserService {
 
         fun get(userId: Int) = database.users.find { it.id.eq(userId) }
 
-        fun getAll(userId: Int) = database.users
+        fun getAll(userId: Int = 0) = database.users
             .filter { it.id.notEq(userId) }
             .toList()
 

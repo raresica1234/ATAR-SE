@@ -9,6 +9,7 @@ import client.view.component.setNode
 import client.view.component.vBoxPane
 import javafx.event.EventTarget
 import javafx.geometry.Pos
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.text.Font
 import tornadofx.*
@@ -38,6 +39,8 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
     private val progress = progressbar()
 
     override val root = vbox(alignment = Pos.CENTER) {
+        maxWidth = 745.0
+
         progress.prefWidthProperty().bind(widthProperty())
         this += progress
         controller.model.isLoading.onChange {
@@ -139,72 +142,100 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
             }
 
             button("Add") {
-                controller.model.selectedSection.addListener { _, oldValue, newValue ->
-                    if (newValue != null) {
+                controller.model.selectedSection.onChange {
+                    if (it == null) {
                         // When a list item is not in focus, prepare model for add
                         controller.model.selectedSection.set(ModifyConferenceSectionModel())
+                        return@onChange
                     }
                     // Enable button only when old value was null and new one is empty
-                    disableProperty().set(oldValue != null)
+                    disableProperty().set(it.id.get() != 0)
                 }
+
+                action { controller.addSection() }
             }
         }
 
         listview(controller.model.sections) {
             maxWidth = LEFT_SIDE_WIDTH
+            selectionModel.selectionMode = SelectionMode.SINGLE
+            selectionModel.selectedItemProperty().addListener { _, _, value ->
+                controller.model.selectedSection.set(value)
+            }
         }
     }
 
     private fun EventTarget.addSectionPane() = vBoxPane(32.0) {
-        val section = controller.model.selectedSectionDetails
-
-        addPaneFieldsAndDeleteButton(section)
-        addProposalsWithAddButton(section)
-    }
-
-    private fun EventTarget.addPaneFieldsAndDeleteButton(section: ModifyConferenceSectionModel) = hbox(49.0) {
-        vbox(8.0) {
-            vbox {
-                maxWidth = LEFT_SIDE_WIDTH
-
-                label("Name")
-                textfield(section.name) {
-                    promptText = "Name"
-                }
+        controller.model.selectedSection.onChange {
+            if (it == null) {
+                return@onChange
             }
-            datePicker("Start date", section.startDate, LEFT_SIDE_WIDTH)
-        }
-        vbox(8.0) {
-            vbox {
-                maxWidth = LEFT_SIDE_WIDTH
 
-                label("Room")
-                combobox(section.selectedRoom, controller.model.sources.rooms) {
-                    minWidth = LEFT_SIDE_WIDTH
-                    promptText = "Select a room"
-                }
-            }
-            datePicker("End date", section.endDate, LEFT_SIDE_WIDTH)
-        }
-        button("Delete")
-    }
+            children.clear()
 
-    private fun EventTarget.addProposalsWithAddButton(section: ModifyConferenceSectionModel) = vbox(4.0) {
-        hbox(370.0, Pos.BOTTOM_LEFT) {
-            text("Proposals") {
-                font = Font(14.0)
-            }
-            button("Add")
-        }
-
-        tableview(section.proposals) {
-            readonlyColumn("Proposal name", ProposalItemModel::name).minWidth = 128.0
-            readonlyColumn("Proposal authors", ProposalItemModel::name).minWidth = 256.0
-            readonlyColumn("Actions", ProposalItemModel::id).setNode {
-                button("Remove") {
-                    action { println("Remove proposal $item") }
-                }
-            }
+            addPaneFieldsAndDeleteButton(it)
+            addProposalsWithAddButton(it)
         }
     }
+
+    private fun EventTarget.addPaneFieldsAndDeleteButton(section: ModifyConferenceSectionModel) = vbox(8.0) {
+        hbox(49.0) {
+            vbox(8.0) {
+                vbox {
+                    maxWidth = LEFT_SIDE_WIDTH
+
+                    label("Name")
+                    textfield(section.name) {
+                        promptText = "Name"
+                    }
+                }
+                datePicker("Start date", section.startDate, LEFT_SIDE_WIDTH)
+            }
+            vbox(8.0) {
+                vbox {
+                    maxWidth = LEFT_SIDE_WIDTH
+
+                    label("Room")
+                    combobox(section.selectedRoom, controller.model.sources.rooms) {
+                        minWidth = LEFT_SIDE_WIDTH
+                        promptText = "Select a room"
+                    }
+                }
+                datePicker("End date", section.endDate, LEFT_SIDE_WIDTH)
+            }
+            button("Delete") {
+                disableProperty().set(section.id.get() == 0)
+                action { controller.deleteSection(section) }
+            }
+        }
+
+        vbox {
+            label("Session chair")
+            combobox(section.sessionChair, controller.model.sources.users) {
+                promptText = "Select a co-chair"
+            }
+        }
+    }
+
+    private fun EventTarget.addProposalsWithAddButton(section: ModifyConferenceSectionModel) =
+        vbox(4.0) {
+            hbox(370.0, Pos.BOTTOM_LEFT) {
+                text("Proposals") {
+                    font = Font(14.0)
+                }
+                button("Add") {
+                    disableProperty().set(section.id.get() == 0)
+                }
+            }
+
+            tableview(section.proposals) {
+                readonlyColumn("Proposal name", ProposalItemModel::name).minWidth = 128.0
+                readonlyColumn("Proposal authors", ProposalItemModel::name).minWidth = 256.0
+                readonlyColumn("Actions", ProposalItemModel::id).setNode {
+                    button("Remove") {
+                        action { println("Remove proposal $item") }
+                    }
+                }
+            }
+        }
 }

@@ -26,5 +26,13 @@ class ProposalService {
                     })
                 }
         }
+
+        fun getAllBySectionId(sectionId: Int) = database.proposals
+            .filter { it.sectionId.eq(sectionId) }
+            .toList()
+
+        fun getAuthorsForProposal(proposalId: Int) = database.proposalAuthors
+            .filter { it.proposalId.eq(proposalId) }
+            .mapNotNull { UserService.get(it.authorId) }
     }
 }
