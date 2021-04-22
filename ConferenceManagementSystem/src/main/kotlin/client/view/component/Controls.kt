@@ -28,9 +28,13 @@ fun EventTarget.datePicker(
 
 fun EventTarget.labelWithData(labelText: String, op: Text.() -> Unit = {}) = hbox(8.0) {
     label(labelText)
-    text("-") {
-        style { fontWeight = FontWeight.BOLD }
+    textflow {
+        maxWidth = 256.0
 
-        op(this)
+        text("-") {
+            style { fontWeight = FontWeight.BOLD }
+
+            op(this)
+        }
     }
 }
