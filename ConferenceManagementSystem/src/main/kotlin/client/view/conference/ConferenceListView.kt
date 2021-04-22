@@ -3,8 +3,10 @@ package client.view.conference
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
 import client.state.userState
-import client.view.room.ManageRoomsView
 import client.view.component.vBoxPane
+import client.view.proposal.ViewProposalView
+import client.view.proposal.SubmitProposalView
+import client.view.room.ManageRoomsView
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
@@ -43,7 +45,15 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     }
 
     private val viewButton = button("View") {
-        action { println("View ${controller.model.selectedConference.get()}") }
+        action {
+            if (controller.isAuthor()) {
+                switchTo(
+                    ViewProposalView::class,
+                    "userId" to userState.user.id,
+                    "conferenceId" to controller.model.getConferenceId()
+                )
+            }
+        }
     }
 
     private val progress = progressbar {

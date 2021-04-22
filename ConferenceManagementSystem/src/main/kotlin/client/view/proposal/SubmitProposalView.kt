@@ -1,7 +1,8 @@
-package client.view.conference
+package client.view.proposal
 
-import client.controller.conference.SubmitProposalController
+import client.controller.proposal.SubmitProposalController
 import client.view.ViewWithParams
+import client.view.conference.ConferenceListView
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import javafx.stage.FileChooser
@@ -91,26 +92,9 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
                 }
             }
 
-            hbox(32.0) {
-                maxWidth = VIEW_WIDTH
-                hbox(8.0, Pos.CENTER) {
-                    label("Full paper:") {
-                        minWidth = 70.0
-                    }
-
-                    label(controller.model.fullPaperName) {
-                        minWidth = 180.0
-                        maxWidth = 180.0
-                    }
-                }
-                button("Upload") {
-                    minWidth = 128.0
-                    action {
-                        controller.handleFullPaperUpload(chooseFile("Select full paper location", PAPER_FILTERS))
-                    }
-                }
+            uploadPaper(controller.model.fullPaperName) {
+                controller.handleFullPaperUpload(it)
             }
-
             hbox(180.0) {
                 alignment = Pos.CENTER
                 maxWidth = VIEW_WIDTH

@@ -76,7 +76,7 @@ class ModifyConferenceController : Controller() {
 
             val sections = SectionService.getAllWithProposalsByConference(initialConference.id).map {
                 ModifyConferenceSectionModel.from(it) { proposalId ->
-                    ProposalService.getAuthorsForProposal(proposalId).joinToString { user -> user.fullName }
+                    ProposalService.getProposalAuthors(proposalId).joinToString { user -> user.fullName }
                 }
             }
 

@@ -1,4 +1,4 @@
-package client.model.conference
+package client.model.proposal
 
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
@@ -7,14 +7,14 @@ import server.domain.Proposal
 import utils.getOrEmpty
 
 data class SubmitProposalModel(
-    var conference: SimpleObjectProperty<Conference> = SimpleObjectProperty(),
-    var name: SimpleStringProperty = SimpleStringProperty(),
-    var topics: SimpleStringProperty = SimpleStringProperty(),
-    var keywords: SimpleStringProperty = SimpleStringProperty(),
-    var authors: SimpleStringProperty = SimpleStringProperty(),
-    var abstractPaper: SimpleStringProperty = SimpleStringProperty(),
-    var fullPaperLocation: SimpleStringProperty = SimpleStringProperty(),
-    var fullPaperName: SimpleStringProperty = SimpleStringProperty("None selected")
+    val conference: SimpleObjectProperty<Conference> = SimpleObjectProperty(),
+    val name: SimpleStringProperty = SimpleStringProperty(),
+    val topics: SimpleStringProperty = SimpleStringProperty(),
+    val keywords: SimpleStringProperty = SimpleStringProperty(),
+    val authors: SimpleStringProperty = SimpleStringProperty(),
+    val abstractPaper: SimpleStringProperty = SimpleStringProperty(),
+    val fullPaperLocation: SimpleStringProperty = SimpleStringProperty(),
+    val fullPaperName: SimpleStringProperty = SimpleStringProperty("None selected")
 ) {
     fun toProposal() = Proposal {
         name = this@SubmitProposalModel.name.get()

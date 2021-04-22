@@ -4,7 +4,6 @@ import org.ktorm.schema.Table
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 import server.domain.Proposal
-import server.tables.Bids.bindTo
 
 object Proposals : Table<Proposal>("proposals") {
     val id = int("id").primaryKey().bindTo { it.id }
