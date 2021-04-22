@@ -13,7 +13,7 @@ import server.users
 
 data class ProposalWithAuthors(val proposal: Proposal, val authors: List<User>)
 
-data class ProposalWithBidsAndReviews(val proposal: Proposal, val bids: List<Bid>, val reviews: List<Review>)
+data class ProposalWithReviews(val proposal: Proposal, val reviews: List<Review>)
 
 class ProposalService {
     companion object {
@@ -35,7 +35,7 @@ class ProposalService {
                 }
         }
 
-        fun getProposalByConferenceAndAuthorId(conferenceId: Int, authorId: Int): ProposalWithBidsAndReviews? {
+        fun getProposalByConferenceAndAuthorId(conferenceId: Int, authorId: Int): ProposalWithReviews? {
             val proposalAuthors = database.proposalAuthors.filter { it.authorId.eq(authorId) }.toList()
             val proposals = database.proposals.filter { it.conferenceId.eq(conferenceId) }.toList()
 
@@ -43,9 +43,8 @@ class ProposalService {
                 proposalAuthors.any { it.proposalId == proposal.id }
             } ?: return null
 
-            return ProposalWithBidsAndReviews(
+            return ProposalWithReviews(
                 proposal,
-                BidService.getAllByProposalId(proposal.id),
                 ReviewService.getAllByProposalId(proposal.id)
             )
         }
@@ -75,7 +74,7 @@ class ProposalService {
         })
 
         fun getWithAuthors(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
-            ProposalWithAuthors(it, getAuthorsForProposal(proposalId))
+            ProposalWithAuthors(it, getProposalAuthors(proposalId))
         }
     }
 }
