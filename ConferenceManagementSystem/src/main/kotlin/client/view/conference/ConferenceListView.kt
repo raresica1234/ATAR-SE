@@ -6,15 +6,14 @@ import client.state.userState
 import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.proposal.ProposalListView
-import client.view.proposal.ViewProposalView
 import client.view.proposal.SubmitProposalView
+import client.view.proposal.ViewProposalView
 import client.view.room.ManageRoomsView
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
-import javafx.scene.layout.HBox
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
