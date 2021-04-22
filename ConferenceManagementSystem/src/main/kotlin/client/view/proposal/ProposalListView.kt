@@ -169,14 +169,14 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
             }
             return
         }
-        button("Pleased to review") {
-            action { println("Pleased to review for proposal ${proposal.id}") }
+        button("Refuse to review") {
+            action { println("Refuse to review for proposal ${proposal.id}") }
         }
         button("Could review") {
             action { println("Could review for proposal ${proposal.id}") }
         }
-        button("Refuse to review") {
-            action { println("Refuse to review for proposal ${proposal.id}") }
+        button("Pleased to review") {
+            action { println("Pleased to review for proposal ${proposal.id}") }
         }
     }
 
