@@ -7,11 +7,13 @@ import client.view.ViewWithParams
 import client.view.component.datePicker
 import client.view.component.setNode
 import client.view.component.vBoxPane
+import client.view.proposal.selectProposalDialog
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.text.Font
+import server.service.ProposalService
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.onBlur
@@ -225,6 +227,11 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                 }
                 button("Add") {
                     disableProperty().set(section.id.get() == 0)
+                    action {
+                        selectProposalDialog({ controller.getProposals() }) {
+                            it?.let { controller.addProposal(it.id) }
+                        }
+                    }
                 }
             }
 
@@ -233,7 +240,7 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                 readonlyColumn("Proposal authors", ProposalItemModel::name).minWidth = 256.0
                 readonlyColumn("Actions", ProposalItemModel::id).setNode {
                     button("Remove") {
-                        action { println("Remove proposal $item") }
+                        action { controller.removeProposal(item) }
                     }
                 }
             }

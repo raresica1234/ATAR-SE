@@ -1,8 +1,10 @@
 package server.tables
 
 import org.ktorm.schema.Table
+import org.ktorm.schema.enum
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
+import server.domain.ApprovalStatus
 import server.domain.Proposal
 
 object Proposals : Table<Proposal>("proposals") {
@@ -14,4 +16,5 @@ object Proposals : Table<Proposal>("proposals") {
     var topics = varchar("topics").bindTo { it.topics }
     var conferenceId = int("conferenceid").bindTo { it.conferenceId }
     var sectionId = int("sectionid").bindTo { it.sectionId }
+    var status = enum<ApprovalStatus>("status").bindTo { it.status }
 }

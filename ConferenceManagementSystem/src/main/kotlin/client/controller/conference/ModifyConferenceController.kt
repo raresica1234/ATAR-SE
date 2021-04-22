@@ -1,5 +1,6 @@
 package client.controller.conference
 
+import client.model.ProposalItemModel
 import client.model.RoomItemModel
 import client.model.SelectedUserItemModel
 import client.model.UserItemModel
@@ -133,6 +134,22 @@ class ModifyConferenceController : Controller() {
         SectionService.delete(section.id.get())
 
         model.sections.remove(section)
+    }
+
+    fun getProposals() = ProposalService.getAllUnassociatedForConference(initialConference.id)
+
+    fun addProposal(proposalId: Int) {
+        val section = model.selectedSection.get()
+
+        ProposalService.setToSection(proposalId, section.id.get())
+        ProposalService.getWithAuthors(proposalId)?.apply {
+            section.proposals.add(ProposalItemModel(proposalId, proposal.name, authors.joinToString { it.fullName }))
+        }
+    }
+
+    fun removeProposal(proposalId: Int) {
+        ProposalService.setToSection(proposalId)
+        model.selectedSection.get().proposals.removeIf { it.id == proposalId }
     }
 
     private fun updateSection(section: ModifyConferenceSectionModel) {

@@ -1,6 +1,9 @@
 package server.service
 
+import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.isNull
+import org.ktorm.dsl.or
 import org.ktorm.entity.*
 import server.database
 import server.domain.*
@@ -8,7 +11,9 @@ import server.proposalAuthors
 import server.proposals
 import server.users
 
-data class ProposalWithBidsAndReviews(val proposal: Proposal, val bids: List<Bid>, val reviews: List<Review>)
+data class ProposalWithAuthors(val proposal: Proposal, val authors: List<User>)
+
+data class ProposalWithReviews(val proposal: Proposal, val reviews: List<Review>)
 
 class ProposalService {
     companion object {
@@ -17,6 +22,7 @@ class ProposalService {
             .toList()
 
         fun submitProposal(proposal: Proposal, authors: List<String>) {
+            proposal.status = ApprovalStatus.TO_BE_REVIEWED
             database.proposals.add(proposal)
 
             authors.mapNotNull { email -> database.users.find { it.email.eq(email) } }
@@ -29,7 +35,7 @@ class ProposalService {
                 }
         }
 
-        fun getProposalByConferenceAndAuthorId(conferenceId: Int, authorId: Int): ProposalWithBidsAndReviews? {
+        fun getProposalByConferenceAndAuthorId(conferenceId: Int, authorId: Int): ProposalWithReviews? {
             val proposalAuthors = database.proposalAuthors.filter { it.authorId.eq(authorId) }.toList()
             val proposals = database.proposals.filter { it.conferenceId.eq(conferenceId) }.toList()
 
@@ -37,9 +43,8 @@ class ProposalService {
                 proposalAuthors.any { it.proposalId == proposal.id }
             } ?: return null
 
-            return ProposalWithBidsAndReviews(
+            return ProposalWithReviews(
                 proposal,
-                BidService.getAllByProposalId(proposal.id),
                 ReviewService.getAllByProposalId(proposal.id)
             )
         }
@@ -56,5 +61,20 @@ class ProposalService {
         fun getAllBySectionId(sectionId: Int) = database.proposals
             .filter { it.sectionId.eq(sectionId) }
             .toList()
+
+        fun getAllUnassociatedForConference(conferenceId: Int) = database.proposals.filter {
+            (it.conferenceId eq conferenceId) and
+                    (it.status eq ApprovalStatus.APPROVED) and
+                    ((it.sectionId eq 0) or it.sectionId.isNull())
+        }.toList()
+
+        fun setToSection(proposalId: Int, sectionId: Int = 0) = database.proposals.update(Proposal {
+            id = proposalId
+            this.sectionId = sectionId
+        })
+
+        fun getWithAuthors(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
+            ProposalWithAuthors(it, getProposalAuthors(proposalId))
+        }
     }
 }

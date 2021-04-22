@@ -13,27 +13,11 @@ class ViewProposalController : Controller() {
 
     fun refreshData(authorId: Int, conferenceId: Int) {
         model.conference.set(ConferenceService.get(conferenceId))
-        val proposal = ProposalService.getProposalByConferenceAndAuthorId(conferenceId, authorId) ?: return
-        val authors = ProposalService.getProposalAuthors(proposal.proposal.id)
 
-        with(model) {
-            id = proposal.proposal.id
-            name.set(proposal.proposal.name)
-            topics.set(proposal.proposal.topics.replace("\n", ", "))
-            keywords.set(proposal.proposal.keywords.replace("\n", ", "))
-            this.authors.set(authors.joinToString { it.fullName })
-            abstractPaper.set(proposal.proposal.abstractPaper)
-            fullPaperLocation.set(proposal.proposal.fullPaper)
-            status.set(getStatus(proposal.bids, proposal.reviews))
-            recommendation.set(proposal.reviews.joinToString("\n\n") { it.recommendation }.ifBlank { "-" })
-        }
-        println(proposal.proposal)
-    }
+        val proposalWithReviews = ProposalService.getProposalByConferenceAndAuthorId(conferenceId, authorId) ?: return
+        val authors = ProposalService.getProposalAuthors(proposalWithReviews.proposal.id)
 
-    private fun getStatus(bids: List<Bid>, reviews: List<Review>): String {
-        if (bids.isEmpty()) return "To be reviewed"
-        if (bids.size != reviews.size) return "In review"
-        return if (reviews.sumBy { it.reviewType.value } > 0) "Approved" else "Rejected"
+        model.setProposal(proposalWithReviews, authors)
     }
 
     fun handleFullPaperUpload(file: File?) {

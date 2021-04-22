@@ -3,6 +3,8 @@ package client.model.proposal
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import server.domain.Conference
+import server.domain.User
+import server.service.ProposalWithReviews
 
 class ViewProposalModel(
     var id: Int = 0,
@@ -16,4 +18,16 @@ class ViewProposalModel(
     val fullPaperName: SimpleStringProperty = SimpleStringProperty("None selected"),
     val status: SimpleStringProperty = SimpleStringProperty(),
     val recommendation: SimpleStringProperty = SimpleStringProperty()
-)
+) {
+    fun setProposal(proposalWithReviews: ProposalWithReviews, authors: List<User>) = with(proposalWithReviews) {
+        id = proposal.id
+        name.set(proposal.name)
+        topics.set(proposal.topics.replace("\n", ", "))
+        keywords.set(proposal.keywords.replace("\n", ", "))
+        this@ViewProposalModel.authors.set(authors.joinToString { it.fullName.ifBlank { it.email } })
+        abstractPaper.set(proposal.abstractPaper)
+        fullPaperLocation.set(proposal.fullPaper)
+        status.set(proposal.status.value)
+        recommendation.set(reviews.joinToString("\n\n") { it.recommendation }.ifBlank { "-" })
+    }
+}
