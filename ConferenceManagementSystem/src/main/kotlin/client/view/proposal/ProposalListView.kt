@@ -170,13 +170,13 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         }
 
         button("Refuse to review") {
-            action {  controller.handleBids(proposal, userState.user.id, BidType.REFUSE_TO_REVIEW) }
+            action {  controller.handleBids(proposal, BidType.REFUSE_TO_REVIEW) }
         }
         button("Could review") {
-            action { controller.handleBids(proposal, userState.user.id, BidType.COULD_REVIEW) }
+            action { controller.handleBids(proposal, BidType.COULD_REVIEW) }
         }
         button("Pleased to review") {
-            action { controller.handleBids(proposal, userState.user.id, BidType.PLEASED_TO_REVIEW) }
+            action { controller.handleBids(proposal, BidType.PLEASED_TO_REVIEW) }
         }
     }
 

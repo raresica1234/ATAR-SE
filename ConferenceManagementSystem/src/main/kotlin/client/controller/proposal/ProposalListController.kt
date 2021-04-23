@@ -72,8 +72,8 @@ class ProposalListController : Controller() {
         return ProposalService.getAllForReviewWithAuthors(conference.id, userId)
     }
 
-    fun handleBids(proposal: ProposalListItemModel, pcMemberId: Int, bidType: BidType) {
-        BidService.add(proposal.id, pcMemberId, bidType)
+    fun handleBids(proposal: ProposalListItemModel, bidType: BidType) {
+        BidService.add(proposal.id, userState.user.id, bidType)
         model.leftTabProposals.remove(proposal)
     }
 }
