@@ -8,4 +8,5 @@ interface Bid : Entity<Bid> {
     var proposalId: Int
     var pcMemberId: Int
     var bidType: BidType
+    var approved: Boolean
 }

@@ -76,5 +76,37 @@ class ProposalService {
         fun getWithAuthors(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
             ProposalWithAuthors(it, getProposalAuthors(proposalId))
         }
+
+        fun getAllWithAuthorsByConference(conferenceId: Int) = database.proposals
+            .filter { it.conferenceId eq conferenceId }
+            .mapNotNull { ProposalWithAuthors(it, getProposalAuthors(it.id)) }
+
+        fun getAllInConflictWithAuthorsByConference(conferenceId: Int) = database.proposals
+            .filter { (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.IN_CONFLICT) }
+            .mapNotNull { ProposalWithAuthors(it, getProposalAuthors(it.id)) }
+
+        fun getAllForBiddingWithAuthors(conferenceId: Int, pcMemberId: Int): List<ProposalWithAuthors> {
+            val madeBids = BidService.getAllByPcMember(pcMemberId)
+
+            return database.proposals.filter {
+                (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.TO_BE_REVIEWED)
+            }.toList()
+                .filter { proposal -> madeBids.none { it.proposalId == proposal.id } }
+                .map {
+                    ProposalWithAuthors(it, getProposalAuthors(it.id))
+                }
+        }
+
+        fun getAllForReviewWithAuthors(conferenceId: Int, pcMemberId: Int): List<ProposalWithAuthors> {
+            val approvedBids = BidService.getAllApprovedByPcMember(pcMemberId)
+
+            return database.proposals.filter {
+                (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.IN_REVIEW)
+            }.toList()
+                .filter { proposal -> approvedBids.any { it.proposalId == proposal.id } }
+                .map {
+                    ProposalWithAuthors(it, getProposalAuthors(it.id))
+                }
+        }
     }
 }

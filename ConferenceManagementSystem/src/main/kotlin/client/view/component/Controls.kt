@@ -1,11 +1,12 @@
 package client.view.component
 
 import javafx.beans.property.Property
+import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventTarget
 import javafx.scene.control.DatePicker
-import tornadofx.datepicker
-import tornadofx.label
-import tornadofx.vbox
+import javafx.scene.text.FontWeight
+import javafx.scene.text.Text
+import tornadofx.*
 import utils.dateConverter
 import java.time.LocalDate
 
@@ -23,5 +24,22 @@ fun EventTarget.datePicker(
         converter = dateConverter
 
         op(this)
+    }
+}
+
+fun EventTarget.labelWithData(
+    labelText: String,
+    binding: SimpleStringProperty = SimpleStringProperty("-"),
+    op: Text.() -> Unit = {}
+) = hbox(8.0) {
+    label(labelText)
+    textflow {
+        maxWidth = 256.0
+
+        text(binding) {
+            style { fontWeight = FontWeight.BOLD }
+
+            op(this)
+        }
     }
 }

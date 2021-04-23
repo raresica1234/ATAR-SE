@@ -74,18 +74,27 @@ class ConferenceListController : Controller() {
         }
     }
 
-    private fun applySearch(conferences: List<ConferenceListItemModel>, searchValue: String) =
-        conferences.filter { it.conference.name.contains(searchValue, true) }
+    fun isListener(): Boolean {
+        val conferenceId = model.getConferenceId()
+        val userId = userState.user.id
 
-    private fun hasPermissionToManage(role: Role) =
-        userState.user.isSiteAdministrator || role.roleType == RoleType.CHAIR
+        return model.roles.any {
+            it.conferenceId == conferenceId && it.userId == userId && it.roleType == RoleType.LISTENER
+        }
+    }
 
     fun isAuthor(): Boolean {
         val conferenceId = model.getConferenceId()
         val userId = userState.user.id
 
         return model.roles.any {
-            it.conferenceId == conferenceId && it.roleType == RoleType.AUTHOR && it.userId == userId
+            it.conferenceId == conferenceId && it.userId == userId && it.roleType == RoleType.AUTHOR
         }
     }
+
+    private fun applySearch(conferences: List<ConferenceListItemModel>, searchValue: String) =
+        conferences.filter { it.conference.name.contains(searchValue, true) }
+
+    private fun hasPermissionToManage(role: Role) =
+        userState.user.isSiteAdministrator || role.roleType == RoleType.CHAIR
 }

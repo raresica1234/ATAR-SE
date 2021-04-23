@@ -3,17 +3,18 @@ package client.view.conference
 import client.controller.conference.ConferenceListController
 import client.model.conference.ConferenceListItemModel
 import client.state.userState
+import client.view.component.labelWithData
 import client.view.component.vBoxPane
-import client.view.proposal.ViewProposalView
+import client.view.proposal.ProposalListView
 import client.view.proposal.SubmitProposalView
+import client.view.proposal.ViewProposalView
 import client.view.room.ManageRoomsView
 import javafx.collections.ObservableList
+import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
-import javafx.scene.layout.HBox
 import javafx.scene.text.Font
-import javafx.scene.text.FontWeight
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.dateConverter
@@ -52,6 +53,8 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                     "userId" to userState.user.id,
                     "conferenceId" to controller.model.getConferenceId()
                 )
+            } else {
+                switchTo(ProposalListView::class, "conference" to controller.model.getConference())
             }
         }
     }
@@ -167,16 +170,12 @@ class ConferenceListView : View(APPLICATION_TITLE) {
         }
     }
 
-    private fun buildLabelWithData(labelText: String, extractor: (ConferenceListItemModel) -> String) = hbox(8.0) {
-        label(labelText)
-        text("-") {
-            style { fontWeight = FontWeight.BOLD }
-
+    private fun buildLabelWithData(labelText: String, extractor: (ConferenceListItemModel) -> String) =
+        labelWithData(labelText) {
             controller.model.selectedConference.onChange {
                 text = if (it == null) "-" else extractor(it)
             }
         }
-    }
 
     private fun buildConferenceActions() = hbox(16.0, Pos.BOTTOM_RIGHT) {
         minWidth = 448.0
@@ -190,25 +189,27 @@ class ConferenceListView : View(APPLICATION_TITLE) {
             }
 
             if (controller.model.activeConferences.contains(it)) {
-                buildActiveConferenceAction(this, it)
+                buildActiveConferenceAction(it)
                 return@onChange
             }
 
-            buildPendingConferenceAction(this, it)
+            buildPendingConferenceAction(it)
         }
     }
 
-    private fun buildActiveConferenceAction(hbox: HBox, itemModel: ConferenceListItemModel) {
+    private fun EventTarget.buildActiveConferenceAction(itemModel: ConferenceListItemModel) {
         if (!itemModel.hideExtraButton) {
-            hbox += submitProposalButton
+            this += submitProposalButton
         }
-        hbox += participateButton
+        this += participateButton
     }
 
-    private fun buildPendingConferenceAction(hbox: HBox, itemModel: ConferenceListItemModel) {
+    private fun EventTarget.buildPendingConferenceAction(itemModel: ConferenceListItemModel) {
         if (!itemModel.hideExtraButton) {
-            hbox += manageButton
+            this += manageButton
         }
-        hbox += viewButton
+        if (!controller.isListener()) {
+            this += viewButton
+        }
     }
 }
