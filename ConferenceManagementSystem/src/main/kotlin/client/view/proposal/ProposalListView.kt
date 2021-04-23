@@ -2,18 +2,20 @@ package client.view.proposal
 
 import client.controller.proposal.ProposalListController
 import client.model.proposal.ProposalListItemModel
-import client.state.userState
 import client.view.ViewWithParams
 import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.conference.ConferenceListView
+import client.view.review.ManageReviewsView
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
 import javafx.scene.text.Font
-import server.domain.*
+import server.domain.BidType
+import server.domain.Conference
+import server.domain.RoleType
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
@@ -39,6 +41,8 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         paddingAll = 32.0
 
         vbox(32.0) {
+            maxWidth = 735.0
+
             text("Proposals") {
                 font = Font(24.0)
 
@@ -164,13 +168,13 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
     private fun EventTarget.buildLeftTabActions(proposal: ProposalListItemModel) {
         if (controller.model.role.get() == RoleType.CHAIR) {
             button("Manage reviews") {
-                action { println("Manage reviews for proposal ${proposal.id}") }
+                action { switchTo(ManageReviewsView::class, "proposalId" to proposal.id) }
             }
             return
         }
 
         button("Refuse to review") {
-            action {  controller.handleBids(proposal, BidType.REFUSE_TO_REVIEW) }
+            action { controller.handleBids(proposal, BidType.REFUSE_TO_REVIEW) }
         }
         button("Could review") {
             action { controller.handleBids(proposal, BidType.COULD_REVIEW) }

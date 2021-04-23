@@ -108,5 +108,16 @@ class ProposalService {
                     ProposalWithAuthors(it, getProposalAuthors(it.id))
                 }
         }
+
+        fun get(proposalId: Int) = database.proposals.find { it.id eq proposalId }
+
+        fun updateStatus(id: Int, status: ApprovalStatus) {
+            val proposal = Proposal {
+                this.id = id
+                this.status = status
+            }
+
+            database.proposals.update(proposal)
+        }
     }
 }
