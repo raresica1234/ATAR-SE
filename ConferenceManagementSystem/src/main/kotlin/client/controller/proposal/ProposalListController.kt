@@ -3,10 +3,7 @@ package client.controller.proposal
 import client.model.proposal.ProposalListItemModel
 import client.model.proposal.ProposalListModel
 import client.state.userState
-import server.domain.Bid
-import server.domain.BidType
-import server.domain.Conference
-import server.domain.RoleType
+import server.domain.*
 import server.service.BidService
 import server.service.ProposalService
 import server.service.ProposalWithAuthors
@@ -75,10 +72,8 @@ class ProposalListController : Controller() {
         return ProposalService.getAllForReviewWithAuthors(conference.id, userId)
     }
 
-    fun handleBids(proposalId: Int, pcMemberId: Int, bidType: BidType): Bid? {
-        val bid =  BidService.add(proposalId, pcMemberId, bidType)
-        model.leftTabProposals.removeIf { it.id == proposalId }
-
-        return bid
+    fun handleBids(proposal: ProposalListItemModel, pcMemberId: Int, bidType: BidType) {
+        BidService.add(proposal.id, pcMemberId, bidType)
+        model.leftTabProposals.remove(proposal)
     }
 }
