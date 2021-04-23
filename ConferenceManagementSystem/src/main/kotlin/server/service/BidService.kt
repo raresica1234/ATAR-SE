@@ -22,7 +22,7 @@ class BidService {
             it.pcMemberId eq pcMemberId and it.approved
         }.toList()
 
-        fun add(proposalId: Int, pcMemberId: Int, bidType: BidType, approved: Boolean): Bid? {
+        fun add(proposalId: Int, pcMemberId: Int, bidType: BidType, approved: Boolean = false): Bid? {
             val bid = Bid {
                 this.proposalId = proposalId
                 this.pcMemberId = pcMemberId
