@@ -3,8 +3,8 @@ package client.controller.proposal
 import client.model.proposal.ProposalListItemModel
 import client.model.proposal.ProposalListModel
 import client.state.userState
-import server.domain.Conference
-import server.domain.RoleType
+import server.domain.*
+import server.service.BidService
 import server.service.ProposalService
 import server.service.ProposalWithAuthors
 import server.service.RoleService
@@ -70,5 +70,10 @@ class ProposalListController : Controller() {
             return ProposalService.getAllInConflictWithAuthorsByConference(conference.id)
         }
         return ProposalService.getAllForReviewWithAuthors(conference.id, userId)
+    }
+
+    fun handleBids(proposal: ProposalListItemModel, bidType: BidType) {
+        BidService.add(proposal.id, userState.user.id, bidType)
+        model.leftTabProposals.remove(proposal)
     }
 }

@@ -2,6 +2,7 @@ package client.view.proposal
 
 import client.controller.proposal.ProposalListController
 import client.model.proposal.ProposalListItemModel
+import client.state.userState
 import client.view.ViewWithParams
 import client.view.component.labelWithData
 import client.view.component.vBoxPane
@@ -12,8 +13,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
 import javafx.scene.text.Font
-import server.domain.Conference
-import server.domain.RoleType
+import server.domain.*
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
@@ -168,14 +168,15 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
             }
             return
         }
+
         button("Refuse to review") {
-            action { println("Refuse to review for proposal ${proposal.id}") }
+            action {  controller.handleBids(proposal, BidType.REFUSE_TO_REVIEW) }
         }
         button("Could review") {
-            action { println("Could review for proposal ${proposal.id}") }
+            action { controller.handleBids(proposal, BidType.COULD_REVIEW) }
         }
         button("Pleased to review") {
-            action { println("Pleased to review for proposal ${proposal.id}") }
+            action { controller.handleBids(proposal, BidType.PLEASED_TO_REVIEW) }
         }
     }
 
