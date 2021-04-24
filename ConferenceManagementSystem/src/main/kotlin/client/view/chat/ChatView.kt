@@ -12,10 +12,12 @@ class ChatView : View(APPLICATION_TITLE) {
         minHeight = 456.0
 
         vbox(16.0, Pos.CENTER) {
+
             listview<ObservableStringValue> {
                 maxWidth = 480.0
                 maxHeight = 280.0
             }
+
             textarea {
                 maxWidth = 480.0
                 maxHeight = 80.0
