@@ -8,6 +8,7 @@ import server.domain.Bid
 import server.domain.Proposal
 import server.service.BidService
 import server.service.ProposalService
+import server.service.ReviewService
 import tornadofx.Controller
 import tornadofx.onChange
 
@@ -51,6 +52,9 @@ class ManageReviewsController : Controller() {
         proposal?.let {
             if (approved && (it.status != ApprovalStatus.IN_CONFLICT || it.status != ApprovalStatus.IN_REVIEW)) {
                 ProposalService.updateStatus(it.id, ApprovalStatus.IN_REVIEW)
+            }
+            if (!approved) {
+                ReviewService.remove(it.id, bid.pcMemberId)
             }
         }
     }
