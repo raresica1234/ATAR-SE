@@ -1,25 +1,27 @@
-package client.model.proposal
+package client.model
 
 import server.service.ProposalWithAuthors
 
-data class ProposalListItemModel(
+data class DetailedProposalItemModel(
     val id: Int,
     val name: String,
     val topics: String,
     val keywords: String,
     val authors: String,
     val abstract: String,
+    val fullPaper: String,
     val status: String
 ) {
     companion object {
         fun from(proposalWithAuthors: ProposalWithAuthors) = with(proposalWithAuthors) {
-            ProposalListItemModel(
+            DetailedProposalItemModel(
                 proposal.id,
                 proposal.name,
                 proposal.topics.replace("\n", ", "),
                 proposal.keywords.replace("\n", ", "),
                 authors.joinToString { it.fullName.ifBlank { it.email } },
                 proposal.abstractPaper,
+                proposal.fullPaper,
                 proposal.status.value
             )
         }

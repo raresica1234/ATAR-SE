@@ -1,12 +1,13 @@
 package client.view.proposal
 
 import client.controller.proposal.ProposalListController
-import client.model.proposal.ProposalListItemModel
+import client.model.DetailedProposalItemModel
 import client.view.ViewWithParams
 import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.conference.ConferenceListView
 import client.view.review.ManageReviewsView
+import client.view.review.ReviewPaperView
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
 import javafx.geometry.Pos
@@ -131,7 +132,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         }
     }
 
-    private fun buildListView(items: ObservableList<ProposalListItemModel>) = listview(items) {
+    private fun buildListView(items: ObservableList<DetailedProposalItemModel>) = listview(items) {
         maxWidth = LIST_WIDTH
         maxHeight = 256.0
 
@@ -141,7 +142,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         }
     }
 
-    private fun EventTarget.buildLabelWithData(labelText: String, extractor: (ProposalListItemModel) -> String) =
+    private fun EventTarget.buildLabelWithData(labelText: String, extractor: (DetailedProposalItemModel) -> String) =
         labelWithData(labelText) {
             controller.model.selectedProposal.onChange {
                 text = if (it == null) "-" else extractor(it)
@@ -165,7 +166,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         }
     }
 
-    private fun EventTarget.buildLeftTabActions(proposal: ProposalListItemModel) {
+    private fun EventTarget.buildLeftTabActions(proposal: DetailedProposalItemModel) {
         if (controller.model.role.get() == RoleType.CHAIR) {
             button("Manage reviews") {
                 action { switchTo(ManageReviewsView::class, "proposalId" to proposal.id) }
@@ -184,7 +185,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
         }
     }
 
-    private fun EventTarget.buildRightTabActions(proposal: ProposalListItemModel) {
+    private fun EventTarget.buildRightTabActions(proposal: DetailedProposalItemModel) {
         if (controller.model.role.get() == RoleType.CHAIR) {
             button("Resolve conflicts") {
                 action { println("Resolve conflicts for proposal ${proposal.id}") }
@@ -192,7 +193,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
             return
         }
         button("Review") {
-            action { println("Review for proposal ${proposal.id}") }
+            action { switchTo(ReviewPaperView::class, "proposal" to proposal) }
         }
     }
 }

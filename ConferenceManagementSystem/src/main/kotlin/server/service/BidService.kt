@@ -56,5 +56,7 @@ class BidService {
 
             database.bids.update(bid)
         }
+
+        fun getCountForProposal(proposalId: Int) = database.bids.filter { it.proposalId eq proposalId }.count()
     }
 }

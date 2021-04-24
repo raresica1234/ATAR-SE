@@ -95,3 +95,5 @@ fun <T> T?.ifNull(provider: () -> T): T {
 
     return this
 }
+
+fun Int.hasSameSign(other: Int) = this * other > 0

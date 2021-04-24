@@ -88,6 +88,7 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
                 textarea(controller.model.abstractPaper) {
                     maxWidth = VIEW_WIDTH
                     maxHeight = TEXT_AREA_HEIGHT * 2
+                    isWrapText = true
                     promptText = "Abstract paper"
                 }
             }

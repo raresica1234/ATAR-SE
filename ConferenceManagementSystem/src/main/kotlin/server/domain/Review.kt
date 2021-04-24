@@ -9,4 +9,6 @@ interface Review : Entity<Review> {
     var pcMemberId: Int
     var reviewType: ReviewType
     var recommendation: String
+
+    val reviewValue get() = reviewType.value
 }

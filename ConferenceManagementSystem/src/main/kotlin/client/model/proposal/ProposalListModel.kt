@@ -1,5 +1,6 @@
 package client.model.proposal
 
+import client.model.DetailedProposalItemModel
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
@@ -11,8 +12,8 @@ data class ProposalListModel(
     val conference: SimpleObjectProperty<Conference> = SimpleObjectProperty(),
     val role: SimpleObjectProperty<RoleType> = SimpleObjectProperty(),
     val isLoading: SimpleBooleanProperty = SimpleBooleanProperty(true),
-    val selectedProposal: SimpleObjectProperty<ProposalListItemModel> = SimpleObjectProperty(),
-    val leftTabProposals: ObservableList<ProposalListItemModel> = observableListOf(),
-    val rightTabProposals: ObservableList<ProposalListItemModel> = observableListOf(),
+    val selectedProposal: SimpleObjectProperty<DetailedProposalItemModel> = SimpleObjectProperty(),
+    val leftTabProposals: ObservableList<DetailedProposalItemModel> = observableListOf(),
+    val rightTabProposals: ObservableList<DetailedProposalItemModel> = observableListOf(),
 
-)
+    )
