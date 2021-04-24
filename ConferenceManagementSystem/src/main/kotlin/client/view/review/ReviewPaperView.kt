@@ -3,6 +3,7 @@ package client.view.review
 import client.controller.review.ReviewPaperController
 import client.model.DetailedProposalItemModel
 import client.view.ViewWithParams
+import client.view.chat.ChatView
 import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.proposal.ProposalListView
@@ -89,7 +90,7 @@ class ReviewPaperView : ViewWithParams(APPLICATION_TITLE) {
                 }
 
                 button("Chat") {
-//                    action { switchTo() }
+                    action { switchTo(ChatView::class) }
                 }
 
                 button("Submit") {
