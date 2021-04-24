@@ -49,7 +49,7 @@ class ManageReviewsController : Controller() {
     private fun handleApprovalChange(proposal: Proposal?, bid: Bid, approved: Boolean) {
         BidService.updateApproval(bid.proposalId, bid.pcMemberId, approved)
         proposal?.let {
-            if (approved && it.status == ApprovalStatus.TO_BE_REVIEWED) {
+            if (approved && (it.status != ApprovalStatus.IN_CONFLICT || it.status != ApprovalStatus.IN_REVIEW)) {
                 ProposalService.updateStatus(it.id, ApprovalStatus.IN_REVIEW)
             }
         }
