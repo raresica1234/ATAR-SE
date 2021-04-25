@@ -1,6 +1,6 @@
 package client.controller.proposal
 
-import client.model.proposal.ProposalListItemModel
+import client.model.DetailedProposalItemModel
 import client.model.proposal.ProposalListModel
 import client.state.userState
 import server.domain.*
@@ -21,8 +21,8 @@ class ProposalListController : Controller() {
     private fun fetchData(conference: Conference) {
         data class FetchData(
             val roleType: RoleType,
-            val leftProposals: List<ProposalListItemModel>,
-            val rightProposals: List<ProposalListItemModel>
+            val leftProposals: List<DetailedProposalItemModel>,
+            val rightProposals: List<DetailedProposalItemModel>
         )
         model.isLoading.set(true)
         runAsync {
@@ -31,10 +31,10 @@ class ProposalListController : Controller() {
             val role = RoleService.get(userId, conference.id)?.roleType ?: return@runAsync null
 
             val leftProposals = fetchLeftProposals(role, conference, userId)
-                .map { ProposalListItemModel.from(it) }
+                .map { DetailedProposalItemModel.from(it) }
 
             val rightProposals = fetchRightProposals(role, conference, userId)
-                .map { ProposalListItemModel.from(it) }
+                .map { DetailedProposalItemModel.from(it) }
 
             FetchData(role, leftProposals, rightProposals)
         } ui {
@@ -72,7 +72,7 @@ class ProposalListController : Controller() {
         return ProposalService.getAllForReviewWithAuthors(conference.id, userId)
     }
 
-    fun handleBids(proposal: ProposalListItemModel, bidType: BidType) {
+    fun handleBids(proposal: DetailedProposalItemModel, bidType: BidType) {
         BidService.add(proposal.id, userState.user.id, bidType)
         model.leftTabProposals.remove(proposal)
     }

@@ -73,7 +73,7 @@ class ProposalService {
             this.sectionId = sectionId
         })
 
-        fun getWithAuthors(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
+        fun getWithAuthors(proposalId: Int) = get(proposalId)?.let {
             ProposalWithAuthors(it, getProposalAuthors(proposalId))
         }
 
@@ -111,13 +111,13 @@ class ProposalService {
 
         fun get(proposalId: Int) = database.proposals.find { it.id eq proposalId }
 
-        fun updateStatus(id: Int, status: ApprovalStatus) {
-            val proposal = Proposal {
-                this.id = id
-                this.status = status
-            }
-
-            database.proposals.update(proposal)
+        fun isProposalInConflict(proposalId: Int) = database.proposals.any {
+            (it.id eq proposalId) and (it.status eq ApprovalStatus.IN_CONFLICT)
         }
+
+        fun updateStatus(proposalId: Int, status: ApprovalStatus) = database.proposals.update(Proposal {
+            id = proposalId
+            this.status = status
+        })
     }
 }
