@@ -76,4 +76,9 @@ class ProposalListController : Controller() {
         BidService.add(proposal.id, userState.user.id, bidType)
         model.leftTabProposals.remove(proposal)
     }
+
+    fun updateProposalStatus(proposalId: Int, proposalStatus: ApprovalStatus) {
+        ProposalService.updateStatus(proposalId, proposalStatus)
+    }
+
 }

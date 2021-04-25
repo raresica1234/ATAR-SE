@@ -14,6 +14,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
 import javafx.scene.text.Font
+import server.domain.ApprovalStatus
 import server.domain.BidType
 import server.domain.Conference
 import server.domain.RoleType
@@ -187,8 +188,12 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
 
     private fun EventTarget.buildRightTabActions(proposal: DetailedProposalItemModel) {
         if (controller.model.role.get() == RoleType.CHAIR) {
-            button("Resolve conflicts") {
-                action { println("Resolve conflicts for proposal ${proposal.id}") }
+            button("Resolve conflict - Accept") {
+                action { controller.updateProposalStatus(proposal.id, ApprovalStatus.APPROVED) }
+            }
+
+            button("Resolve conflict - Reject") {
+                action { controller.updateProposalStatus(proposal.id, ApprovalStatus.REJECTED) }
             }
             return
         }
