@@ -237,7 +237,7 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
 
             tableview(section.proposals) {
                 readonlyColumn("Proposal name", ProposalItemModel::name).minWidth = 128.0
-                readonlyColumn("Proposal authors", ProposalItemModel::name).minWidth = 256.0
+                readonlyColumn("Proposal authors", ProposalItemModel::authors).minWidth = 256.0
                 readonlyColumn("Actions", ProposalItemModel::id).setNode {
                     button("Remove") {
                         action { controller.removeProposal(item) }

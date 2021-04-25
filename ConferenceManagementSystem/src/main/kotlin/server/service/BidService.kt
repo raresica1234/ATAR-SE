@@ -2,15 +2,16 @@ package server.service
 
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
-import org.ktorm.entity.add
-import org.ktorm.entity.filter
-import org.ktorm.entity.toList
+import org.ktorm.dsl.or
+import org.ktorm.entity.*
 import server.bids
 import server.database
 import server.domain.Bid
 import server.domain.BidType
+import server.domain.User
 import utils.LOG_EXCEPTIONS
-import java.lang.Exception
+
+data class BidWithPcMember(val bid: Bid, val pcMember: User)
 
 class BidService {
     companion object {
@@ -38,6 +39,22 @@ class BidService {
             }
 
             return bid
+        }
+
+        fun getAllWillingToReviewForProposal(proposalId: Int) = database.bids.filter {
+            (it.proposalId eq proposalId) and
+                    ((it.bidType eq BidType.PLEASED_TO_REVIEW) or (it.bidType eq BidType.COULD_REVIEW))
+        }.sortedByDescending { it.bidType }
+            .mapNotNull { BidWithPcMember(it, UserService.get(it.pcMemberId) ?: return@mapNotNull null) }
+
+        fun updateApproval(proposalId: Int, pcMemberId: Int, approved: Boolean) {
+            val bid = Bid {
+                this.proposalId = proposalId
+                this.pcMemberId = pcMemberId
+                this.approved = approved
+            }
+
+            database.bids.update(bid)
         }
     }
 }
