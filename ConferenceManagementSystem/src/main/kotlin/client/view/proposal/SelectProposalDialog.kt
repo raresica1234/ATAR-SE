@@ -5,7 +5,9 @@ import javafx.geometry.Pos
 import server.domain.Proposal
 import tornadofx.*
 
-data class ProposalDialogModel(val id: Int, val name: String)
+data class ProposalDialogModel(val id: Int, val name: String) {
+    override fun toString() = name
+}
 
 fun UIComponent.selectProposalDialog(
     proposalsSource: () -> List<Proposal>,
