@@ -56,11 +56,21 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
                         }
 
                         vbox(8.0) {
-                            labelWithCount("Strong accept reviews:")
-                            labelWithCount("Accept reviews:")
-                            labelWithCount("Borderline reviews:")
-                            labelWithCount("Reject reviews:")
-                            labelWithCount("Strong reject reviews:")
+                            labelWithCount(ReviewType.STRONG_ACCEPT)
+                            labelWithCount(ReviewType.ACCEPT)
+                            labelWithCount(ReviewType.BORDERLINE_PAPER)
+                            labelWithCount(ReviewType.REJECT)
+                            labelWithCount(ReviewType.STRONG_REJECT)
+                            spacer {
+                                minHeight = 16.0
+                            }
+                            labelWithData("Reviews score:") {
+                                val reviews = controller.model.reviews
+
+                                reviews.onChange {
+                                    text = reviews.sumBy { it.reviewValue }.toString()
+                                }
+                            }
                             labelWithData("Status:") {
                                 controller.model.proposal.onChange {
                                     text = it?.status?.value.ifNull { "-" }
@@ -81,11 +91,12 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
         }
     }
 
-    private fun EventTarget.labelWithCount(reviewType: ReviewType) = labelWithData(reviewType.) {
-        val reviews = controller.model.reviews
+    private fun EventTarget.labelWithCount(reviewType: ReviewType) =
+        labelWithData("${reviewType.displayName}:") {
+            val reviews = controller.model.reviews
 
-        reviews.onChange {
-            text = reviews.count { it.reviewType == reviewType }.toString()
+            reviews.onChange {
+                text = reviews.count { it.reviewType == reviewType }.toString()
+            }
         }
-    }
 }
