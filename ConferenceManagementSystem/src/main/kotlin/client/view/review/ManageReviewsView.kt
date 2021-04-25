@@ -5,11 +5,14 @@ import client.view.ViewWithParams
 import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.proposal.ProposalListView
+import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.text.Font
+import server.domain.ReviewType
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.ifNull
 import utils.switchTo
 
 class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
@@ -53,12 +56,16 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
                         }
 
                         vbox(8.0) {
-                            labelWithData("Strong accept reviews:")
-                            labelWithData("Accept reviews:")
-                            labelWithData("Borderline reviews:")
-                            labelWithData("Reject reviews:")
-                            labelWithData("Strong reject reviews:")
-                            labelWithData("Status:")
+                            labelWithCount("Strong accept reviews:")
+                            labelWithCount("Accept reviews:")
+                            labelWithCount("Borderline reviews:")
+                            labelWithCount("Reject reviews:")
+                            labelWithCount("Strong reject reviews:")
+                            labelWithData("Status:") {
+                                controller.model.proposal.onChange {
+                                    text = it?.status?.value.ifNull { "-" }
+                                }
+                            }
                         }
                     }
                 }
@@ -71,6 +78,14 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
                     }
                 }
             }
+        }
+    }
+
+    private fun EventTarget.labelWithCount(reviewType: ReviewType) = labelWithData(reviewType.) {
+        val reviews = controller.model.reviews
+
+        reviews.onChange {
+            text = reviews.count { it.reviewType == reviewType }.toString()
         }
     }
 }

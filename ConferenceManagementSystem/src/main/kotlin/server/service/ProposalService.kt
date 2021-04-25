@@ -119,5 +119,9 @@ class ProposalService {
             id = proposalId
             this.status = status
         })
+
+        fun getWithReviews(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
+            ProposalWithReviews(it, ReviewService.getAllByProposalId(it.id))
+        }
     }
 }
