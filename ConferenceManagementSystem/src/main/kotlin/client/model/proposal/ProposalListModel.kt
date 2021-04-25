@@ -15,5 +15,4 @@ data class ProposalListModel(
     val selectedProposal: SimpleObjectProperty<DetailedProposalItemModel> = SimpleObjectProperty(),
     val leftTabProposals: ObservableList<DetailedProposalItemModel> = observableListOf(),
     val rightTabProposals: ObservableList<DetailedProposalItemModel> = observableListOf(),
-
-    )
+)
