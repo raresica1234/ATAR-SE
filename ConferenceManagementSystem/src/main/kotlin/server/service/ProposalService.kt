@@ -100,12 +100,14 @@ class ProposalService {
 
         fun getAllForReviewWithAuthors(conferenceId: Int, pcMemberId: Int): List<ProposalWithAuthors> {
             val approvedBids = BidService.getAllApprovedByPcMember(pcMemberId)
+            val reviews = ReviewService.getAllByPcMember(pcMemberId)
 
             return database.proposals.filter {
                 (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.IN_REVIEW)
             }.toList()
-                .filter { proposal -> approvedBids.any { it.proposalId == proposal.id } }
-                .map {
+                .filter { proposal ->
+                    approvedBids.any { it.proposalId == proposal.id } && reviews.none { it.proposalId == proposal.id }
+                }.map {
                     ProposalWithAuthors(it, getProposalAuthors(it.id))
                 }
         }

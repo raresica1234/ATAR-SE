@@ -50,5 +50,7 @@ class ReviewService {
 
             return review
         }
+
+        fun getAllByPcMember(pcMemberId: Int) = database.reviews.filter { it.pcMemberId eq pcMemberId }.toList()
     }
 }
