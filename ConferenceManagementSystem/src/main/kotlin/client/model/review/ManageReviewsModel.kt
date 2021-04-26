@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import server.domain.Proposal
+import server.domain.Review
 import tornadofx.observableListOf
 
 data class BidItemModel(
@@ -18,5 +19,6 @@ data class BidItemModel(
 
 data class ManageReviewsModel(
     val proposal: SimpleObjectProperty<Proposal> = SimpleObjectProperty(),
-    val bids: ObservableList<BidItemModel> = observableListOf()
+    val bids: ObservableList<BidItemModel> = observableListOf(),
+    val reviews: ObservableList<Review> = observableListOf()
 )

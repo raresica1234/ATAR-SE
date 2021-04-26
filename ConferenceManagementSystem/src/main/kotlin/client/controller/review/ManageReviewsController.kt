@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import server.domain.ApprovalStatus
 import server.domain.Bid
 import server.domain.Proposal
+import server.domain.Review
 import server.service.BidService
 import server.service.ProposalService
 import server.service.ReviewService
@@ -20,11 +21,11 @@ class ManageReviewsController : Controller() {
     }
 
     private fun fetchData(proposalId: Int) {
-        data class FetchData(val proposal: Proposal?, val bids: List<BidItemModel>)
+        data class FetchData(val proposal: Proposal?, val bids: List<BidItemModel>, val reviews: List<Review>)
 
         runAsync {
-            // TODO: Make another service function to get with reviews and replace the current one
-            val proposal = ProposalService.get(proposalId)
+            val proposalWithReviews = ProposalService.getWithReviews(proposalId)
+                ?: return@runAsync FetchData(null, emptyList(), emptyList())
 
             val bids = BidService.getAllWillingToReviewForProposal(proposalId).map { bidWithPcMember ->
                 with(bidWithPcMember) {
@@ -34,16 +35,17 @@ class ManageReviewsController : Controller() {
                         "${pcMember.fullName} - ${pcMember.email}",
                         bid.bidType.value,
                         SimpleBooleanProperty(bid.approved).apply {
-                            onChange { handleApprovalChange(proposal, bid, it) }
+                            onChange { handleApprovalChange(proposalWithReviews.proposal, bid, it) }
                         }
                     )
                 }
             }
 
-            FetchData(proposal, bids)
+            FetchData(proposalWithReviews.proposal, bids, proposalWithReviews.reviews)
         } ui {
             model.proposal.set(it.proposal)
             model.bids.setAll(it.bids)
+            model.reviews.setAll(it.reviews)
         }
     }
 

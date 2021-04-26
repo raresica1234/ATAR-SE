@@ -89,7 +89,8 @@ class ProposalService {
             val madeBids = BidService.getAllByPcMember(pcMemberId)
 
             return database.proposals.filter {
-                (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.TO_BE_REVIEWED)
+                (it.conferenceId eq conferenceId) and
+                        ((it.status eq ApprovalStatus.TO_BE_REVIEWED) or (it.status eq ApprovalStatus.IN_REVIEW))
             }.toList()
                 .filter { proposal -> madeBids.none { it.proposalId == proposal.id } }
                 .map {
@@ -119,5 +120,9 @@ class ProposalService {
             id = proposalId
             this.status = status
         })
+
+        fun getWithReviews(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
+            ProposalWithReviews(it, ReviewService.getAllByProposalId(it.id))
+        }
     }
 }
