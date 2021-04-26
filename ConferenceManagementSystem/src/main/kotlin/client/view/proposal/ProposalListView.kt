@@ -7,6 +7,7 @@ import client.view.component.labelWithData
 import client.view.component.vBoxPane
 import client.view.conference.ConferenceListView
 import client.view.review.ManageReviewsView
+import client.view.review.ResolveConflictsView
 import client.view.review.ReviewPaperView
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
@@ -14,7 +15,6 @@ import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
 import javafx.scene.text.Font
-import server.domain.ApprovalStatus
 import server.domain.BidType
 import server.domain.Conference
 import server.domain.RoleType
@@ -172,6 +172,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
             button("Manage reviews") {
                 action { switchTo(ManageReviewsView::class, "proposalId" to proposal.id) }
             }
+
             return
         }
 
@@ -188,13 +189,10 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
 
     private fun EventTarget.buildRightTabActions(proposal: DetailedProposalItemModel) {
         if (controller.model.role.get() == RoleType.CHAIR) {
-            button("Resolve conflict - Accept") {
-                action { controller.updateProposalStatus(proposal.id, ApprovalStatus.APPROVED) }
+            button("Resolve Conflicts") {
+                action { switchTo(ResolveConflictsView::class, "proposal" to proposal) }
             }
 
-            button("Resolve conflict - Reject") {
-                action { controller.updateProposalStatus(proposal.id, ApprovalStatus.REJECTED) }
-            }
             return
         }
         button("Review") {
