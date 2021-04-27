@@ -6,6 +6,7 @@ import server.service.ProposalService
 import server.service.UserService
 import tornadofx.Controller
 import utils.ValidationException
+import utils.isEmail
 import utils.isNullOrBlank
 import java.io.File
 
@@ -18,8 +19,15 @@ class SubmitProposalController : Controller() {
 
             val authors = mutableListOf(userState.user.email)
 
-            model.authors.get()?.let {
-                if (it.isNotBlank()) authors.addAll(it.split("\n"))
+            model.authors.get()?.let { authorsInput ->
+                if (authorsInput.isNotBlank()) authors.addAll(authorsInput.trim().split("\n").map {
+                    it.trim().apply {
+                        if (!isEmail()) throw ValidationException(
+                            "Author email is not valid.",
+                            "The author emails must be valid before continuing, try again"
+                        )
+                    }
+                })
             }
 
             UserService.createMissingAccounts(authors)
