@@ -24,7 +24,7 @@ class SubmitProposalController : Controller() {
             }
 
             authors.forEach {
-                if (it.isEmail()) throw ValidationException(
+                if (!it.isEmail()) throw ValidationException(
                     "Author email is not valid.",
                     "The author emails must be valid before continuing, try again"
                 )
