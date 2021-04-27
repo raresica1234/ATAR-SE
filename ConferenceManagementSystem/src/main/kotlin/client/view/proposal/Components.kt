@@ -32,7 +32,7 @@ fun EventTarget.uploadPaper(
     button("Upload") {
         minWidth = 128.0
         action {
-            onUpload(chooseFile("Select full paper location", PAPER_FILTERS).first())
+            onUpload(chooseFile("Select full paper location", PAPER_FILTERS).firstOrNull())
         }
     }
 }
