@@ -1,21 +1,21 @@
 package client.controller.review
 
-import client.model.ConflictItemModel
 import client.model.DetailedProposalItemModel
+import javafx.beans.property.SimpleObjectProperty
 import server.domain.ApprovalStatus
 import server.service.ProposalService
 import tornadofx.Controller
 
 class ResolveConflictsController : Controller() {
-    val model = ConflictItemModel()
+    val proposal: SimpleObjectProperty<DetailedProposalItemModel> = SimpleObjectProperty()
 
     fun onParamsSet(proposal: DetailedProposalItemModel) {
-        model.proposal.set(proposal)
+        this.proposal.set(proposal)
     }
 
-    fun openPaper() = hostServices.showDocument(model.proposal.get().fullPaper)
+    fun openPaper() = hostServices.showDocument(proposal.get().fullPaper)
 
     fun updateProposalStatus(proposalStatus: ApprovalStatus) {
-        ProposalService.updateStatus(model.proposal.get().id, proposalStatus)
+        ProposalService.updateStatus(proposal.get().id, proposalStatus)
     }
 }

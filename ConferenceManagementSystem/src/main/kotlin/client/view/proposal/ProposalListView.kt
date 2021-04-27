@@ -39,6 +39,43 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
     private val leftListView = buildListView(controller.model.leftTabProposals)
     private val rightListView = buildListView(controller.model.rightTabProposals)
 
+    private val tabContainer = tabpane {
+        maxWidth = LIST_WIDTH
+        tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
+        selectionModel.selectedIndexProperty().onChange {
+            controller.model.selectedProposal.set(null)
+            leftListView.selectionModel.clearSelection()
+            rightListView.selectionModel.clearSelection()
+        }
+
+        tab("For bidding") {
+            maxWidth = LIST_WIDTH
+
+            controller.model.role.onChange {
+                text = when (it) {
+                    RoleType.PROGRAM_COMMITTEE -> "For bidding"
+                    RoleType.CHAIR -> "All proposals"
+                    else -> ""
+                }
+            }
+
+            this += leftListView
+        }
+        tab("For reviewing") {
+            maxWidth = LIST_WIDTH
+
+            controller.model.role.onChange {
+                text = when (it) {
+                    RoleType.PROGRAM_COMMITTEE -> "For reviewing"
+                    RoleType.CHAIR -> "Conflicts"
+                    else -> ""
+                }
+            }
+
+            this += rightListView
+        }
+    }
+
     override val root = vbox(alignment = Pos.CENTER) {
         paddingAll = 32.0
 
@@ -63,44 +100,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                         }
                     }
 
-                    tabpane {
-                        controller.model.tabPane = this
-
-                        maxWidth = LIST_WIDTH
-                        tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
-                        selectionModel.selectedIndexProperty().onChange {
-                            controller.model.selectedProposal.set(null)
-                            leftListView.selectionModel.clearSelection()
-                            rightListView.selectionModel.clearSelection()
-                        }
-
-                        tab("For bidding") {
-                            maxWidth = LIST_WIDTH
-
-                            controller.model.role.onChange {
-                                text = when (it) {
-                                    RoleType.PROGRAM_COMMITTEE -> "For bidding"
-                                    RoleType.CHAIR -> "All proposals"
-                                    else -> ""
-                                }
-                            }
-
-                            this += leftListView
-                        }
-                        tab("For reviewing") {
-                            maxWidth = LIST_WIDTH
-
-                            controller.model.role.onChange {
-                                text = when (it) {
-                                    RoleType.PROGRAM_COMMITTEE -> "For reviewing"
-                                    RoleType.CHAIR -> "Conflicts"
-                                    else -> ""
-                                }
-                            }
-
-                            this += rightListView
-                        }
-                    }
+                    this += tabContainer
                 }
 
                 vBoxPane(16.0) {
@@ -159,8 +159,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
             if (it == null) {
                 return@onChange
             }
-
-            if (controller.model.tabPane.selectionModel.selectedIndex == 0) {
+            if (tabContainer.selectionModel.selectedIndex == 0) {
                 buildLeftTabActions(it)
                 return@onChange
             }
@@ -191,7 +190,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
 
     private fun EventTarget.buildRightTabActions(proposal: DetailedProposalItemModel) {
         if (controller.model.role.get() == RoleType.CHAIR) {
-            button("Resolve Conflicts") {
+            button("Resolve conflicts") {
                 action { switchTo(ResolveConflictsView::class, "proposal" to proposal) }
             }
 

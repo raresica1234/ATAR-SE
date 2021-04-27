@@ -29,7 +29,7 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
 
             text {
                 font = Font(24.0)
-                controller.model.proposal.onChange { text = "${it?.name} - Resolve conflicts" }
+                controller.proposal.onChange { text = "${it?.name} - Resolve conflicts" }
             }
             hbox(32.0) {
                 vBoxPane(8.0) {
@@ -47,7 +47,7 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
 
                         label("Full paper:")
                         button("Open") {
-                            controller.model.proposal.onChange {
+                            controller.proposal.onChange {
                                 disableProperty().set(it?.fullPaper.isNullOrBlank())
                             }
 
@@ -85,7 +85,7 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
         labelText: String,
         extractor: (DetailedProposalItemModel) -> String
     ) = labelWithData(labelText) {
-        controller.model.proposal.onChange {
+        controller.proposal.onChange {
             text = if (it == null) "-" else extractor(it)
         }
     }
