@@ -20,15 +20,14 @@ class SubmitProposalController : Controller() {
             val authors = mutableListOf(userState.user.email)
 
             model.authors.get()?.let { authorsInput ->
-                if (authorsInput.isNotBlank()) authors.addAll(authorsInput.trim().split("\n").map { it.trim() })
-            }
-
-            authors.forEach {
-                println(it)
-                if (!it.isEmail()) throw ValidationException(
-                    "Author email is not valid.",
-                    "The author emails must be valid before continuing, try again"
-                )
+                if (authorsInput.isNotBlank()) authors.addAll(authorsInput.trim().split("\n").map {
+                    val res = it.trim()
+                    if (!res.isEmail()) throw ValidationException(
+                        "Author email is not valid.",
+                        "The author emails must be valid before continuing, try again"
+                    )
+                    res
+                })
             }
 
             UserService.createMissingAccounts(authors)
