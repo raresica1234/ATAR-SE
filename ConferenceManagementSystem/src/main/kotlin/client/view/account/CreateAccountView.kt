@@ -3,6 +3,7 @@ package client.view.account
 import client.controller.account.CreateAccountController
 import javafx.geometry.Pos
 import javafx.scene.control.ButtonType
+import javafx.scene.input.KeyCombination
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
@@ -121,6 +122,7 @@ class CreateAccountView : View(APPLICATION_TITLE) {
                             }
                         }
                     }
+                    shortcut(KeyCombination.keyCombination("ENTER"))
                 }
             }
         }
