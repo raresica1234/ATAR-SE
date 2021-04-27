@@ -64,6 +64,8 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                     }
 
                     tabpane {
+                        controller.model.tabPane = this
+
                         maxWidth = LIST_WIDTH
                         tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
                         selectionModel.selectedIndexProperty().onChange {
@@ -158,7 +160,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                 return@onChange
             }
 
-            if (controller.model.leftTabProposals.contains(it)) {
+            if (controller.model.tabPane.selectionModel.selectedIndex == 0) {
                 buildLeftTabActions(it)
                 return@onChange
             }

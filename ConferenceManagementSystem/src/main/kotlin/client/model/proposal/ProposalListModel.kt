@@ -4,6 +4,7 @@ import client.model.DetailedProposalItemModel
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
+import javafx.scene.control.TabPane
 import server.domain.Conference
 import server.domain.RoleType
 import tornadofx.observableListOf
@@ -15,4 +16,5 @@ data class ProposalListModel(
     val selectedProposal: SimpleObjectProperty<DetailedProposalItemModel> = SimpleObjectProperty(),
     val leftTabProposals: ObservableList<DetailedProposalItemModel> = observableListOf(),
     val rightTabProposals: ObservableList<DetailedProposalItemModel> = observableListOf(),
+    var tabPane: TabPane = TabPane(),
 )
