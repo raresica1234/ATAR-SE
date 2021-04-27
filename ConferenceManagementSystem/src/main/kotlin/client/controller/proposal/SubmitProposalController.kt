@@ -21,12 +21,12 @@ class SubmitProposalController : Controller() {
 
             model.authors.get()?.let { authorsInput ->
                 if (authorsInput.isNotBlank()) authors.addAll(authorsInput.trim().split("\n").map {
-                    val res = it.trim()
-                    if (!res.isEmail()) throw ValidationException(
-                        "Author email is not valid.",
-                        "The author emails must be valid before continuing, try again"
-                    )
-                    res
+                    it.trim().apply {
+                        if (!isEmail()) throw ValidationException(
+                            "Author email is not valid.",
+                            "The author emails must be valid before continuing, try again"
+                        )
+                    }
                 })
             }
 
