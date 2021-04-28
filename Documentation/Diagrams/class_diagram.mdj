@@ -1267,7 +1267,7 @@
 											"top": 512,
 											"width": 170.91064453125,
 											"height": 13,
-											"text": "+reviwerCount: Int",
+											"text": "+reviewerCount: Int",
 											"horizontalAlignment": 0
 										}
 									],
@@ -8188,7 +8188,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF5E5YKLk0P7N0="
 									},
-									"name": "reviwerCount",
+									"name": "reviewerCount",
 									"type": "Int"
 								}
 							],
