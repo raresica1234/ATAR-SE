@@ -1,5 +1,6 @@
 package client.model
 
+import server.domain.ApprovalStatus
 import server.service.ProposalWithAuthors
 
 data class DetailedProposalItemModel(
@@ -10,7 +11,7 @@ data class DetailedProposalItemModel(
     val authors: String,
     val abstract: String,
     val fullPaper: String,
-    val status: String
+    val status: ApprovalStatus
 ) {
     companion object {
         fun from(proposalWithAuthors: ProposalWithAuthors) = with(proposalWithAuthors) {
@@ -22,7 +23,7 @@ data class DetailedProposalItemModel(
                 authors.joinToString { it.fullName.ifBlank { it.email } },
                 proposal.abstractPaper,
                 proposal.fullPaper,
-                proposal.status.value
+                proposal.status
             )
         }
     }

@@ -21,6 +21,8 @@ class ReviewService {
             (it.proposalId eq proposalId) and (it.pcMemberId eq pcMemberId)
         }
 
+        fun remove(proposalId: Int) = database.reviews.removeIf { it.proposalId eq proposalId }
+
         fun add(review: Review): Review {
             database.reviews.add(review)
 

@@ -119,7 +119,7 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                         buildLabelWithData("Keywords:") { it.keywords }
                         buildLabelWithData("Authors:") { it.authors }
                         buildLabelWithData("Abstract:") { it.abstract }
-                        buildLabelWithData("Status:") { it.status }
+                        buildLabelWithData("Status:") { it.status.value }
                     }
 
                     buildProposalActions()

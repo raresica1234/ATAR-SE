@@ -1,7 +1,7 @@
 package client.controller.review
 
 import client.model.DetailedProposalItemModel
-import client.model.ReviewPaperModel
+import client.model.review.ReviewPaperModel
 import client.state.userState
 import server.domain.Review
 import server.service.ReviewService
