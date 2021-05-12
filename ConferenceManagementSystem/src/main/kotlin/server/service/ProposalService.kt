@@ -140,8 +140,7 @@ class ProposalService {
         }
 
         fun setRevaluationStatus(proposalId: Int) {
-            // TODO: decide how to handle existing reviews
-            //ReviewService.remove(proposalId)
+            ReviewService.invalidate(proposalId)
 
             updateStatus(proposalId, ApprovalStatus.IN_REVALUATION)
         }
