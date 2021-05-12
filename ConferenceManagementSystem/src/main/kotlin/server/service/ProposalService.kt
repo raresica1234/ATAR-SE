@@ -92,7 +92,8 @@ class ProposalService {
                 (it.conferenceId eq conferenceId) and
                         ((it.status eq ApprovalStatus.TO_BE_REVIEWED) or
                                 (it.status eq ApprovalStatus.IN_REVIEW) or
-                                (it.status eq ApprovalStatus.IN_DISCUSSION))
+                                (it.status eq ApprovalStatus.IN_DISCUSSION) or
+                                (it.status eq ApprovalStatus.IN_REVALUATION))
             }.toList()
                 .filter { proposal -> madeBids.none { it.proposalId == proposal.id } }
                 .map {
@@ -106,7 +107,9 @@ class ProposalService {
 
             return database.proposals.filter {
                 (it.conferenceId eq conferenceId) and
-                        ((it.status eq ApprovalStatus.IN_REVIEW) or (it.status eq ApprovalStatus.IN_DISCUSSION))
+                        ((it.status eq ApprovalStatus.IN_REVIEW) or
+                                (it.status eq ApprovalStatus.IN_DISCUSSION) or
+                                (it.status eq ApprovalStatus.IN_REVALUATION))
             }.toList()
                 .filter { proposal ->
                     approvedBids.any { it.proposalId == proposal.id } && reviews.none { it.proposalId == proposal.id }
@@ -134,6 +137,13 @@ class ProposalService {
             ReviewService.remove(proposalId)
 
             updateStatus(proposalId, ApprovalStatus.IN_DISCUSSION)
+        }
+
+        fun setRevaluationStatus(proposalId: Int) {
+            // TODO: decide how to handle existing reviews
+            //ReviewService.remove(proposalId)
+
+            updateStatus(proposalId, ApprovalStatus.IN_REVALUATION)
         }
     }
 }

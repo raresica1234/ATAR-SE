@@ -71,6 +71,16 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
                     }
                 }
 
+                button("Request revaluation") {
+                    action {
+                        switchTo(
+                            ManageReviewsView::class,
+                            "proposalId" to controller.proposal.get().id,
+                            "isRevaluation" to true
+                        )
+                    }
+                }
+
                 button("Reject") {
                     action {
                         controller.updateProposalStatus(ApprovalStatus.REJECTED)

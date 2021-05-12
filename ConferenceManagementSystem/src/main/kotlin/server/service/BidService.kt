@@ -2,6 +2,7 @@ package server.service
 
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.not
 import org.ktorm.dsl.or
 import org.ktorm.entity.*
 import server.bids
@@ -41,11 +42,13 @@ class BidService {
             return bid
         }
 
-        fun getAllWillingToReviewForProposal(proposalId: Int) = database.bids.filter {
-            (it.proposalId eq proposalId) and
-                    ((it.bidType eq BidType.PLEASED_TO_REVIEW) or (it.bidType eq BidType.COULD_REVIEW))
-        }.sortedByDescending { it.bidType }
-            .mapNotNull { BidWithPcMember(it, UserService.get(it.pcMemberId) ?: return@mapNotNull null) }
+        fun getAllWillingToReviewForProposal(proposalId: Int, excludingAssigned: Boolean = false) =
+            database.bids.filter {
+                (it.proposalId eq proposalId) and
+                        !(excludingAssigned and it.approved) and
+                        ((it.bidType eq BidType.PLEASED_TO_REVIEW) or (it.bidType eq BidType.COULD_REVIEW))
+            }.sortedByDescending { it.bidType }
+                .mapNotNull { BidWithPcMember(it, UserService.get(it.pcMemberId) ?: return@mapNotNull null) }
 
         fun updateApproval(proposalId: Int, pcMemberId: Int, approved: Boolean) {
             val bid = Bid {

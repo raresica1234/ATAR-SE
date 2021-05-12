@@ -19,7 +19,9 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
     private val controller by inject<ManageReviewsController>()
 
     override fun onParamSet() {
-        getParam<Int>("proposalId")?.let { controller.onParamsSet(it) }
+        val isRevaluation = getParam<Boolean>("isRevaluation") ?: false
+
+        getParam<Int>("proposalId")?.let { controller.onParamsSet(it, isRevaluation) }
     }
 
     override val root = vbox(alignment = Pos.CENTER) {
