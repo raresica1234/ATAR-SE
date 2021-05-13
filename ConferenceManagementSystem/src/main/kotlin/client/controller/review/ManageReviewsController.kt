@@ -3,11 +3,9 @@ package client.controller.review
 import client.model.review.BidItemModel
 import client.model.review.ManageReviewsModel
 import javafx.beans.property.SimpleBooleanProperty
-import server.domain.ApprovalStatus
-import server.domain.Bid
-import server.domain.Proposal
-import server.domain.Review
+import server.domain.*
 import server.service.BidService
+import server.service.ConferenceService
 import server.service.ProposalService
 import server.service.ReviewService
 import tornadofx.Controller
@@ -22,13 +20,20 @@ class ManageReviewsController : Controller() {
     }
 
     private fun fetchData(proposalId: Int) {
-        data class FetchData(val proposal: Proposal?, val bids: List<BidItemModel>, val reviews: List<Review>)
+        data class FetchData(
+            val proposal: Proposal? = null,
+            val bids: List<BidItemModel> = emptyList(),
+            val reviews: List<Review> = emptyList(),
+            val conference: Conference? = null
+        )
 
         val isRevaluation = model.isRevaluation.get()
 
         runAsync {
             val proposalWithReviews = ProposalService.getWithReviews(proposalId)
-                ?: return@runAsync FetchData(null, emptyList(), emptyList())
+                ?: return@runAsync FetchData()
+
+            val proposal = proposalWithReviews.proposal
 
             val bids = BidService.getAllWillingToReviewForProposal(proposalId, isRevaluation).map { bidWithPcMember ->
                 with(bidWithPcMember) {
@@ -38,17 +43,20 @@ class ManageReviewsController : Controller() {
                         "${pcMember.fullName} - ${pcMember.email}",
                         bid.bidType.value,
                         SimpleBooleanProperty(bid.approved).apply {
-                            onChange { handleApprovalChange(proposalWithReviews.proposal, bid, isRevaluation, it) }
+                            onChange { handleApprovalChange(proposal, bid, isRevaluation, it) }
                         }
                     )
                 }
             }
 
-            FetchData(proposalWithReviews.proposal, bids, proposalWithReviews.reviews)
+            val conference = ConferenceService.get(proposal.conferenceId)
+
+            FetchData(proposalWithReviews.proposal, bids, proposalWithReviews.reviews, conference)
         } ui {
             model.proposal.set(it.proposal)
             model.bids.setAll(it.bids)
             model.reviews.setAll(it.reviews)
+            model.maximumReviewers.set(it.conference?.reviewerCount ?: 0)
         }
     }
 

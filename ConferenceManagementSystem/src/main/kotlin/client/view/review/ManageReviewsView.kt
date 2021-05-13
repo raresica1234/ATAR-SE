@@ -39,8 +39,16 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
             }
 
             vbox(8.0) {
-                text("Reviewers") {
-                    font = Font(18.0)
+                hbox(8.0) {
+                    text("Reviewers -") {
+                        font = Font(18.0)
+                    }
+                    text("2/4") {
+                        font = Font(18.0)
+                        style {
+                            textFill = c("red")
+                        }
+                    }
                 }
 
                 hbox(64.0) {

@@ -1,6 +1,7 @@
 package client.model.review
 
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import server.domain.Proposal
@@ -22,4 +23,5 @@ data class ManageReviewsModel(
     val bids: ObservableList<BidItemModel> = observableListOf(),
     val reviews: ObservableList<Review> = observableListOf(),
     val isRevaluation: SimpleBooleanProperty = SimpleBooleanProperty(false)
+    val maximumReviewers: SimpleIntegerProperty = SimpleIntegerProperty()
 )
