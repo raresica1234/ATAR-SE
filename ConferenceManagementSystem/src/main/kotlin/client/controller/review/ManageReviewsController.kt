@@ -10,6 +10,7 @@ import server.service.ProposalService
 import server.service.ReviewService
 import tornadofx.Controller
 import tornadofx.onChange
+import utils.ValidationException
 
 class ManageReviewsController : Controller() {
     val model = ManageReviewsModel()
@@ -57,11 +58,28 @@ class ManageReviewsController : Controller() {
             model.bids.setAll(it.bids)
             model.reviews.setAll(it.reviews)
             model.maximumReviewers.set(it.conference?.reviewerCount ?: 0)
+            model.reviewers.set(it.bids.count { bid -> bid.approved.get() })
         }
     }
 
     private fun handleApprovalChange(proposal: Proposal?, bid: Bid, isRevaluation: Boolean, approved: Boolean) {
-        BidService.updateApproval(bid.proposalId, bid.pcMemberId, approved)
+        if (approved) model.reviewers.value++ else model.reviewers.value--
+
+        val maximumReviewers = model.maximumReviewers.get()
+        if (model.reviewers.get() > maximumReviewers) {
+            model.bids.find { it.pcMemberId == bid.pcMemberId }?.approved?.set(false)
+
+            ValidationException(
+                "Maximum reviewers assigned!",
+                "The maximum number of $maximumReviewers reviewers was exceeded. Deallocate a PC member and try again."
+            ).displayError()
+            return
+        }
+
+        if (!BidService.updateApproval(bid.proposalId, bid.pcMemberId, approved)) {
+            return
+        }
+
         proposal?.let {
             if (isRevaluation) {
                 return@let handleRevaluation(it)

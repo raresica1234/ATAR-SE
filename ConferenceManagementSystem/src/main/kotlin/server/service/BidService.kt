@@ -50,14 +50,14 @@ class BidService {
             }.sortedByDescending { it.bidType }
                 .mapNotNull { BidWithPcMember(it, UserService.get(it.pcMemberId) ?: return@mapNotNull null) }
 
-        fun updateApproval(proposalId: Int, pcMemberId: Int, approved: Boolean) {
+        fun updateApproval(proposalId: Int, pcMemberId: Int, approved: Boolean): Boolean {
             val bid = Bid {
                 this.proposalId = proposalId
                 this.pcMemberId = pcMemberId
                 this.approved = approved
             }
 
-            database.bids.update(bid)
+            return database.bids.update(bid) != 0
         }
 
         fun getCountForProposal(proposalId: Int) = database.bids.filter { it.proposalId eq proposalId }.count()

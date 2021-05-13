@@ -22,6 +22,7 @@ data class ManageReviewsModel(
     val proposal: SimpleObjectProperty<Proposal> = SimpleObjectProperty(),
     val bids: ObservableList<BidItemModel> = observableListOf(),
     val reviews: ObservableList<Review> = observableListOf(),
-    val isRevaluation: SimpleBooleanProperty = SimpleBooleanProperty(false)
-    val maximumReviewers: SimpleIntegerProperty = SimpleIntegerProperty()
+    val isRevaluation: SimpleBooleanProperty = SimpleBooleanProperty(false),
+    val maximumReviewers: SimpleIntegerProperty = SimpleIntegerProperty(),
+    val reviewers: SimpleIntegerProperty = SimpleIntegerProperty()
 )

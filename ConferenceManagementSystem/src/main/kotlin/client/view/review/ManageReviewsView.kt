@@ -40,13 +40,13 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
 
             vbox(8.0) {
                 hbox(8.0) {
-                    text("Reviewers -") {
+                    text("Reviewers - 0/0") {
                         font = Font(18.0)
-                    }
-                    text("2/4") {
-                        font = Font(18.0)
-                        style {
-                            textFill = c("red")
+
+                        controller.model.reviewers.onChange {
+                            val maximumReviewers = controller.model.maximumReviewers.get()
+
+                            text = "Reviewers - $it/$maximumReviewers"
                         }
                     }
                 }
