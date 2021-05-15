@@ -163,7 +163,7 @@ class ModifyConferenceController : Controller() {
         }
 
         SectionService.update(sectionToUpdate)
-        
+
         val sectionIndex = model.sections.indexOfFirst { it.id eq section.id }
         model.sections[sectionIndex] = section
     }
