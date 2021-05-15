@@ -12,7 +12,7 @@ class ReviewPaperController : Controller() {
     val model = ReviewPaperModel()
 
     fun onParamsSet(proposal: DetailedProposalItemModel) {
-        model.proposal.set(proposal)
+        model.set(proposal)
     }
 
     fun openPaper() = hostServices.showDocument(model.proposal.get().fullPaper)
