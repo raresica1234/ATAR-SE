@@ -67,11 +67,11 @@ class ManageReviewsView : ViewWithParams(APPLICATION_TITLE) {
 
                         vbox(8.0) {
                             labelWithCount(ReviewType.STRONG_ACCEPT)
-                            labelWithCount(ReviewType.WEAK_ACCEPT)
                             labelWithCount(ReviewType.ACCEPT)
+                            labelWithCount(ReviewType.WEAK_ACCEPT)
                             labelWithCount(ReviewType.BORDERLINE_PAPER)
-                            labelWithCount(ReviewType.REJECT)
                             labelWithCount(ReviewType.WEAK_REJECT)
+                            labelWithCount(ReviewType.REJECT)
                             labelWithCount(ReviewType.STRONG_REJECT)
                             spacer {
                                 minHeight = 16.0
