@@ -14,8 +14,10 @@ import server.domain.Section
 import server.domain.User
 import server.service.*
 import tornadofx.Controller
+import tornadofx.eq
 import tornadofx.onChange
 import utils.ValidationException
+import utils.eq
 import utils.isValid
 import utils.validateBefore
 import java.time.LocalDate
@@ -161,6 +163,9 @@ class ModifyConferenceController : Controller() {
         }
 
         SectionService.update(sectionToUpdate)
+        
+        val sectionIndex = model.sections.indexOfFirst { it.id eq section.id }
+        model.sections[sectionIndex] = section
     }
 
     private fun areConferenceFieldsValid() = with(model) {

@@ -189,8 +189,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
             }
 
             if (controller.model.activeConferences.contains(it)) {
-                buildActiveConferenceAction(it)
-                return@onChange
+                return@onChange buildActiveConferenceAction(it)
             }
 
             buildPendingConferenceAction(it)
