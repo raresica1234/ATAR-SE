@@ -13,6 +13,7 @@ import java.time.LocalDate
 data class SectionWithProposals(
     val section: Section,
     val proposals: List<Proposal>,
+    val participants: Int,
     val room: Room?,
     val sessionChair: User?
 )
@@ -34,6 +35,7 @@ class SectionService {
                 SectionWithProposals(
                     it,
                     ProposalService.getAllBySectionId(it.id),
+                    ParticipantService.getSectionParticipants(it.id),
                     RoomService.get(it.roomId),
                     UserService.get(it.sessionChairId)
                 )

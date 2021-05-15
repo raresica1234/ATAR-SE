@@ -68,10 +68,19 @@ class ProposalService {
                     ((it.sectionId eq 0) or it.sectionId.isNull())
         }.toList()
 
-        fun setToSection(proposalId: Int, sectionId: Int = 0) = database.proposals.update(Proposal {
-            id = proposalId
-            this.sectionId = sectionId
-        })
+        fun setToSection(proposalId: Int, sectionId: Int = 0) {
+            database.proposals.update(Proposal {
+                id = proposalId
+                this.sectionId = sectionId
+            })
+            database.proposalAuthors.find { it.proposalId eq proposalId }?.let {
+                if (sectionId == 0) {
+                    ParticipantService.delete(sectionId, it.authorId)
+                } else {
+                    ParticipantService.addSpeaker(sectionId, it.authorId)
+                }
+            }
+        }
 
         fun getWithAuthors(proposalId: Int) = get(proposalId)?.let {
             ProposalWithAuthors(it, getProposalAuthors(proposalId))

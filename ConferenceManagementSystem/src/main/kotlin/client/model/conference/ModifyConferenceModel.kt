@@ -32,7 +32,8 @@ data class ModifyConferenceSectionModel(
     val startDate: SimpleObjectProperty<LocalDate> = SimpleObjectProperty(),
     val endDate: SimpleObjectProperty<LocalDate> = SimpleObjectProperty(),
     val sessionChair: SimpleObjectProperty<UserItemModel> = SimpleObjectProperty(),
-    val proposals: ObservableList<ProposalItemModel> = FXCollections.observableArrayList()
+    val proposals: ObservableList<ProposalItemModel> = FXCollections.observableArrayList(),
+    val participants: SimpleIntegerProperty = SimpleIntegerProperty()
 ) {
     companion object {
         fun from(sectionWithProposals: SectionWithProposals, provideAuthors: (Int) -> String) =
@@ -46,7 +47,8 @@ data class ModifyConferenceSectionModel(
                     SimpleObjectProperty(sessionChair?.let {
                         UserItemModel(sessionChair.id, sessionChair.fullName, sessionChair.email)
                     }),
-                    proposals.map { ProposalItemModel(it.id, it.name, provideAuthors(it.id)) }.toObservable()
+                    proposals.map { ProposalItemModel(it.id, it.name, provideAuthors(it.id)) }.toObservable(),
+                    SimpleIntegerProperty(participants)
                 )
             }
     }
