@@ -27,14 +27,6 @@ class ModifyConferenceController : Controller() {
 
     init {
         model.search.onChange { applyCommitteesSearch(it) }
-        model.selectedSection.addListener { _, oldValue, _ ->
-            if (oldValue == null) {
-                return@addListener
-            }
-            if (oldValue.id.get() != 0) {
-                updateSection(oldValue)
-            }
-        }
     }
 
     fun refreshData() {
@@ -114,8 +106,14 @@ class ModifyConferenceController : Controller() {
         }
     }
 
-    fun addSection() {
-        val section = model.selectedSection.get().toSection(initialConference.id)
+    fun saveSection() {
+        val selectedSection = model.selectedSection.get()
+
+        if (selectedSection.id.get() != 0) {
+            return updateSection(selectedSection)
+        }
+
+        val section = selectedSection.toSection(initialConference.id)
 
         try {
             validateSection(section)
