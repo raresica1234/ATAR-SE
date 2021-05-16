@@ -1,6 +1,5 @@
 package utils
 
-import client.model.RoomItemModel
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -63,7 +62,7 @@ fun LocalDate?.validateBefore(other: LocalDate?, canBeEqual: Boolean = false): L
     }
     throw ValidationException(
         "The dates are not in order",
-        "The date ${dateConverter.toString(this)} should be before the date ${dateConverter.toString(other)}"
+        "The date ${this.format()} should be before the date ${other.format()}"
     )
 }
 
@@ -101,5 +100,7 @@ fun <T> T?.ifNull(provider: () -> T): T {
 fun Int.hasSameSign(other: Int) = this * other > 0
 
 fun SimpleIntegerProperty?.isNull() = this?.get() == null
+
+fun LocalDate?.format(): String = dateConverter.toString(this)
 
 infix fun SimpleIntegerProperty.eq(other: SimpleIntegerProperty) = this.get() == other.get()
