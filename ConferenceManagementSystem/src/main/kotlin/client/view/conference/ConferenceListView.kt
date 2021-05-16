@@ -18,6 +18,7 @@ import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.dateConverter
+import utils.format
 import utils.switchTo
 
 class ConferenceListView : View(APPLICATION_TITLE) {
@@ -140,16 +141,16 @@ class ConferenceListView : View(APPLICATION_TITLE) {
                 }
                 vbox(8.0) {
                     this += buildLabelWithData("Abstract paper deadline:") {
-                        dateConverter.toString(it.conference.abstractDeadline).ifBlank { "None" }
+                        it.conference.abstractDeadline.format().ifBlank { "None" }
                     }
                     this += buildLabelWithData("Full paper deadline:") {
-                        dateConverter.toString(it.conference.paperDeadline).ifBlank { "None" }
+                        it.conference.paperDeadline.format().ifBlank { "None" }
                     }
                     this += buildLabelWithData("Bidding deadline:") {
-                        dateConverter.toString(it.conference.biddingDeadline).ifBlank { "None" }
+                        it.conference.biddingDeadline.format().ifBlank { "None" }
                     }
                     this += buildLabelWithData("Review deadline:") {
-                        dateConverter.toString(it.conference.reviewDeadline).ifBlank { "None" }
+                        it.conference.reviewDeadline.format().ifBlank { "None" }
                     }
                     this += buildLabelWithData("Sections:") { it.sections }
                     this += buildLabelWithData("Submitted papers:") { it.papers }

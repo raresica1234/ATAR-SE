@@ -2,6 +2,9 @@ package client.view.component
 
 import javafx.event.EventTarget
 import javafx.geometry.Pos
+import javafx.scene.Node
+import javafx.scene.control.ListCell
+import javafx.scene.control.ListView
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.VBox
@@ -23,6 +26,17 @@ fun <S, T> TableColumn<S, T>.setNode(op: HBoxWithItem<T>.() -> Unit = {}) {
             override fun updateItem(item: T, empty: Boolean) {
                 super.updateItem(item, empty)
                 graphic = if (empty) null else hboxWithItem(item, 16.0, Pos.CENTER).apply { op(this) }
+            }
+        }
+    }
+}
+
+fun <T> ListView<T>.renderItem(onRender: (T) -> Node) {
+    cellFactory = Callback<ListView<T>, ListCell<T>> {
+        object : ListCell<T>() {
+            override fun updateItem(item: T, empty: Boolean) {
+                super.updateItem(item, empty)
+                graphic = if (empty) null else onRender(item)
             }
         }
     }

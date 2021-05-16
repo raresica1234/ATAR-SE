@@ -1,17 +1,18 @@
 package utils
 
-import client.model.RoomItemModel
 import client.view.ViewWithParams
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.scene.Node
+import javafx.scene.control.MultipleSelectionModel
 import javafx.util.StringConverter
 import tornadofx.UIComponent
-import tornadofx.ge
+import tornadofx.observableListOf
 import tornadofx.onChange
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
@@ -63,7 +64,7 @@ fun LocalDate?.validateBefore(other: LocalDate?, canBeEqual: Boolean = false): L
     }
     throw ValidationException(
         "The dates are not in order",
-        "The date ${dateConverter.toString(this)} should be before the date ${dateConverter.toString(other)}"
+        "The date ${this.format()} should be before the date ${other.format()}"
     )
 }
 
@@ -80,6 +81,17 @@ val dateConverter = object : StringConverter<LocalDate?>() {
         else LocalDate.parse(string, formatter)
 }
 
+val dateTimeConverter = object : StringConverter<LocalDateTime?>() {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")
+
+    override fun toString(date: LocalDateTime?) =
+        if (date == null) "" else formatter.format(date)
+
+    override fun fromString(string: String?) =
+        if (string.isNullOrBlank()) null
+        else LocalDateTime.parse(string, formatter)
+}
+
 fun Node.onBlur(handler: () -> Unit) = focusedProperty().onChange {
     if (!it) {
         handler()
@@ -90,16 +102,57 @@ fun <T> ObservableList<T>.setObject(oldItem: T, newItem: T?) {
     set(indexOf(oldItem), newItem)
 }
 
-fun <T> T?.ifNull(provider: () -> T): T {
-    if (this == null) {
-        return provider()
-    }
-
-    return this
-}
+fun <T> T?.ifNull(provider: () -> T) = this ?: provider()
 
 fun Int.hasSameSign(other: Int) = this * other > 0
 
 fun SimpleIntegerProperty?.isNull() = this?.get() == null
 
+fun LocalDate?.format(): String = dateConverter.toString(this)
+
+fun LocalDateTime?.format(): String = dateTimeConverter.toString(this)
+
 infix fun SimpleIntegerProperty.eq(other: SimpleIntegerProperty) = this.get() == other.get()
+
+fun <T> getNoSelectionMode() = object : MultipleSelectionModel<T>() {
+    override fun clearAndSelect(p0: Int) {
+    }
+
+    override fun select(p0: Int) {
+    }
+
+    override fun select(p0: T) {
+    }
+
+    override fun clearSelection(p0: Int) {
+    }
+
+    override fun clearSelection() {
+    }
+
+    override fun isSelected(p0: Int) = false
+
+    override fun isEmpty() = true
+
+    override fun selectPrevious() {
+    }
+
+    override fun selectNext() {
+    }
+
+    override fun selectFirst() {
+    }
+
+    override fun selectLast() {
+    }
+
+    override fun getSelectedIndices() = observableListOf<Int>()
+
+    override fun getSelectedItems() = observableListOf<T>()
+
+    override fun selectIndices(p0: Int, vararg p1: Int) {
+    }
+
+    override fun selectAll() {
+    }
+}
