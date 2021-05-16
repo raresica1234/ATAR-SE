@@ -1,9 +1,12 @@
 package client.view.chat
 
+import client.view.proposal.ViewProposalView
+import client.view.review.ReviewPaperView
 import javafx.beans.value.ObservableStringValue
 import javafx.geometry.Pos
 import tornadofx.*
 import utils.APPLICATION_TITLE
+import utils.switchTo
 
 class ChatView : View(APPLICATION_TITLE) {
 
@@ -23,10 +26,19 @@ class ChatView : View(APPLICATION_TITLE) {
                 maxHeight = 80.0
             }
 
-            vbox(alignment = Pos.CENTER_RIGHT) {
+            hbox(8.0, alignment = Pos.CENTER_RIGHT) {
                 maxWidth = 480.0
 
-                button("Send")
+                button("Back") {
+                    action {
+                        switchTo(ReviewPaperView::class)
+                    }
+                }
+                button("Send") {
+                    action {
+                        println("Send message")
+                    }
+                }
             }
         }
     }
