@@ -10,3 +10,5 @@ const val EMAIL_PATTERN =
 const val APPLICATION_TITLE = "Conference Management System"
 
 const val LOG_EXCEPTIONS = false
+
+const val TICKET_PRICE = 50

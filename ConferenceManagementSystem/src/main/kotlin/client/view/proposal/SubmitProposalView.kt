@@ -2,10 +2,10 @@ package client.view.proposal
 
 import client.controller.proposal.SubmitProposalController
 import client.view.ViewWithParams
+import client.view.component.confirmPayment
 import client.view.conference.ConferenceListView
 import javafx.geometry.Pos
 import javafx.scene.text.Font
-import javafx.stage.FileChooser
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.switchTo
@@ -14,13 +14,6 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
     companion object {
         const val PARAM_CONFERENCE = "conference"
     }
-
-    private val PAPER_FILTERS = arrayOf(
-        FileChooser.ExtensionFilter(
-            "Full paper (*.pdf, *.docx, *.txt)",
-            "*.pdf", "*.docx", "*.txt"
-        )
-    )
 
     private val TEXT_AREA_WIDTH = 128.0
     private val TEXT_AREA_HEIGHT = 256.0
@@ -43,6 +36,7 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
         vbox(32.0, Pos.CENTER) {
             vbox {
                 maxWidth = VIEW_WIDTH
+
                 label("Name")
                 textfield(controller.model.name) {
                     maxWidth = VIEW_WIDTH
@@ -51,6 +45,7 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
             }
             hbox(16.0) {
                 maxWidth = VIEW_WIDTH
+
                 vbox {
                     label("Topics")
                     textarea(controller.model.topics) {
@@ -84,6 +79,7 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
 
             vbox {
                 maxWidth = VIEW_WIDTH
+
                 label("Abstract paper")
                 textarea(controller.model.abstractPaper) {
                     maxWidth = VIEW_WIDTH
@@ -96,12 +92,14 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
             uploadPaper(controller.model.fullPaperName) {
                 controller.handleFullPaperUpload(it)
             }
+
             hbox(180.0) {
                 alignment = Pos.CENTER
                 maxWidth = VIEW_WIDTH
 
                 button("Back") {
                     minWidth = 80.0
+
                     action {
                         switchTo(ConferenceListView::class)
                     }
@@ -109,7 +107,8 @@ class SubmitProposalView : ViewWithParams(APPLICATION_TITLE) {
 
                 button("Submit") {
                     minWidth = 80.0
-                    action {
+
+                    confirmPayment {
                         if (controller.handleSubmitProposalClick()) {
                             switchTo(ConferenceListView::class)
                         }
