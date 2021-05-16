@@ -10,6 +10,7 @@ import client.view.proposal.ProposalListView
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.text.Font
+import server.domain.ApprovalStatus
 import server.domain.ReviewType
 import tornadofx.*
 import utils.APPLICATION_TITLE
@@ -17,6 +18,10 @@ import utils.switchTo
 
 class ReviewPaperView : ViewWithParams(APPLICATION_TITLE) {
     private val controller by inject<ReviewPaperController>()
+
+    private val chatButton = button("Chat") {
+        action { switchTo(ChatView::class) }
+    }
 
     override fun onParamSet() {
         getParam<DetailedProposalItemModel>("proposal")?.let { controller.onParamsSet(it) }
@@ -42,7 +47,7 @@ class ReviewPaperView : ViewWithParams(APPLICATION_TITLE) {
                     labelWithDataExtractor("Topics:") { it.topics }
                     labelWithDataExtractor("Keywords:") { it.keywords }
                     labelWithDataExtractor("Authors:") { it.authors }
-                    labelWithDataExtractor("Status:") { it.status }
+                    labelWithDataExtractor("Status:") { it.status.value }
                     labelWithDataExtractor("Abstract paper:") { it.abstract }
 
                     hbox(16.0, Pos.CENTER_LEFT) {
@@ -89,8 +94,12 @@ class ReviewPaperView : ViewWithParams(APPLICATION_TITLE) {
                     action { switchTo(ProposalListView::class) }
                 }
 
-                button("Chat") {
-                    action { switchTo(ChatView::class) }
+                controller.model.proposal.onChange {
+                    if (it?.status == ApprovalStatus.IN_DISCUSSION) {
+                        children.add(1, chatButton)
+                    } else {
+                        children.remove(chatButton)
+                    }
                 }
 
                 button("Submit") {

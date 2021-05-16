@@ -39,7 +39,7 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
                     labelWithDataExtractor("Topics:") { it.topics }
                     labelWithDataExtractor("Keywords:") { it.keywords }
                     labelWithDataExtractor("Authors:") { it.authors }
-                    labelWithDataExtractor("Status:") { it.status }
+                    labelWithDataExtractor("Status:") { it.status.value }
                     labelWithDataExtractor("Abstract paper:") { it.abstract }
 
                     hbox(16.0, Pos.CENTER_LEFT) {
@@ -62,6 +62,13 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
 
                 button("Close") {
                     action { switchTo(ProposalListView::class) }
+                }
+
+                button("Request discussion") {
+                    action {
+                        controller.requestDiscussion()
+                        switchTo(ProposalListView::class)
+                    }
                 }
 
                 button("Reject") {

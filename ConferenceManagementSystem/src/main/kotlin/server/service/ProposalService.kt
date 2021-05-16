@@ -90,7 +90,9 @@ class ProposalService {
 
             return database.proposals.filter {
                 (it.conferenceId eq conferenceId) and
-                        ((it.status eq ApprovalStatus.TO_BE_REVIEWED) or (it.status eq ApprovalStatus.IN_REVIEW))
+                        ((it.status eq ApprovalStatus.TO_BE_REVIEWED) or
+                                (it.status eq ApprovalStatus.IN_REVIEW) or
+                                (it.status eq ApprovalStatus.IN_DISCUSSION))
             }.toList()
                 .filter { proposal -> madeBids.none { it.proposalId == proposal.id } }
                 .map {
@@ -103,7 +105,8 @@ class ProposalService {
             val reviews = ReviewService.getAllByPcMember(pcMemberId)
 
             return database.proposals.filter {
-                (it.conferenceId eq conferenceId) and (it.status eq ApprovalStatus.IN_REVIEW)
+                (it.conferenceId eq conferenceId) and
+                        ((it.status eq ApprovalStatus.IN_REVIEW) or (it.status eq ApprovalStatus.IN_DISCUSSION))
             }.toList()
                 .filter { proposal ->
                     approvedBids.any { it.proposalId == proposal.id } && reviews.none { it.proposalId == proposal.id }
@@ -125,6 +128,12 @@ class ProposalService {
 
         fun getWithReviews(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
             ProposalWithReviews(it, ReviewService.getAllByProposalId(it.id))
+        }
+
+        fun setDiscussionStatus(proposalId: Int) {
+            ReviewService.remove(proposalId)
+
+            updateStatus(proposalId, ApprovalStatus.IN_DISCUSSION)
         }
     }
 }

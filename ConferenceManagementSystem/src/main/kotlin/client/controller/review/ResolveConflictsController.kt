@@ -15,7 +15,8 @@ class ResolveConflictsController : Controller() {
 
     fun openPaper() = hostServices.showDocument(proposal.get().fullPaper)
 
-    fun updateProposalStatus(proposalStatus: ApprovalStatus) {
+    fun updateProposalStatus(proposalStatus: ApprovalStatus) =
         ProposalService.updateStatus(proposal.get().id, proposalStatus)
-    }
+
+    fun requestDiscussion() = ProposalService.setDiscussionStatus(proposal.get().id)
 }
