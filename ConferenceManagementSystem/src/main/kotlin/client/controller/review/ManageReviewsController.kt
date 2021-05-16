@@ -16,18 +16,21 @@ import tornadofx.onChange
 class ManageReviewsController : Controller() {
     val model = ManageReviewsModel()
 
-    fun onParamsSet(proposalId: Int) {
+    fun onParamsSet(proposalId: Int, isRevaluation: Boolean) {
+        model.isRevaluation.set(isRevaluation)
         fetchData(proposalId)
     }
 
     private fun fetchData(proposalId: Int) {
         data class FetchData(val proposal: Proposal?, val bids: List<BidItemModel>, val reviews: List<Review>)
 
+        val isRevaluation = model.isRevaluation.get()
+
         runAsync {
             val proposalWithReviews = ProposalService.getWithReviews(proposalId)
                 ?: return@runAsync FetchData(null, emptyList(), emptyList())
 
-            val bids = BidService.getAllWillingToReviewForProposal(proposalId).map { bidWithPcMember ->
+            val bids = BidService.getAllWillingToReviewForProposal(proposalId, isRevaluation).map { bidWithPcMember ->
                 with(bidWithPcMember) {
                     BidItemModel(
                         bid.proposalId,
@@ -35,7 +38,7 @@ class ManageReviewsController : Controller() {
                         "${pcMember.fullName} - ${pcMember.email}",
                         bid.bidType.value,
                         SimpleBooleanProperty(bid.approved).apply {
-                            onChange { handleApprovalChange(proposalWithReviews.proposal, bid, it) }
+                            onChange { handleApprovalChange(proposalWithReviews.proposal, bid, isRevaluation, it) }
                         }
                     )
                 }
@@ -49,9 +52,12 @@ class ManageReviewsController : Controller() {
         }
     }
 
-    private fun handleApprovalChange(proposal: Proposal?, bid: Bid, approved: Boolean) {
+    private fun handleApprovalChange(proposal: Proposal?, bid: Bid, isRevaluation: Boolean, approved: Boolean) {
         BidService.updateApproval(bid.proposalId, bid.pcMemberId, approved)
         proposal?.let {
+            if (isRevaluation) {
+                return@let handleRevaluation(it)
+            }
             if (approved && (it.status != ApprovalStatus.IN_CONFLICT || it.status != ApprovalStatus.IN_REVIEW)) {
                 ProposalService.updateStatus(it.id, ApprovalStatus.IN_REVIEW)
             }
@@ -59,5 +65,11 @@ class ManageReviewsController : Controller() {
                 ReviewService.remove(it.id, bid.pcMemberId)
             }
         }
+    }
+
+    private fun handleRevaluation(proposal: Proposal) {
+        if (proposal.status == ApprovalStatus.IN_REVALUATION) return
+
+        ProposalService.setRevaluationStatus(proposal.id)
     }
 }

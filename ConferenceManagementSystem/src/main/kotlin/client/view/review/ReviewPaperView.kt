@@ -68,8 +68,13 @@ class ReviewPaperView : ViewWithParams(APPLICATION_TITLE) {
                     vbox {
                         maxWidth = 192.0
 
+                        val reviewTypes = ReviewType.values().toList()
+
                         label("Review statement")
-                        combobox(controller.model.selectedReviewType, ReviewType.values().toList().reversed()) {
+                        combobox(
+                            controller.model.selectedReviewType,
+                            reviewTypes.take(reviewTypes.size - 1).reversed()
+                        ) {
                             minWidth = 192.0
                             promptText = "Select a review"
                         }

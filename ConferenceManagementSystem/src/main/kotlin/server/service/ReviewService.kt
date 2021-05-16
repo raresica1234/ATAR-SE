@@ -2,14 +2,11 @@ package server.service
 
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
-import org.ktorm.entity.add
-import org.ktorm.entity.count
-import org.ktorm.entity.filter
-import org.ktorm.entity.removeIf
-import org.ktorm.entity.toList
+import org.ktorm.entity.*
 import server.database
 import server.domain.ApprovalStatus
 import server.domain.Review
+import server.domain.ReviewType
 import server.reviews
 import utils.hasSameSign
 
@@ -54,5 +51,9 @@ class ReviewService {
         }
 
         fun getAllByPcMember(pcMemberId: Int) = database.reviews.filter { it.pcMemberId eq pcMemberId }.toList()
+
+        fun invalidate(proposalId: Int) = database.reviews.filter { it.proposalId eq proposalId }.forEach {
+            it.reviewType = ReviewType.INVALID
+        }
     }
 }

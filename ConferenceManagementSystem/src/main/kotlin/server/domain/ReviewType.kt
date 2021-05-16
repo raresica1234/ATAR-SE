@@ -7,7 +7,8 @@ enum class ReviewType(val value: Int, val displayName: String) {
     BORDERLINE_PAPER(0, "Borderline paper"),
     WEAK_ACCEPT(1, "Weak accept"),
     ACCEPT(2, "Accept"),
-    STRONG_ACCEPT(3, "Strong accept");
+    STRONG_ACCEPT(3, "Strong accept"),
+    INVALID(0, "Invalid");
 
     override fun toString() = displayName
 }

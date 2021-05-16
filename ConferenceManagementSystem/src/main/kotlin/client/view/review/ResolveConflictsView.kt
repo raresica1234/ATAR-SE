@@ -31,7 +31,7 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
                 font = Font(24.0)
                 controller.proposal.onChange { text = "${it?.name} - Resolve conflicts" }
             }
-            hbox(32.0) {
+            hbox(32.0, Pos.CENTER) {
                 vBoxPane(8.0) {
                     minWidth = 400.0
 
@@ -59,6 +59,7 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
 
             hbox(16.0, Pos.CENTER_RIGHT) {
                 paddingTop = 16.0
+                minWidth = 512.0
 
                 button("Close") {
                     action { switchTo(ProposalListView::class) }
@@ -68,6 +69,16 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
                     action {
                         controller.requestDiscussion()
                         switchTo(ProposalListView::class)
+                    }
+                }
+
+                button("Request revaluation") {
+                    action {
+                        switchTo(
+                            ManageReviewsView::class,
+                            "proposalId" to controller.proposal.get().id,
+                            "isRevaluation" to true
+                        )
                     }
                 }
 
