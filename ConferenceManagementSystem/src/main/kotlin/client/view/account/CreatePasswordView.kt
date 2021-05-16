@@ -2,6 +2,7 @@ package client.view.account
 
 import client.controller.account.CreatePasswordController
 import client.view.ViewWithParams
+import client.view.component.confirmPayment
 import client.view.conference.ConferenceListView
 import javafx.geometry.Pos
 import javafx.scene.text.Font
@@ -58,7 +59,7 @@ class CreatePasswordView : ViewWithParams(APPLICATION_TITLE) {
 
         vbox(alignment = Pos.CENTER) {
             button("Create password") {
-                action {
+                confirmPayment {
                     if (controller.handleCreatePassword()) {
                         switchTo(ConferenceListView::class)
                     }
