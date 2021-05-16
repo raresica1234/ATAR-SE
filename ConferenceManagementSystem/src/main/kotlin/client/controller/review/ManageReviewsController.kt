@@ -3,15 +3,14 @@ package client.controller.review
 import client.model.review.BidItemModel
 import client.model.review.ManageReviewsModel
 import javafx.beans.property.SimpleBooleanProperty
-import server.domain.ApprovalStatus
-import server.domain.Bid
-import server.domain.Proposal
-import server.domain.Review
+import server.domain.*
 import server.service.BidService
+import server.service.ConferenceService
 import server.service.ProposalService
 import server.service.ReviewService
 import tornadofx.Controller
 import tornadofx.onChange
+import utils.ValidationException
 
 class ManageReviewsController : Controller() {
     val model = ManageReviewsModel()
@@ -22,13 +21,20 @@ class ManageReviewsController : Controller() {
     }
 
     private fun fetchData(proposalId: Int) {
-        data class FetchData(val proposal: Proposal?, val bids: List<BidItemModel>, val reviews: List<Review>)
+        data class FetchData(
+            val proposal: Proposal? = null,
+            val bids: List<BidItemModel> = emptyList(),
+            val reviews: List<Review> = emptyList(),
+            val conference: Conference? = null
+        )
 
         val isRevaluation = model.isRevaluation.get()
 
         runAsync {
             val proposalWithReviews = ProposalService.getWithReviews(proposalId)
-                ?: return@runAsync FetchData(null, emptyList(), emptyList())
+                ?: return@runAsync FetchData()
+
+            val proposal = proposalWithReviews.proposal
 
             val bids = BidService.getAllWillingToReviewForProposal(proposalId, isRevaluation).map { bidWithPcMember ->
                 with(bidWithPcMember) {
@@ -38,22 +44,42 @@ class ManageReviewsController : Controller() {
                         "${pcMember.fullName} - ${pcMember.email}",
                         bid.bidType.value,
                         SimpleBooleanProperty(bid.approved).apply {
-                            onChange { handleApprovalChange(proposalWithReviews.proposal, bid, isRevaluation, it) }
+                            onChange { handleApprovalChange(proposal, bid, isRevaluation, it) }
                         }
                     )
                 }
             }
 
-            FetchData(proposalWithReviews.proposal, bids, proposalWithReviews.reviews)
+            val conference = ConferenceService.get(proposal.conferenceId)
+
+            FetchData(proposalWithReviews.proposal, bids, proposalWithReviews.reviews, conference)
         } ui {
             model.proposal.set(it.proposal)
             model.bids.setAll(it.bids)
             model.reviews.setAll(it.reviews)
+            model.maximumReviewers.set(it.conference?.reviewerCount ?: 0)
+            model.reviewers.set(it.bids.count { bid -> bid.approved.get() })
         }
     }
 
     private fun handleApprovalChange(proposal: Proposal?, bid: Bid, isRevaluation: Boolean, approved: Boolean) {
-        BidService.updateApproval(bid.proposalId, bid.pcMemberId, approved)
+        if (approved) model.reviewers.value++ else model.reviewers.value--
+
+        val maximumReviewers = model.maximumReviewers.get()
+        if (model.reviewers.get() > maximumReviewers) {
+            model.bids.find { it.pcMemberId == bid.pcMemberId }?.approved?.set(false)
+
+            ValidationException(
+                "Maximum reviewers assigned!",
+                "The maximum number of $maximumReviewers reviewers was exceeded. Deallocate a PC member and try again."
+            ).displayError()
+            return
+        }
+
+        if (!BidService.updateApproval(bid.proposalId, bid.pcMemberId, approved)) {
+            return
+        }
+
         proposal?.let {
             if (isRevaluation) {
                 return@let handleRevaluation(it)

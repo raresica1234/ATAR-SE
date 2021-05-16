@@ -54,6 +54,17 @@ class CreateConferenceView : View(APPLICATION_TITLE) {
             datePicker("Full paper deadline", controller.model.paperDeadline)
             datePicker("Bidding deadline", controller.model.biddingDeadline)
             datePicker("Review deadline", controller.model.reviewDeadline)
+
+            vbox {
+                maxWidth = 192.0
+
+                label("Maximum reviewers")
+                textfield(controller.model.reviewerCount) {
+                    promptText = "Maximum reviewers"
+
+                    filterInput { it.controlNewText.isInt() }
+                }
+            }
         }
 
         hbox(16.0, Pos.CENTER) {

@@ -2,6 +2,7 @@ package utils
 
 import client.model.RoomItemModel
 import client.view.ViewWithParams
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
@@ -97,3 +98,5 @@ fun <T> T?.ifNull(provider: () -> T): T {
 }
 
 fun Int.hasSameSign(other: Int) = this * other > 0
+
+fun SimpleIntegerProperty?.isNull() = this?.get() == null
