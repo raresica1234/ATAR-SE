@@ -2,6 +2,7 @@ package client.view.conference
 
 import client.controller.conference.SectionSelectionController
 import client.view.ViewWithParams
+import client.view.component.confirmPayment
 import javafx.geometry.Pos
 import javafx.scene.text.Font
 import tornadofx.*
@@ -33,7 +34,7 @@ class SectionSelectionView : ViewWithParams() {
                     action { switchTo(ConferenceListView::class) }
                 }
                 button("Continue") {
-                    action {
+                    confirmPayment {
                         controller.onContinue()
                         switchTo(ConferenceListView::class)
                     }
