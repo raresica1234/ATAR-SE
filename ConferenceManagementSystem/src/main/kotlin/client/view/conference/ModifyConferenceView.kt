@@ -13,7 +13,6 @@ import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.text.Font
-import server.service.ProposalService
 import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.onBlur
@@ -143,18 +142,16 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
                 font = Font(18.0)
             }
 
-            button("Add") {
+            button("Save") {
                 controller.model.selectedSection.onChange {
                     if (it == null) {
                         // When a list item is not in focus, prepare model for add
                         controller.model.selectedSection.set(ModifyConferenceSectionModel())
                         return@onChange
                     }
-                    // Enable button only when old value was null and new one is empty
-                    disableProperty().set(it.id.get() != 0)
                 }
 
-                action { controller.addSection() }
+                action { controller.saveSection() }
             }
         }
 

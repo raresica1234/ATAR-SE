@@ -9,6 +9,7 @@ import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.util.StringConverter
 import tornadofx.UIComponent
+import tornadofx.ge
 import tornadofx.onChange
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -100,3 +101,5 @@ fun <T> T?.ifNull(provider: () -> T): T {
 fun Int.hasSameSign(other: Int) = this * other > 0
 
 fun SimpleIntegerProperty?.isNull() = this?.get() == null
+
+infix fun SimpleIntegerProperty.eq(other: SimpleIntegerProperty) = this.get() == other.get()
