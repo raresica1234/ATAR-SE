@@ -113,13 +113,15 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                             text = it?.name ?: SELECT_A_PROPOSAL
                         }
                     }
-                    vbox(8.0) {
-                        buildLabelWithData("Name:") { it.name }
-                        buildLabelWithData("Topics:") { it.topics }
-                        buildLabelWithData("Keywords:") { it.keywords }
-                        buildLabelWithData("Authors:") { it.authors }
-                        buildLabelWithData("Abstract:") { it.abstract }
-                        buildLabelWithData("Status:") { it.status.value }
+                    scrollpane(fitToWidth = true) {
+                        vbox(8.0) {
+                            buildLabelWithData("Name:") { it.name }
+                            buildLabelWithData("Topics:") { it.topics }
+                            buildLabelWithData("Keywords:") { it.keywords }
+                            buildLabelWithData("Authors:") { it.authors }
+                            buildLabelWithData("Abstract:") { it.abstract }
+                            buildLabelWithData("Status:") { it.status.value }
+                        }
                     }
 
                     buildProposalActions()
