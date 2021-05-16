@@ -1,7 +1,7 @@
 package server.domain
 
 import org.ktorm.entity.Entity
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface Chat : Entity<Chat> {
     companion object : Entity.Factory<Chat>()
@@ -10,5 +10,7 @@ interface Chat : Entity<Chat> {
     var userId: Int
     var proposalId: Int
     var message: String
-    var timestamp: LocalDate
+    var timestamp: LocalDateTime
+
+    var user: User?
 }

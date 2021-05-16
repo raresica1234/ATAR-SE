@@ -20,7 +20,7 @@ class ReviewPaperView : ViewWithParams(APPLICATION_TITLE) {
     private val controller by inject<ReviewPaperController>()
 
     private val chatButton = button("Chat") {
-        action { switchTo(ChatView::class) }
+        action { switchTo(ChatView::class, "proposalId" to controller.model.proposal.get().id) }
     }
 
     override fun onParamSet() {
