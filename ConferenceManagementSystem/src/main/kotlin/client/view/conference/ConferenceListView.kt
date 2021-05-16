@@ -38,7 +38,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     }
 
     private val participateButton = button("Participate") {
-        action { println("Participate to ${controller.model.selectedConference.get()}") }
+        action { switchTo(SectionSelectionView::class, "conferenceId" to controller.model.getConferenceId()) }
     }
 
     private val manageButton = button("Manage") {

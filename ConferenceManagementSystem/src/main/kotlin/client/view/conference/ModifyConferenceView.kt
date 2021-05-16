@@ -17,6 +17,7 @@ import tornadofx.*
 import utils.APPLICATION_TITLE
 import utils.onBlur
 import utils.switchTo
+import javax.swing.GroupLayout
 
 class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
     private val controller by inject<ModifyConferenceController>()
@@ -208,12 +209,24 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
             }
         }
 
-        vbox {
-            label("Session chair")
-            combobox(section.sessionChair, controller.model.sources.users) {
-                promptText = "Select a co-chair"
+        hbox(32.0, Pos.BOTTOM_LEFT) {
+            vbox {
+                label("Session chair")
+                combobox(section.sessionChair, controller.model.sources.users) {
+                    promptText = "Select a co-chair"
+                }
+            }
+
+            hbox(4.0, Pos.CENTER_LEFT) {
+                paddingTop = 16.0
+
+                label("Participants:")
+                text(section.participants.get().toString()) {
+                    font = Font(14.0)
+                }
             }
         }
+
     }
 
     private fun EventTarget.addProposalsWithAddButton(section: ModifyConferenceSectionModel) =
