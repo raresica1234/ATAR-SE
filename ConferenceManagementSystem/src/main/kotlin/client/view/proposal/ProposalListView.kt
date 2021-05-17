@@ -113,8 +113,8 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                             text = it?.name ?: SELECT_A_PROPOSAL
                         }
                     }
-                    scrollpane(fitToWidth = true) {
-                        vbox(8.0) {
+                    vbox(8.0) {
+                        scrollpane(fitToWidth = true) {
                             buildLabelWithData("Name:") { it.name }
                             buildLabelWithData("Topics:") { it.topics }
                             buildLabelWithData("Keywords:") { it.keywords }
