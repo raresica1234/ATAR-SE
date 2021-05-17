@@ -33,8 +33,8 @@ class ViewProposalView : ViewWithParams(APPLICATION_TITLE) {
                 font = Font(24.0)
                 controller.model.conference.onChange { text = "${it?.name} - Your proposal" }
             }
-            scrollpane(fitToWidth = true) {
-                vBoxPane(8.0) {
+            vBoxPane(8.0) {
+                scrollpane(fitToWidth = true) {
                     labelWithData("Name: ", controller.model.name)
                     labelWithData("Topics: ", controller.model.topics)
                     labelWithData("Keywords: ", controller.model.keywords)
