@@ -114,12 +114,14 @@ class ProposalListView : ViewWithParams(APPLICATION_TITLE) {
                         }
                     }
                     vbox(8.0) {
-                        buildLabelWithData("Name:") { it.name }
-                        buildLabelWithData("Topics:") { it.topics }
-                        buildLabelWithData("Keywords:") { it.keywords }
-                        buildLabelWithData("Authors:") { it.authors }
-                        buildLabelWithData("Abstract:") { it.abstract }
-                        buildLabelWithData("Status:") { it.status.value }
+                        scrollpane(fitToWidth = true) {
+                            buildLabelWithData("Name:") { it.name }
+                            buildLabelWithData("Topics:") { it.topics }
+                            buildLabelWithData("Keywords:") { it.keywords }
+                            buildLabelWithData("Authors:") { it.authors }
+                            buildLabelWithData("Abstract:") { it.abstract }
+                            buildLabelWithData("Status:") { it.status.value }
+                        }
                     }
 
                     buildProposalActions()

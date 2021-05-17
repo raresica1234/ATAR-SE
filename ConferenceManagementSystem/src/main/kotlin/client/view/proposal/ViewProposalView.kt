@@ -34,15 +34,17 @@ class ViewProposalView : ViewWithParams(APPLICATION_TITLE) {
                 controller.model.conference.onChange { text = "${it?.name} - Your proposal" }
             }
             vBoxPane(8.0) {
-                labelWithData("Name: ", controller.model.name)
-                labelWithData("Topics: ", controller.model.topics)
-                labelWithData("Keywords: ", controller.model.keywords)
-                labelWithData("Authors: ", controller.model.authors)
-                labelWithData("Status: ", controller.model.status)
-                labelWithData("Recommendation: ", controller.model.recommendation)
-                labelWithData("Abstract paper: ", controller.model.abstractPaper)
-                uploadPaper(controller.model.fullPaperName) {
-                    controller.handleFullPaperUpload(it)
+                scrollpane(fitToWidth = true) {
+                    labelWithData("Name: ", controller.model.name)
+                    labelWithData("Topics: ", controller.model.topics)
+                    labelWithData("Keywords: ", controller.model.keywords)
+                    labelWithData("Authors: ", controller.model.authors)
+                    labelWithData("Status: ", controller.model.status)
+                    labelWithData("Recommendation: ", controller.model.recommendation)
+                    labelWithData("Abstract paper: ", controller.model.abstractPaper)
+                    uploadPaper(controller.model.fullPaperName) {
+                        controller.handleFullPaperUpload(it)
+                    }
                 }
             }
             vbox {

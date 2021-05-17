@@ -35,12 +35,14 @@ class ResolveConflictsView : ViewWithParams(APPLICATION_TITLE) {
                 vBoxPane(8.0) {
                     minWidth = 400.0
 
-                    labelWithDataExtractor("Name:") { it.name }
-                    labelWithDataExtractor("Topics:") { it.topics }
-                    labelWithDataExtractor("Keywords:") { it.keywords }
-                    labelWithDataExtractor("Authors:") { it.authors }
-                    labelWithDataExtractor("Status:") { it.status.value }
-                    labelWithDataExtractor("Abstract paper:") { it.abstract }
+                    scrollpane(fitToWidth = true) {
+                        labelWithDataExtractor("Name:") { it.name }
+                        labelWithDataExtractor("Topics:") { it.topics }
+                        labelWithDataExtractor("Keywords:") { it.keywords }
+                        labelWithDataExtractor("Authors:") { it.authors }
+                        labelWithDataExtractor("Status:") { it.status.value }
+                        labelWithDataExtractor("Abstract paper:") { it.abstract }
+                    }
 
                     hbox(16.0, Pos.CENTER_LEFT) {
                         paddingTop = 16.0
