@@ -9,12 +9,13 @@ import server.domain.Proposal
 
 object Proposals : Table<Proposal>("proposals") {
     val id = int("id").primaryKey().bindTo { it.id }
-    var abstractPaper = varchar("abstractpaper").bindTo { it.abstractPaper }
-    var fullPaper = varchar("fullpaper").bindTo { it.fullPaper }
-    var name = varchar("name").bindTo { it.name }
-    var keywords = varchar("keywords").bindTo { it.keywords }
-    var topics = varchar("topics").bindTo { it.topics }
-    var conferenceId = int("conferenceid").bindTo { it.conferenceId }
-    var sectionId = int("sectionid").bindTo { it.sectionId }
-    var status = enum<ApprovalStatus>("status").bindTo { it.status }
+    val abstractPaper = varchar("abstractpaper").bindTo { it.abstractPaper }
+    val fullPaper = varchar("fullpaper").bindTo { it.fullPaper }
+    val name = varchar("name").bindTo { it.name }
+    val keywords = varchar("keywords").bindTo { it.keywords }
+    val topics = varchar("topics").bindTo { it.topics }
+    val conferenceId = int("conferenceid").bindTo { it.conferenceId }
+    val sectionId = int("sectionid").bindTo { it.sectionId }
+    val status = enum<ApprovalStatus>("status").bindTo { it.status }
+    val presentation = varchar("presentation").bindTo { it.presentation }
 }

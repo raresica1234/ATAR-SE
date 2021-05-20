@@ -66,6 +66,11 @@ class ProposalService {
             this.fullPaper = fullPaper
         })
 
+        fun updatePresentation(proposalId: Int, presentation: String) = database.proposals.update(Proposal {
+            id = proposalId
+            this.presentation = presentation
+        })
+
         fun getAllBySectionId(sectionId: Int) = database.proposals
             .filter { it.sectionId.eq(sectionId) }
             .toList()
