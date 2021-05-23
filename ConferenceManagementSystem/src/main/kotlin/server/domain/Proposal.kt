@@ -14,4 +14,5 @@ interface Proposal : Entity<Proposal> {
     var conferenceId: Int
     var sectionId: Int
     var status: ApprovalStatus
+    var presentation: String
 }

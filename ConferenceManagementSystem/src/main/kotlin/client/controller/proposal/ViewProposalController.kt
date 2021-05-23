@@ -31,4 +31,13 @@ class ViewProposalController : Controller() {
         ProposalService.updateFullPaper(model.id, file.absolutePath)
     }
 
+    fun handlePresentationUpload(file: File?) {
+        if (file == null) {
+            return
+        }
+
+        model.presentationLocation.set(file.absolutePath)
+        model.presentationName.set(file.name)
+        ProposalService.updatePresentation(model.id, file.absolutePath)
+    }
 }

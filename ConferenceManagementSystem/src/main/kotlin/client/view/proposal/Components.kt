@@ -14,13 +14,14 @@ private val PAPER_FILTERS = arrayOf(
     )
 )
 
-fun EventTarget.uploadPaper(
+fun EventTarget.uploadFile(
+    fileDescription: String,
     bindingName: SimpleStringProperty,
     onUpload: (File?) -> Unit = {}
 ) = hbox(32.0) {
     maxWidth = 416.0
     hbox(8.0, Pos.CENTER) {
-        label("Full paper:") {
+        label("${fileDescription.capitalize()}:") {
             minWidth = 70.0
         }
 
@@ -32,7 +33,10 @@ fun EventTarget.uploadPaper(
     button("Upload") {
         minWidth = 128.0
         action {
-            onUpload(chooseFile("Select full paper location", PAPER_FILTERS).firstOrNull())
+            onUpload(chooseFile("Select $fileDescription location", PAPER_FILTERS).firstOrNull())
         }
     }
 }
+
+fun EventTarget.uploadPaper( bindingName: SimpleStringProperty, onUpload: (File?) -> Unit = {}) =
+    uploadFile("full paper", bindingName, onUpload)
