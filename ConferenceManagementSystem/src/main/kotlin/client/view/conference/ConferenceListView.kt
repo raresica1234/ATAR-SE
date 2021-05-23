@@ -17,7 +17,6 @@ import javafx.scene.control.TabPane
 import javafx.scene.text.Font
 import tornadofx.*
 import utils.APPLICATION_TITLE
-import utils.dateConverter
 import utils.format
 import utils.switchTo
 
@@ -49,11 +48,7 @@ class ConferenceListView : View(APPLICATION_TITLE) {
     private val viewButton = button("View") {
         action {
             if (controller.isAuthor()) {
-                switchTo(
-                    ViewProposalView::class,
-                    "userId" to userState.user.id,
-                    "conferenceId" to controller.model.getConferenceId()
-                )
+                switchTo(ViewProposalView::class, "conferenceId" to controller.model.getConferenceId())
             } else {
                 switchTo(ProposalListView::class, "conference" to controller.model.getConference())
             }

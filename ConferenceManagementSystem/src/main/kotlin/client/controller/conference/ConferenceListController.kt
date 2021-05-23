@@ -6,8 +6,10 @@ import client.state.userState
 import server.domain.Role
 import server.domain.RoleType
 import server.service.ConferenceService
+import server.service.ProposalService
 import server.service.RoleService
 import tornadofx.Controller
+import tornadofx.information
 import tornadofx.onChange
 import utils.hasPassed
 
@@ -36,7 +38,6 @@ class ConferenceListController : Controller() {
 
                 allConferences.forEach { conferenceWithData ->
                     val conference = conferenceWithData.conference
-                    // TODO: Maybe add more to the sections
                     val sectionsString = conferenceWithData.sections.joinToString { it.name }.ifEmpty { "None" }
                     val proposalsString = conferenceWithData.proposals.joinToString { it.name }.ifEmpty { "None" }
 
@@ -72,6 +73,8 @@ class ConferenceListController : Controller() {
                 isLoading.set(false)
             }
         }
+
+        checkNotifications()
     }
 
     fun isListener(): Boolean {
@@ -97,4 +100,13 @@ class ConferenceListController : Controller() {
 
     private fun hasPermissionToManage(role: Role) =
         userState.user.isSiteAdministrator || role.roleType == RoleType.CHAIR
+
+    private fun checkNotifications() = runAsync { ProposalService.checkNotifications(userState.user.id) } ui {
+        it?.let {
+            information(
+                "Proposal approved!",
+                "Congratulations! Your proposal '${it.name}' has been approved and the presentation can be uploaded."
+            )
+        }
+    }
 }

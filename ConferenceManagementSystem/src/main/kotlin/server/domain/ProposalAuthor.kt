@@ -7,4 +7,5 @@ interface ProposalAuthor : Entity<ProposalAuthor> {
 
     var proposalId: Int
     var authorId: Int
+    var notification: Boolean
 }

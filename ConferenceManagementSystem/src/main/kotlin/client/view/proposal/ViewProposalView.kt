@@ -14,10 +14,7 @@ import utils.switchTo
 class ViewProposalView : ViewWithParams(APPLICATION_TITLE) {
     val controller by inject<ViewProposalController>()
     override fun onParamSet() {
-        controller.refreshData(
-            getParam<Int>("userId") ?: 0,
-            getParam<Int>("conferenceId") ?: 0
-        )
+        controller.refreshData(getParam<Int>("conferenceId") ?: 0)
     }
 
     override val root = vbox(32.0, alignment = Pos.CENTER) {

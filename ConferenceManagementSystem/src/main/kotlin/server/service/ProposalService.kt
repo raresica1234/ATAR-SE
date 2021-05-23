@@ -43,6 +43,14 @@ class ProposalService {
                 proposalAuthors.any { it.proposalId == proposal.id }
             } ?: return null
 
+            return getWithReviewsForAuthor(proposal, authorId)
+        }
+
+        private fun getWithReviewsForAuthor(proposal: Proposal, authorId: Int?): ProposalWithReviews {
+            if (authorId != null) {
+                markNotificationAsRead(proposal.id, authorId)
+            }
+
             return ProposalWithReviews(
                 proposal,
                 ReviewService.getAllByProposalId(proposal.id)
@@ -133,14 +141,21 @@ class ProposalService {
             (it.id eq proposalId) and (it.status eq ApprovalStatus.IN_CONFLICT)
         }
 
-        fun updateStatus(proposalId: Int, status: ApprovalStatus) = database.proposals.update(Proposal {
-            id = proposalId
-            this.status = status
-        })
+        fun updateStatus(proposalId: Int, status: ApprovalStatus) {
+            database.proposals.update(Proposal {
+                id = proposalId
+                this.status = status
+            })
 
-        fun getWithReviews(proposalId: Int) = database.proposals.find { it.id eq proposalId }?.let {
-            ProposalWithReviews(it, ReviewService.getAllByProposalId(it.id))
+            if (status == ApprovalStatus.APPROVED) {
+                notifyAuthorsForProposal(proposalId)
+            }
         }
+
+        fun getWithReviews(proposalId: Int, authorId: Int? = null) =
+            database.proposals.find { it.id eq proposalId }?.let {
+                getWithReviewsForAuthor(it, authorId)
+            }
 
         fun setDiscussionStatus(proposalId: Int) {
             ReviewService.remove(proposalId)
@@ -152,6 +167,27 @@ class ProposalService {
             ReviewService.invalidate(proposalId)
 
             updateStatus(proposalId, ApprovalStatus.IN_REVALUATION)
+        }
+
+        private fun notifyAuthorsForProposal(proposalId: Int) = database.proposalAuthors
+            .filter { it.proposalId eq proposalId }
+            .forEach { updateProposalAuthor(proposalId, it.authorId, true) }
+
+        private fun markNotificationAsRead(proposalId: Int, authorId: Int) =
+            updateProposalAuthor(proposalId, authorId, false)
+
+        private fun updateProposalAuthor(proposalId: Int, authorId: Int, notification: Boolean) =
+            database.proposalAuthors.update(ProposalAuthor {
+                this.proposalId = proposalId
+                this.authorId = authorId
+                this.notification = notification
+            })
+
+        fun checkNotifications(userId: Int): Proposal? {
+            val proposalAuthor = database.proposalAuthors.firstOrNull { it.authorId eq userId and it.notification }
+                ?: return null
+
+            return get(proposalAuthor.proposalId)
         }
     }
 }
