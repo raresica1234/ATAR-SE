@@ -213,7 +213,7 @@ class ModifyConferenceView : ViewWithParams(APPLICATION_TITLE) {
             vbox {
                 label("Session chair")
                 combobox(section.sessionChair, controller.model.sources.users) {
-                    promptText = "Select a co-chair"
+                    promptText = "Select a session chair"
                 }
             }
 
